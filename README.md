@@ -3,6 +3,8 @@
 Adaptive practice and assessments for K–8 math and language arts, plus Algebra 1.
 Built with Next.js App Router and deployed on Vercel.
 
+**Live:** https://katchi-ed.vercel.app
+
 ## What it does
 
 **Practice.** Every skill generates questions on the fly from a seeded PRNG, so
@@ -97,13 +99,21 @@ once those land support. Everything else is current.
 ## Deploying
 
 ```bash
-npm i -g vercel
-vercel        # preview
-vercel --prod # production
+vercel              # preview deployment
+vercel deploy --prod # production
 ```
 
 `vercel.ts` sets caching for the prerendered catalog pages and a CSP that allows
-the YouTube embed and nothing else.
+the YouTube embed and nothing else. Both are verifiable against a deployment:
+
+```bash
+curl -sI https://katchi-ed.vercel.app/learn/math/5 | grep -i cache-control
+# cache-control: public, max-age=3600, stale-while-revalidate=86400
+```
+
+Per-deployment URLs (`katchi-<hash>-<scope>.vercel.app`) sit behind Vercel
+Deployment Protection and redirect to SSO; use `vercel curl` to inspect those.
+The production alias is public.
 
 ## Adding a skill
 
