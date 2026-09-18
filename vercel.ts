@@ -7,7 +7,7 @@ import { routes, type VercelConfig } from "@vercel/config/v1";
  */
 export const config: VercelConfig = {
   framework: "nextjs",
-  buildCommand: "next build --turbopack",
+  buildCommand: "next build",
 
   headers: [
     // Prerendered skill pages change only when the catalog does.
