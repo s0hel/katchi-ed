@@ -10,8 +10,10 @@ export const config: VercelConfig = {
   buildCommand: "next build",
 
   headers: [
-    // Prerendered skill pages change only when the catalog does.
+    // Prerendered catalog pages change only when the catalog does. `/learn` is
+    // listed separately because `/learn/(.*)` does not match a bare `/learn`.
     routes.cacheControl("/practice/(.*)", { public: true, maxAge: "1 hour", staleWhileRevalidate: "1 day" }),
+    routes.cacheControl("/learn", { public: true, maxAge: "1 hour", staleWhileRevalidate: "1 day" }),
     routes.cacheControl("/learn/(.*)", { public: true, maxAge: "1 hour", staleWhileRevalidate: "1 day" }),
     {
       source: "/(.*)",
