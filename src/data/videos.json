@@ -1,177 +1,836 @@
 {
+  "ela-2-capitalization": {
+    "channel": "Khan Academy",
+    "query": "khan academy capitalization proper nouns beginning of a sentence",
+    "relevance": 0.4,
+    "title": "Common and proper nouns | The parts of speech | Grammar | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "bGz1acC3Wew"
+  },
+  "ela-2-nouns-verbs-and-adjectives": {
+    "channel": "Khan Academy",
+    "query": "khan academy parts of speech nouns verbs adjectives",
+    "title": "Intro to adjectives | The parts of speech | Grammar | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "pt-cjNaErxI"
+  },
+  "ela-2-plural-nouns": {
+    "channel": "Khan Academy",
+    "query": "khan academy plural nouns irregular plurals",
+    "title": "Irregular plural nouns |   base plurals | The parts of speech | Grammar | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "UnJmPywSSvg"
+  },
+  "ela-3-commonly-confused-words": {
+    "channel": "Khan Academy",
+    "query": "khan academy commonly confused words its it's there their",
+    "title": "There, their, and they're | Frequently confused words | Usage | Grammar",
+    "verifiedAt": "2026-09-18",
+    "videoId": "0D54pfccNUQ"
+  },
+  "ela-3-irregular-plurals": {
+    "channel": "Khan Academy",
+    "query": "khan academy plural nouns irregular plurals",
+    "title": "Irregular plural nouns |   base plurals | The parts of speech | Grammar | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "UnJmPywSSvg"
+  },
+  "ela-3-parts-of-speech": {
+    "channel": "Khan Academy",
+    "query": "khan academy parts of speech nouns verbs adjectives",
+    "title": "Intro to adjectives | The parts of speech | Grammar | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "pt-cjNaErxI"
+  },
+  "ela-3-prefixes-and-suffixes": {
+    "channel": "Khan Academy",
+    "query": "khan academy prefixes and suffixes word parts",
+    "title": "Latin and Greek roots and affixes | Reading | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "fiaPqgwJFo4"
+  },
+  "ela-4-complete-sentences-and-fragments": {
+    "channel": "Khan Academy",
+    "query": "khan academy sentence fragments and run on sentences",
+    "title": "Run-ons and comma splices | Syntax | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "Fh45mhVsZrU"
+  },
+  "ela-4-determine-the-main-idea": {
+    "channel": "Khan Academy",
+    "query": "khan academy finding the main idea of a passage reading",
+    "title": "What is a main idea? | Reading | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "4swFGRhQoMI"
+  },
+  "ela-4-subject-verb-agreement": {
+    "channel": "Khan Academy",
+    "query": "khan academy subject verb agreement grammar",
+    "title": "Subject-verb agreement | Syntax | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "4fMipjAnlRk"
+  },
+  "ela-4-word-parts": {
+    "channel": "Khan Academy",
+    "query": "khan academy prefixes and suffixes word parts",
+    "title": "Latin and Greek roots and affixes | Reading | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "fiaPqgwJFo4"
+  },
+  "ela-5-commas-and-end-punctuation": {
+    "channel": "Khan Academy",
+    "query": "khan academy commas semicolons and colons punctuation",
+    "title": "Introduction to the semicolon | The Colon and semicolon | Punctuation | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "41XNKfR56OY"
+  },
+  "ela-5-context-clues": {
+    "channel": "Khan Academy",
+    "query": "khan academy using context clues to determine word meaning",
+    "title": "Using context clues to figure out new words | Reading | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "CiNggzdWkIo"
+  },
+  "ela-5-figurative-language": {
+    "channel": "Khan Academy",
+    "query": "khan academy figurative language simile metaphor personification",
+    "title": "Figurative language | Reading | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "lzKj-bLvrYQ"
+  },
+  "ela-5-main-idea-and-supporting-details": {
+    "channel": "Khan Academy",
+    "query": "khan academy finding the main idea of a passage reading",
+    "title": "What is a main idea? | Reading | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "4swFGRhQoMI"
+  },
+  "ela-5-prefixes-suffixes-and-roots": {
+    "channel": "Khan Academy",
+    "query": "khan academy prefixes and suffixes word parts",
+    "title": "Latin and Greek roots and affixes | Reading | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "fiaPqgwJFo4"
+  },
+  "ela-5-verb-tenses": {
+    "channel": "Khan Academy",
+    "query": "khan academy verb tenses grammar",
+    "title": "Introduction to verb tense | The parts of speech | Grammar | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "faUvT7zfsyk"
+  },
+  "ela-6-context-clues": {
+    "channel": "Khan Academy",
+    "query": "khan academy using context clues to determine word meaning",
+    "title": "Using context clues to figure out new words | Reading | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "CiNggzdWkIo"
+  },
+  "ela-6-figurative-language": {
+    "channel": "Khan Academy",
+    "query": "khan academy figurative language simile metaphor personification",
+    "title": "Figurative language | Reading | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "lzKj-bLvrYQ"
+  },
+  "ela-6-pronoun-antecedent-agreement": {
+    "channel": "Khan Academy",
+    "query": "khan academy pronoun antecedent agreement",
+    "title": "Pronoun-antecedent agreement | Syntax | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "j9kIACViG60"
+  },
+  "ela-6-run-on-sentences-and-fragments": {
+    "channel": "Khan Academy",
+    "query": "khan academy sentence fragments and run on sentences",
+    "title": "Run-ons and comma splices | Syntax | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "Fh45mhVsZrU"
+  },
+  "ela-7-central-idea-of-a-passage": {
+    "channel": "Khan Academy",
+    "query": "khan academy finding the main idea of a passage reading",
+    "title": "What is a main idea? | Reading | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "4swFGRhQoMI"
+  },
+  "ela-7-determine-word-meaning-from-context": {
+    "channel": "Khan Academy",
+    "query": "khan academy using context clues to determine word meaning",
+    "title": "Using context clues to figure out new words | Reading | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "CiNggzdWkIo"
+  },
+  "ela-7-semicolons-colons-and-commas": {
+    "channel": "Khan Academy",
+    "query": "khan academy commas semicolons and colons punctuation",
+    "title": "Introduction to the semicolon | The Colon and semicolon | Punctuation | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "41XNKfR56OY"
+  },
+  "ela-7-subject-verb-agreement": {
+    "channel": "Khan Academy",
+    "query": "khan academy subject verb agreement grammar",
+    "title": "Subject-verb agreement | Syntax | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "4fMipjAnlRk"
+  },
+  "ela-8-academic-vocabulary-in-context": {
+    "channel": "Khan Academy",
+    "query": "khan academy using context clues to determine word meaning",
+    "title": "Using context clues to figure out new words | Reading | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "CiNggzdWkIo"
+  },
+  "ela-8-analyze-the-central-idea": {
+    "channel": "Khan Academy",
+    "query": "khan academy finding the main idea of a passage reading",
+    "title": "What is a main idea? | Reading | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "4swFGRhQoMI"
+  },
+  "ela-8-figurative-and-connotative-meaning": {
+    "channel": "Khan Academy",
+    "query": "khan academy figurative language simile metaphor personification",
+    "title": "Figurative language | Reading | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "lzKj-bLvrYQ"
+  },
+  "ela-8-punctuation-in-complex-sentences": {
+    "channel": "Khan Academy",
+    "query": "khan academy commas semicolons and colons punctuation",
+    "title": "Introduction to the semicolon | The Colon and semicolon | Punctuation | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "41XNKfR56OY"
+  },
+  "ela-8-verb-tense-consistency": {
+    "channel": "Khan Academy",
+    "query": "khan academy verb tenses grammar",
+    "title": "Introduction to verb tense | The parts of speech | Grammar | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "faUvT7zfsyk"
+  },
   "math-0-addition-within-10": {
-    "videoId": "fsTD_jqseBA",
-    "title": "Introduction to addition | Basic addition and subtraction | Early Math | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy basic addition within 20",
-    "verifiedAt": "2026-09-18"
+    "title": "Introduction to addition | Basic addition and subtraction | Early Math | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "fsTD_jqseBA"
   },
   "math-0-compare-numbers-to-20": {
-    "videoId": "9Jg5S7F2SMQ",
-    "title": "Comparing whole numbers | Place value (tens and hundreds) | Early Math | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy comparing whole numbers greater than less than",
-    "verifiedAt": "2026-09-18"
+    "title": "Comparing whole numbers | Place value (tens and hundreds) | Early Math | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "9Jg5S7F2SMQ"
   },
   "math-0-count-objects-to-10": {
-    "videoId": "EUqhLxFccbM",
-    "title": "Counting dogs, mice, and cookies | Counting | Early Math | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy counting objects numbers 1 to 10 kindergarten",
-    "verifiedAt": "2026-09-18"
+    "title": "Counting dogs, mice, and cookies | Counting | Early Math | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "EUqhLxFccbM"
   },
   "math-0-name-the-shape-s-area": {
-    "videoId": "LoaBd-sPzkU",
-    "title": "Perimeter and area: the basics | Perimeter, area, and volume | Geometry | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy area and perimeter of rectangles",
-    "verifiedAt": "2026-09-18"
+    "title": "Perimeter and area: the basics | Perimeter, area, and volume | Geometry | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "LoaBd-sPzkU"
   },
   "math-0-subtraction-within-10": {
-    "videoId": "gEGKvx1wlFg",
-    "title": "Equal sign | Addition and subtraction within 20 | Early Math | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy basic subtraction within 20",
-    "verifiedAt": "2026-09-18"
+    "title": "Equal sign | Addition and subtraction within 20 | Early Math | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "gEGKvx1wlFg"
   },
   "math-1-addition-within-20": {
-    "videoId": "fsTD_jqseBA",
-    "title": "Introduction to addition | Basic addition and subtraction | Early Math | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy basic addition within 20",
-    "verifiedAt": "2026-09-18"
+    "title": "Introduction to addition | Basic addition and subtraction | Early Math | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "fsTD_jqseBA"
   },
   "math-1-compare-two-digit-numbers": {
-    "videoId": "9Jg5S7F2SMQ",
-    "title": "Comparing whole numbers | Place value (tens and hundreds) | Early Math | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy comparing whole numbers greater than less than",
-    "verifiedAt": "2026-09-18"
+    "title": "Comparing whole numbers | Place value (tens and hundreds) | Early Math | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "9Jg5S7F2SMQ"
   },
   "math-1-patterns-what-comes-next": {
-    "videoId": "pXo0bG4iAyg",
-    "title": "Introduction to geometric sequences | Sequences, series and induction | Precalculus | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy arithmetic and geometric sequences patterns",
-    "verifiedAt": "2026-09-18"
+    "title": "Introduction to geometric sequences | Sequences, series and induction | Precalculus | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "pXo0bG4iAyg"
   },
   "math-1-perimeter-of-rectangles": {
-    "videoId": "LoaBd-sPzkU",
-    "title": "Perimeter and area: the basics | Perimeter, area, and volume | Geometry | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy area and perimeter of rectangles",
-    "verifiedAt": "2026-09-18"
+    "title": "Perimeter and area: the basics | Perimeter, area, and volume | Geometry | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "LoaBd-sPzkU"
   },
   "math-1-place-value-tens-and-ones": {
-    "videoId": "wx2gI8iwMCA",
-    "title": "Introduction to place value | Place value (tens and hundreds) | Early Math | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy place value ones tens hundreds",
-    "verifiedAt": "2026-09-18"
+    "title": "Introduction to place value | Place value (tens and hundreds) | Early Math | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "wx2gI8iwMCA"
   },
   "math-1-subtraction-within-20": {
-    "videoId": "gEGKvx1wlFg",
-    "title": "Equal sign | Addition and subtraction within 20 | Early Math | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy basic subtraction within 20",
-    "verifiedAt": "2026-09-18"
+    "title": "Equal sign | Addition and subtraction within 20 | Early Math | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "gEGKvx1wlFg"
   },
   "math-2-area-of-rectangles": {
-    "videoId": "LoaBd-sPzkU",
-    "title": "Perimeter and area: the basics | Perimeter, area, and volume | Geometry | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy area and perimeter of rectangles",
-    "verifiedAt": "2026-09-18"
+    "title": "Perimeter and area: the basics | Perimeter, area, and volume | Geometry | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "LoaBd-sPzkU"
+  },
+  "math-2-measurement-conversions": {
+    "channel": "Khan Academy",
+    "query": "khan academy converting units of measurement",
+    "title": "Unit conversion within the metric system | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "w0nqd_HXHPQ"
   },
   "math-2-place-value-to-hundreds": {
-    "videoId": "wx2gI8iwMCA",
-    "title": "Introduction to place value | Place value (tens and hundreds) | Early Math | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy place value ones tens hundreds",
-    "verifiedAt": "2026-09-18"
+    "title": "Introduction to place value | Place value (tens and hundreds) | Early Math | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "wx2gI8iwMCA"
+  },
+  "math-2-range-of-a-data-set": {
+    "channel": "Khan Academy",
+    "query": "khan academy mean median mode and range",
+    "title": "Finding mean, median, and mode | Descriptive statistics | Probability and Statistics | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "k3aKKasOmIw"
   },
   "math-2-round-to-the-nearest-ten": {
-    "videoId": "jvp0mtr1kFM",
-    "title": "Examples rounding to the nearest 10 and 100 | 3rd grade | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy rounding whole numbers to nearest ten hundred",
-    "verifiedAt": "2026-09-18"
+    "title": "Examples rounding to the nearest 10 and 100 | 3rd grade | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "jvp0mtr1kFM"
   },
   "math-2-skip-counting-patterns": {
-    "videoId": "pXo0bG4iAyg",
-    "title": "Introduction to geometric sequences | Sequences, series and induction | Precalculus | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy arithmetic and geometric sequences patterns",
-    "verifiedAt": "2026-09-18"
+    "title": "Introduction to geometric sequences | Sequences, series and induction | Precalculus | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "pXo0bG4iAyg"
   },
   "math-2-two-digit-addition": {
-    "videoId": "TVtdqRNJmiw",
-    "title": "Adding multi digit numbers with regrouping",
     "channel": "Khan Academy",
     "query": "khan academy multi digit addition with regrouping",
-    "verifiedAt": "2026-09-18"
+    "title": "Adding multi digit numbers with regrouping",
+    "verifiedAt": "2026-09-18",
+    "videoId": "TVtdqRNJmiw"
   },
   "math-2-two-digit-subtraction": {
-    "videoId": "buyK1y4rV3E",
-    "title": "Subtracting multi digit numbers with regrouping",
     "channel": "Khan Academy",
     "query": "khan academy multi digit subtraction with regrouping borrowing",
-    "verifiedAt": "2026-09-18"
+    "title": "Subtracting multi digit numbers with regrouping",
+    "verifiedAt": "2026-09-18",
+    "videoId": "buyK1y4rV3E"
   },
   "math-3-area-and-perimeter": {
-    "videoId": "LoaBd-sPzkU",
-    "title": "Perimeter and area: the basics | Perimeter, area, and volume | Geometry | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy area and perimeter of rectangles",
-    "verifiedAt": "2026-09-18"
+    "title": "Perimeter and area: the basics | Perimeter, area, and volume | Geometry | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "LoaBd-sPzkU"
+  },
+  "math-3-compare-fractions": {
+    "channel": "Khan Academy",
+    "query": "khan academy comparing fractions with unlike denominators",
+    "title": "Intro to comparing fractions with different denominators | 4th grade | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "zRjLZROI7wc"
+  },
+  "math-3-division-facts": {
+    "channel": "Khan Academy",
+    "query": "khan academy intro to division basic facts",
+    "title": "Division 1 | Multiplication and division | Arithmetic | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "MTzTqvzWzm8"
+  },
+  "math-3-fractions-of-a-group": {
+    "channel": "Khan Academy",
+    "query": "khan academy fraction of a whole number word problem",
+    "title": "Dividing fractions and whole number word problems",
+    "verifiedAt": "2026-09-18",
+    "videoId": "HUT8eL1sGhk"
+  },
+  "math-3-multiplication-facts": {
+    "channel": "Khan Academy",
+    "query": "khan academy intro to multiplication basic facts",
+    "title": "Introduction to multiplication",
+    "verifiedAt": "2026-09-18",
+    "videoId": "NVhA7avdTAw"
   },
   "math-3-round-to-the-nearest-hundred": {
-    "videoId": "jvp0mtr1kFM",
-    "title": "Examples rounding to the nearest 10 and 100 | 3rd grade | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy rounding whole numbers to nearest ten hundred",
-    "verifiedAt": "2026-09-18"
+    "title": "Examples rounding to the nearest 10 and 100 | 3rd grade | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "jvp0mtr1kFM"
+  },
+  "math-3-simple-probability": {
+    "channel": "Khan Academy",
+    "query": "khan academy basic probability intro",
+    "title": "Probability explained | Independent and dependent events | Probability and Statistics | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "uzkc-qNVoOk"
   },
   "math-3-three-digit-addition": {
-    "videoId": "TVtdqRNJmiw",
-    "title": "Adding multi digit numbers with regrouping",
     "channel": "Khan Academy",
     "query": "khan academy multi digit addition with regrouping",
-    "verifiedAt": "2026-09-18"
+    "title": "Adding multi digit numbers with regrouping",
+    "verifiedAt": "2026-09-18",
+    "videoId": "TVtdqRNJmiw"
   },
   "math-3-three-digit-subtraction": {
-    "videoId": "buyK1y4rV3E",
-    "title": "Subtracting multi digit numbers with regrouping",
     "channel": "Khan Academy",
     "query": "khan academy multi digit subtraction with regrouping borrowing",
-    "verifiedAt": "2026-09-18"
+    "title": "Subtracting multi digit numbers with regrouping",
+    "verifiedAt": "2026-09-18",
+    "videoId": "buyK1y4rV3E"
+  },
+  "math-4-add-and-subtract-decimals": {
+    "channel": "Khan Academy",
+    "query": "khan academy adding and subtracting decimals",
+    "title": "Subtracting decimals example 1 | Decimals | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "Eq4mVCd-yyo"
+  },
+  "math-4-add-fractions-with-like-denominators": {
+    "channel": "Khan Academy",
+    "query": "khan academy adding fractions with unlike denominators",
+    "title": "Adding fractions with unlike denominators",
+    "verifiedAt": "2026-09-18",
+    "videoId": "bcCLKACsYJ0"
+  },
+  "math-4-angles-in-a-triangle": {
+    "channel": "Khan Academy",
+    "query": "khan academy complementary and supplementary angles",
+    "title": "Complementary and supplementary angles | Angles and intersecting lines | Geometry | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "BTnAlNSgNsY"
   },
   "math-4-area-of-triangles": {
-    "videoId": "LoaBd-sPzkU",
-    "title": "Perimeter and area: the basics | Perimeter, area, and volume | Geometry | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy area and perimeter of rectangles",
-    "verifiedAt": "2026-09-18"
+    "title": "Perimeter and area: the basics | Perimeter, area, and volume | Geometry | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "LoaBd-sPzkU"
+  },
+  "math-4-factors-and-multiples": {
+    "channel": "Khan Academy",
+    "query": "khan academy greatest common factor and least common multiple",
+    "title": "Greatest common factor explained | Factors and multiples | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "jFd-6EPfnec"
+  },
+  "math-4-function-tables": {
+    "channel": "Khan Academy",
+    "query": "khan academy function tables input output rule",
+    "title": "Input & output tables: identifying the rule | 4th grade math (TX TEKS) | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "Y9oW96dhzg0"
+  },
+  "math-4-long-division": {
+    "channel": "Khan Academy",
+    "query": "khan academy long division with remainders",
+    "title": "Dividing numbers: long division with remainders | Arithmetic | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "NcADzGz3bSI"
+  },
+  "math-4-mean-of-a-data-set": {
+    "channel": "Khan Academy",
+    "query": "khan academy mean median mode and range",
+    "title": "Finding mean, median, and mode | Descriptive statistics | Probability and Statistics | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "k3aKKasOmIw"
+  },
+  "math-4-multi-digit-multiplication": {
+    "channel": "Khan Academy",
+    "query": "khan academy multiplying 2 digit numbers standard algorithm",
+    "title": "Multiplying: 2 digit numbers | Multiplication and division | 4th grade | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "DaQlieZH1kk"
+  },
+  "math-4-multiply-fractions": {
+    "channel": "Khan Academy",
+    "query": "khan academy multiplying and dividing fractions",
+    "title": "Understanding division of fractions | Fractions | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "f3ySpxX9oeM"
+  },
+  "math-5-add-fractions-with-unlike-denominators": {
+    "channel": "Khan Academy",
+    "query": "khan academy adding fractions with unlike denominators",
+    "title": "Adding fractions with unlike denominators",
+    "verifiedAt": "2026-09-18",
+    "videoId": "bcCLKACsYJ0"
+  },
+  "math-5-coordinate-plane": {
+    "channel": "Khan Academy",
+    "query": "khan academy coordinate plane quadrants points",
+    "title": "Coordinate plane: graphing points and naming quadrants | Negative numbers | 6th grade | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "Jeh5vudjmLI"
+  },
+  "math-5-divide-fractions": {
+    "channel": "Khan Academy",
+    "query": "khan academy multiplying and dividing fractions",
+    "title": "Understanding division of fractions | Fractions | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "f3ySpxX9oeM"
+  },
+  "math-5-evaluate-expressions": {
+    "channel": "Khan Academy",
+    "query": "khan academy evaluating algebraic expressions substitution",
+    "title": "How to test solutions to equations using substitution | 6th grade | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "U9OfQd8poTQ"
+  },
+  "math-5-fractions-decimals-and-percents": {
+    "channel": "Khan Academy",
+    "query": "khan academy converting fractions decimals and percents",
+    "title": "Converting percent to decimal and fraction | Decimals | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "-gB1y-PMWfs"
+  },
+  "math-5-median-and-range": {
+    "channel": "Khan Academy",
+    "query": "khan academy mean median mode and range",
+    "title": "Finding mean, median, and mode | Descriptive statistics | Probability and Statistics | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "k3aKKasOmIw"
+  },
+  "math-5-multiply-decimals": {
+    "channel": "Khan Academy",
+    "query": "khan academy adding and subtracting decimals",
+    "title": "Subtracting decimals example 1 | Decimals | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "Eq4mVCd-yyo"
+  },
+  "math-5-order-of-operations": {
+    "channel": "Khan Academy",
+    "query": "khan academy order of operations PEMDAS",
+    "title": "Order of operations: PEMDAS | Arithmetic properties | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "piIcRV2dx7E"
+  },
+  "math-5-powers-and-exponents": {
+    "channel": "Khan Academy",
+    "query": "khan academy intro to exponents powers",
+    "title": "Introduction to exponents | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "XZRQhkii0h0"
+  },
+  "math-5-volume-of-rectangular-prisms": {
+    "channel": "Khan Academy",
+    "query": "khan academy volume of rectangular prisms",
+    "title": "Volume of a rectangular prism or box examples | Measurement | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "I9efKVtLCf4"
+  },
+  "math-6-absolute-value": {
+    "channel": "Khan Academy",
+    "query": "khan academy absolute value of integers",
+    "title": "Absolute value of integers | Negative numbers and absolute value | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "r6hS_8nm1jM"
   },
   "math-6-area-of-circles": {
-    "videoId": "LoaBd-sPzkU",
-    "title": "Perimeter and area: the basics | Perimeter, area, and volume | Geometry | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy area and perimeter of rectangles",
-    "verifiedAt": "2026-09-18"
+    "title": "Perimeter and area: the basics | Perimeter, area, and volume | Geometry | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "LoaBd-sPzkU"
+  },
+  "math-6-greatest-common-factor": {
+    "channel": "Khan Academy",
+    "query": "khan academy greatest common factor and least common multiple",
+    "title": "Greatest common factor explained | Factors and multiples | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "jFd-6EPfnec"
+  },
+  "math-6-least-common-multiple": {
+    "channel": "Khan Academy",
+    "query": "khan academy greatest common factor and least common multiple",
+    "title": "Greatest common factor explained | Factors and multiples | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "jFd-6EPfnec"
+  },
+  "math-6-mean-median-and-range": {
+    "channel": "Khan Academy",
+    "query": "khan academy mean median mode and range",
+    "title": "Finding mean, median, and mode | Descriptive statistics | Probability and Statistics | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "k3aKKasOmIw"
+  },
+  "math-6-one-step-equations": {
+    "channel": "Khan Academy",
+    "query": "khan academy solving one step equations",
+    "title": "How to solve one-step equations | Linear equations | Algebra I | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "jWpiMu5LNdg"
+  },
+  "math-6-percent-of-a-number": {
+    "channel": "Khan Academy",
+    "query": "khan academy finding a percent of a number",
+    "title": "Percentage of a whole number | Decimals | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "-lUEWEEpmIo"
+  },
+  "math-6-probability-of-a-single-event": {
+    "channel": "Khan Academy",
+    "query": "khan academy basic probability intro",
+    "title": "Probability explained | Independent and dependent events | Probability and Statistics | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "uzkc-qNVoOk"
+  },
+  "math-6-ratios-and-proportions": {
+    "channel": "Khan Academy",
+    "query": "khan academy solving proportions cross multiply",
+    "title": "Solving proportions 2 exercise examples | Algebra Basics | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "qzsR7cChujg"
+  },
+  "math-6-unit-rates": {
+    "channel": "Khan Academy",
+    "query": "khan academy unit rate intro",
+    "title": "Introduction to rates | Ratios, rates, and percentages | 6th grade | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "qGTYSAeLTOE"
+  },
+  "math-6-write-and-evaluate-expressions": {
+    "channel": "Khan Academy",
+    "query": "khan academy evaluating algebraic expressions substitution",
+    "title": "How to test solutions to equations using substitution | 6th grade | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "U9OfQd8poTQ"
   },
   "math-7-circumference-of-circles": {
-    "videoId": "LoaBd-sPzkU",
-    "title": "Perimeter and area: the basics | Perimeter, area, and volume | Geometry | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy area and perimeter of rectangles",
-    "verifiedAt": "2026-09-18"
+    "title": "Perimeter and area: the basics | Perimeter, area, and volume | Geometry | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "LoaBd-sPzkU"
+  },
+  "math-7-complementary-and-supplementary-angles": {
+    "channel": "Khan Academy",
+    "query": "khan academy complementary and supplementary angles",
+    "title": "Complementary and supplementary angles | Angles and intersecting lines | Geometry | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "BTnAlNSgNsY"
+  },
+  "math-7-one-step-inequalities": {
+    "channel": "Khan Academy",
+    "query": "khan academy solving one step inequalities",
+    "title": "One-step inequality involving addition | Linear inequalities | Algebra I | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "17a443nL7Qw"
+  },
+  "math-7-operations-with-integers": {
+    "channel": "Khan Academy",
+    "query": "khan academy adding and subtracting negative numbers integers",
+    "title": "Adding and subtracting negative numbers | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "NQSN00zL5gg"
+  },
+  "math-7-percent-increase-and-decrease": {
+    "channel": "Khan Academy",
+    "query": "khan academy percent increase and decrease discount",
+    "title": "Growing by a percentage | Linear equations | Algebra I | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "X2jVap1YgwI"
+  },
+  "math-7-probability": {
+    "channel": "Khan Academy",
+    "query": "khan academy basic probability intro",
+    "title": "Probability explained | Independent and dependent events | Probability and Statistics | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "uzkc-qNVoOk"
+  },
+  "math-7-proportional-relationships": {
+    "channel": "Khan Academy",
+    "query": "khan academy solving proportions cross multiply",
+    "title": "Solving proportions 2 exercise examples | Algebra Basics | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "qzsR7cChujg"
+  },
+  "math-7-rate-word-problems": {
+    "channel": "Khan Academy",
+    "query": "khan academy rate distance time word problems",
+    "title": "Finding average speed or rate | Ratios, proportions, units, and rates | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "mt6Nq0dzFjo"
+  },
+  "math-7-two-step-equations": {
+    "channel": "Khan Academy",
+    "query": "khan academy solving two step equations",
+    "title": "Solving two-step equations | Linear equations | Algebra I | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "_y_Q3_B2Vh8"
+  },
+  "math-7-volume-and-surface-area": {
+    "channel": "Khan Academy",
+    "query": "khan academy volume of rectangular prisms",
+    "title": "Volume of a rectangular prism or box examples | Measurement | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "I9efKVtLCf4"
+  },
+  "math-8-exponent-rules": {
+    "channel": "Khan Academy",
+    "query": "khan academy intro to exponents powers",
+    "title": "Introduction to exponents | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "XZRQhkii0h0"
+  },
+  "math-8-find-the-slope": {
+    "channel": "Khan Academy",
+    "query": "khan academy finding slope from two points",
+    "title": "Slope from two ordered pairs example 1 | Algebra I | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "WkspBxrzuZo"
+  },
+  "math-8-linear-function-tables": {
+    "channel": "Khan Academy",
+    "query": "khan academy function tables input output rule",
+    "title": "Input & output tables: identifying the rule | 4th grade math (TX TEKS) | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "Y9oW96dhzg0"
+  },
+  "math-8-mean-median-mode-and-range": {
+    "channel": "Khan Academy",
+    "query": "khan academy mean median mode and range",
+    "title": "Finding mean, median, and mode | Descriptive statistics | Probability and Statistics | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "k3aKKasOmIw"
+  },
+  "math-8-points-on-the-coordinate-plane": {
+    "channel": "Khan Academy",
+    "query": "khan academy coordinate plane quadrants points",
+    "title": "Coordinate plane: graphing points and naming quadrants | Negative numbers | 6th grade | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "Jeh5vudjmLI"
+  },
+  "math-8-scientific-notation": {
+    "channel": "Khan Academy",
+    "query": "khan academy scientific notation intro",
+    "title": "Introduction to scientific notation | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "trdbaV4TaAo"
+  },
+  "math-8-slope-intercept-form": {
+    "channel": "Khan Academy",
+    "query": "khan academy slope intercept form y equals mx plus b",
+    "title": "Slope-intercept form | Algebra I | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "IL3UCuXrUzE"
+  },
+  "math-8-solve-two-step-equations": {
+    "channel": "Khan Academy",
+    "query": "khan academy solving two step equations",
+    "title": "Solving two-step equations | Linear equations | Algebra I | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "_y_Q3_B2Vh8"
+  },
+  "math-8-the-pythagorean-theorem": {
+    "channel": "Khan Academy",
+    "query": "khan academy pythagorean theorem intro",
+    "title": "The Pythagorean theorem intro | Right triangles and trigonometry | Geometry | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "AA6RfgP-AHU"
+  },
+  "math-8-volume-of-prisms": {
+    "channel": "Khan Academy",
+    "query": "khan academy volume of rectangular prisms",
+    "title": "Volume of a rectangular prism or box examples | Measurement | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "I9efKVtLCf4"
   },
   "math-9-arithmetic-and-geometric-sequences": {
-    "videoId": "pXo0bG4iAyg",
-    "title": "Introduction to geometric sequences | Sequences, series and induction | Precalculus | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy arithmetic and geometric sequences patterns",
-    "verifiedAt": "2026-09-18"
+    "title": "Introduction to geometric sequences | Sequences, series and induction | Precalculus | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "pXo0bG4iAyg"
+  },
+  "math-9-evaluate-algebraic-expressions": {
+    "channel": "Khan Academy",
+    "query": "khan academy evaluating algebraic expressions substitution",
+    "title": "How to test solutions to equations using substitution | 6th grade | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "U9OfQd8poTQ"
+  },
+  "math-9-factor-quadratics": {
+    "channel": "Khan Academy",
+    "query": "khan academy factoring quadratic expressions",
+    "title": "Example 2: Factoring quadratics by grouping | Algebra I | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "u1SAo2GiX8A"
+  },
+  "math-9-properties-of-exponents": {
+    "channel": "Khan Academy",
+    "query": "khan academy intro to exponents powers",
+    "title": "Introduction to exponents | Pre-Algebra | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "XZRQhkii0h0"
+  },
+  "math-9-slope-and-rate-of-change": {
+    "channel": "Khan Academy",
+    "query": "khan academy finding slope from two points",
+    "title": "Slope from two ordered pairs example 1 | Algebra I | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "WkspBxrzuZo"
+  },
+  "math-9-slope-intercept-form": {
+    "channel": "Khan Academy",
+    "query": "khan academy slope intercept form y equals mx plus b",
+    "title": "Slope-intercept form | Algebra I | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "IL3UCuXrUzE"
+  },
+  "math-9-solve-inequalities": {
+    "channel": "Khan Academy",
+    "query": "khan academy solving one step inequalities",
+    "title": "One-step inequality involving addition | Linear inequalities | Algebra I | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "17a443nL7Qw"
+  },
+  "math-9-solve-multi-step-equations": {
+    "channel": "Khan Academy",
+    "query": "khan academy solving two step equations",
+    "title": "Solving two-step equations | Linear equations | Algebra I | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "_y_Q3_B2Vh8"
+  },
+  "math-9-systems-of-equations": {
+    "channel": "Khan Academy",
+    "query": "khan academy solving systems of equations elimination",
+    "title": "Solving systems of equations by elimination | Algebra Basics | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "vA-55wZtLeE"
+  },
+  "math-9-the-pythagorean-theorem": {
+    "channel": "Khan Academy",
+    "query": "khan academy pythagorean theorem intro",
+    "title": "The Pythagorean theorem intro | Right triangles and trigonometry | Geometry | Khan Academy",
+    "verifiedAt": "2026-09-18",
+    "videoId": "AA6RfgP-AHU"
   }
 }

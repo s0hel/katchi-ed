@@ -24,6 +24,8 @@ interface VideoEntry {
   channel: string;
   /** the query that found it, kept so a maintainer can tune bad matches */
   query: string;
+  /** share of query keywords present in the title, 0..1 */
+  relevance?: number;
   verifiedAt: string;
 }
 
@@ -76,27 +78,75 @@ const QUERY_HINTS: Record<string, string> = {
   "mean-median-mode": "mean median mode and range",
   probability: "basic probability intro",
   "word-problem-rate": "rate distance time word problems",
-  "synonyms-antonyms": "synonyms and antonyms",
+  "synonyms-antonyms": "shades of meaning synonyms word choice vocabulary",
   "parts-of-speech": "parts of speech nouns verbs adjectives",
   homophones: "commonly confused words its it's there their",
   "subject-verb-agreement": "subject verb agreement grammar",
   punctuation: "commas semicolons and colons punctuation",
-  capitalization: "capitalization rules grammar",
+  capitalization: "capitalization proper nouns beginning of a sentence",
   "sentence-type": "sentence fragments and run on sentences",
   "verb-tense": "verb tenses grammar",
   "prefix-suffix": "prefixes and suffixes word parts",
   "context-clues": "using context clues to determine word meaning",
   "main-idea": "finding the main idea of a passage reading",
   "figurative-language": "figurative language simile metaphor personification",
-  analogies: "word analogies vocabulary",
+  analogies: "relationships between words analogy vocabulary",
   plurals: "plural nouns irregular plurals",
   "pronoun-antecedent": "pronoun antecedent agreement",
 };
+
+/**
+ * Topics with no good lesson on the channel. Khan Academy teaches vocabulary
+ * through context and word relationships rather than synonym/antonym or
+ * analogy drills, so searches return confidently-wrong matches. These skills
+ * fall back to the in-app "Search Khan Academy" link instead.
+ */
+const NO_GOOD_MATCH = new Set(["synonyms-antonyms", "analogies"]);
 
 function queryFor(skill: Skill): string {
   const hint = QUERY_HINTS[skill.generator] ?? skill.name;
   return `khan academy ${hint}`;
 }
+
+/** Words too common to signal that a video is actually about the topic. */
+const STOPWORDS = new Set([
+  "khan", "academy", "the", "a", "an", "and", "or", "of", "to", "in", "on", "for", "with",
+  "intro", "introduction", "basic", "basics", "how", "what", "is", "are", "using", "use",
+  "math", "maths", "grade", "video", "lesson", "example", "examples", "problem", "problems",
+]);
+
+function tokens(text: string): Set<string> {
+  return new Set(
+    text
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, " ")
+      .split(/\s+/)
+      .filter((w) => w.length > 2 && !STOPWORDS.has(w)),
+  );
+}
+
+/**
+ * Share of the query's meaningful words that appear in the video title.
+ *
+ * Used to RANK candidates, not to reject them. As a cutoff it was far too
+ * blunt: "counting objects" scores 0.25 against "Counting dogs, mice, and
+ * cookies" and "prefixes and suffixes" scores 0.00 against "Latin and Greek
+ * roots and affixes" -- both excellent matches. Topics whose vocabulary simply
+ * differs from Khan Academy's titles get a QUERY_HINTS entry instead.
+ */
+function relevance(query: string, title: string): number {
+  const wanted = tokens(query);
+  if (!wanted.size) return 0;
+  const have = tokens(title);
+  let hits = 0;
+  for (const word of wanted) {
+    // count a stem match too, so "fractions" matches "fraction"
+    if (have.has(word) || [...have].some((h) => h.startsWith(word) || word.startsWith(h))) hits++;
+  }
+  return hits / wanted.size;
+}
+
+const MIN_RELEVANCE = 0;
 
 interface SearchHit {
   videoId: string;
@@ -185,6 +235,7 @@ async function main() {
   // Skills sharing a generator+params can share a video; harvest once per query.
   const byQuery = new Map<string, Skill[]>();
   for (const skill of SKILLS) {
+    if (NO_GOOD_MATCH.has(skill.generator)) continue;
     const q = queryFor(skill);
     byQuery.set(q, [...(byQuery.get(q) ?? []), skill]);
   }
@@ -196,12 +247,24 @@ async function main() {
 
   for (const [query, skills] of queries) {
     try {
-      const hits = (await search(query)).filter((h) => h.owner === CHANNEL);
+      const hits = (await search(query))
+        .filter((h) => h.owner === CHANNEL)
+        .map((h) => ({ ...h, score: relevance(query, h.title) }))
+        .filter((h) => h.score >= MIN_RELEVANCE)
+        .sort((a, b) => b.score - a.score);
+
       let entry: VideoEntry | null = null;
       for (const hit of hits.slice(0, 4)) {
         const ok = await verify(hit.videoId);
         if (ok) {
-          entry = { videoId: hit.videoId, title: ok.title, channel: ok.channel, query, verifiedAt: new Date().toISOString().slice(0, 10) };
+          entry = {
+            videoId: hit.videoId,
+            title: ok.title,
+            channel: ok.channel,
+            query,
+            relevance: Number(hit.score.toFixed(2)),
+            verifiedAt: new Date().toISOString().slice(0, 10),
+          };
           break;
         }
         await sleep(400);
@@ -209,7 +272,7 @@ async function main() {
       if (entry) {
         for (const s of skills) catalog[s.id] = entry;
         found++;
-        console.log(`  ok   ${skills[0].generator.padEnd(26)} ${entry.title.slice(0, 58)}`);
+        console.log(`  ok   ${skills[0].generator.padEnd(26)} [${entry.relevance}] ${entry.title.slice(0, 52)}`);
       } else {
         failed++;
         console.log(`  MISS ${skills[0].generator.padEnd(26)} (${query})`);
