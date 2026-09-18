@@ -1,26 +1,124 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ---------------------------------------------------------------- tokens */
+
+@theme {
+  --color-brand-50:  oklch(0.97 0.02 195);
+  --color-brand-100: oklch(0.94 0.045 195);
+  --color-brand-200: oklch(0.88 0.075 195);
+  --color-brand-300: oklch(0.80 0.105 193);
+  --color-brand-400: oklch(0.72 0.125 191);
+  --color-brand-500: oklch(0.64 0.128 189);
+  --color-brand-600: oklch(0.55 0.115 189);
+  --color-brand-700: oklch(0.46 0.095 190);
+  --color-brand-800: oklch(0.38 0.075 191);
+  --color-brand-900: oklch(0.30 0.055 192);
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:root {
+  --kx-bg: oklch(0.99 0.004 210);
+  --kx-surface: oklch(1 0 0);
+  --kx-surface-2: oklch(0.975 0.005 210);
+  --kx-border: oklch(0.91 0.008 210);
+  --kx-text: oklch(0.24 0.02 250);
+  --kx-muted: oklch(0.52 0.02 250);
+  --kx-fig-fill: oklch(0.94 0.045 195 / 0.5);
+  --kx-fig-stroke: oklch(0.46 0.095 190);
+  --kx-shadow: 0 1px 2px oklch(0.2 0.02 250 / 0.06), 0 8px 24px oklch(0.2 0.02 250 / 0.06);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --kx-bg: oklch(0.17 0.015 250);
+    --kx-surface: oklch(0.21 0.018 250);
+    --kx-surface-2: oklch(0.25 0.02 250);
+    --kx-border: oklch(0.32 0.02 250);
+    --kx-text: oklch(0.95 0.01 250);
+    --kx-muted: oklch(0.70 0.02 250);
+    --kx-fig-fill: oklch(0.38 0.075 191 / 0.45);
+    --kx-fig-stroke: oklch(0.80 0.105 193);
+    --kx-shadow: 0 1px 2px oklch(0 0 0 / 0.3), 0 8px 24px oklch(0 0 0 / 0.28);
   }
 }
 
+@theme inline {
+  --color-bg: var(--kx-bg);
+  --color-surface: var(--kx-surface);
+  --color-surface-2: var(--kx-surface-2);
+  --color-line: var(--kx-border);
+  --color-ink: var(--kx-text);
+  --color-muted: var(--kx-muted);
+}
+
+/* ----------------------------------------------------------------- base */
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--kx-bg);
+  color: var(--kx-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/*
+ * Tailwind v4 needs these declared with @utility (not a plain class in
+ * @layer components) so that one can @apply another -- kx-btn-primary builds
+ * on kx-btn, and both stay usable with variants.
+ */
+
+@utility kx-card {
+  background: var(--kx-surface);
+  border: 1px solid var(--kx-border);
+  border-radius: 0.875rem;
+  box-shadow: var(--kx-shadow);
+}
+
+@utility kx-btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition
+         focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500
+         disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+@utility kx-btn-primary {
+  @apply kx-btn bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800;
+}
+
+@utility kx-btn-ghost {
+  @apply kx-btn border text-[var(--kx-text)] hover:bg-[var(--kx-surface-2)];
+  border-color: var(--kx-border);
+}
+
+@utility kx-input {
+  @apply w-full rounded-lg border bg-[var(--kx-surface)] px-4 py-3 text-lg text-[var(--kx-text)]
+         outline-none transition placeholder:text-[var(--kx-muted)]
+         focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15;
+  border-color: var(--kx-border);
+}
+
+@utility kx-chip {
+  @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold;
+}
+
+/* Inline SVG figures rendered by question generators. */
+.kx-figure svg { max-width: 100%; height: auto; }
+.kx-fig-label {
+  font: 600 13px var(--font-sans);
+  fill: var(--kx-text);
+}
+
+/* Question tables (function tables, data sets). */
+.kx-stem table {
+  @apply my-3 border-collapse overflow-hidden rounded-lg text-base;
+  border: 1px solid var(--kx-border);
+}
+.kx-stem th,
+.kx-stem td {
+  @apply px-4 py-2 text-center;
+  border: 1px solid var(--kx-border);
+}
+.kx-stem th { background: var(--kx-surface-2); font-weight: 600; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
