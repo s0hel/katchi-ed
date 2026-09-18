@@ -143,3 +143,50 @@ describe("rng", () => {
     expect(new Set(a).size).toBeGreaterThan(5);
   });
 });
+
+describe("grade appropriateness", () => {
+  const seeds = Array.from({ length: 60 }, (_, i) => i * 977 + 3);
+
+  it("keeps the grade 5 coordinate skill in the first quadrant", () => {
+    // 5.G.A.1-2 covers the first quadrant only; negative coordinates are grade 6.
+    const skill = SKILLS.find((s) => s.id === "math-5-points-on-a-coordinate-grid")!;
+    expect(skill).toBeDefined();
+    const leaks: string[] = [];
+    for (let level = 1; level <= (skill.levels ?? 4); level++) {
+      for (const seed of seeds) {
+        const q = generateQuestion(skill, level, seed);
+        const text = `${q.stem} ${q.answer} ${q.figure ?? ""}`;
+        if (/-\d/.test(text)) leaks.push(`L${level} seed ${seed}: ${q.stem.slice(0, 50)} -> ${q.answer}`);
+      }
+    }
+    expect(leaks.slice(0, 5)).toEqual([]);
+  });
+
+  it("ramps difficulty instead of ignoring level", () => {
+    // Several generators once took `level` and did nothing with it, so every
+    // tier served the same question and the SmartScore ramp did nothing.
+    const skill = SKILLS.find((s) => s.id === "math-6-quadrants-of-the-coordinate-plane")!;
+    const shapes = new Set<string>();
+    for (let level = 1; level <= 4; level++) {
+      const q = generateQuestion(skill, level, 555);
+      shapes.add(`${q.format.kind}:${q.instructions}:${q.figure ? "fig" : "nofig"}`);
+    }
+    expect(shapes.size).toBeGreaterThan(2);
+  });
+
+  it("shows a figure whenever a question refers to a plotted point", () => {
+    const missing: string[] = [];
+    for (const skill of SKILLS) {
+      for (let level = 1; level <= (skill.levels ?? 4); level++) {
+        for (const seed of seeds.slice(0, 12)) {
+          const q = generateQuestion(skill, level, seed);
+          // "point A" / "point P" phrasing only makes sense with a picture
+          if (/\bpoint \*\*[A-Z]\*\*/.test(q.stem) && !q.figure) {
+            missing.push(`${skill.id} L${level} seed ${seed}`);
+          }
+        }
+      }
+    }
+    expect(missing.slice(0, 5)).toEqual([]);
+  });
+});

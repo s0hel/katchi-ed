@@ -106,6 +106,18 @@ body {
   font: 600 13px var(--font-sans);
   fill: var(--kx-text);
 }
+.kx-fig-tick {
+  font: 500 10px var(--font-sans);
+  fill: var(--kx-muted);
+}
+.kx-fig-grid line {
+  stroke: var(--kx-border);
+  stroke-width: 1;
+}
+.kx-fig-axis line {
+  stroke: var(--kx-muted);
+  stroke-width: 1.75;
+}
 
 /* Question tables (function tables, data sets). */
 .kx-stem table {

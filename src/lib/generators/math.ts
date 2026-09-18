@@ -774,18 +774,90 @@ const angles: GeneratorFn = (rng, level) => {
   });
 };
 
-const coordinatePlane: GeneratorFn = (rng, level) => {
+const coordinatePlane: GeneratorFn = (rng, level, params) => {
+  const firstQuadrantOnly = params["firstQuadrant"] === true;
+  const label = rng.pick(["A", "B", "P", "Q", "M", "T"]);
+
+  // Grade 5 (5.G.A.1-2) stays in the first quadrant: plotting and reading
+  // points. Quadrant naming needs negative coordinates, which is grade 6.
+  if (firstQuadrantOnly) {
+    const x = rng.int(1, 9);
+    const y = rng.int(1, 9);
+    if (level <= 2) {
+      return {
+        instructions: `Read the coordinates of point ${label}.`,
+        stem: `What are the coordinates of point **${label}**?`,
+        format: { kind: "pair", labels: ["x =", "y ="] },
+        answer: `${x},${y}`,
+        explanation: `Count ${x} across from the origin, then ${y} up. Point ${label} is at (${x}, ${y}).`,
+        hint: "Read across the x-axis first, then up the y-axis.",
+        figure: gridFigure({ x, y, label, min: 0, max: 10 }),
+      };
+    }
+    return {
+      instructions: "Find the coordinates.",
+      stem: `Start at the origin. Move **${x} units right**, then **${y} units up**.\n\nWhere do you land?`,
+      format: { kind: "pair", labels: ["x =", "y ="] },
+      answer: `${x},${y}`,
+      explanation: `Right is the x-direction and up is the y-direction, so you land at (${x}, ${y}).`,
+      hint: "The first number is how far across; the second is how far up.",
+    };
+  }
+
   const x = rng.intExcept(-6, 6, [0]);
   const y = rng.intExcept(-6, 6, [0]);
-  void level;
-  const quadrant = x > 0 ? (y > 0 ? "I" : "IV") : y > 0 ? "II" : "III";
+  const quadrantOf = (px: number, py: number) =>
+    px > 0 ? (py > 0 ? "I" : "IV") : py > 0 ? "II" : "III";
+  const quadrant = quadrantOf(x, y);
+
+  // Levels 1-2 show the grid, so the learner can see what a quadrant *is*
+  // before being asked to reason from the signs alone at levels 3-4.
+  if (level <= 1) {
+    return {
+      instructions: `Read the coordinates of point ${label}.`,
+      stem: `What are the coordinates of point **${label}**?`,
+      format: { kind: "pair", labels: ["x =", "y ="] },
+      answer: `${x},${y}`,
+      explanation: `Point ${label} sits ${Math.abs(x)} ${x > 0 ? "right of" : "left of"} the origin and ${Math.abs(y)} ${y > 0 ? "above" : "below"} it, so it is at (${x}, ${y}).`,
+      hint: "Left and down are negative directions.",
+      figure: gridFigure({ x, y, label, min: -6, max: 6 }),
+    };
+  }
+
+  if (level === 2) {
+    return choice(rng, {
+      instructions: "Identify the quadrant.",
+      stem: `In which quadrant does point **${label}** lie?`,
+      answer: quadrant,
+      distractors: ["I", "II", "III", "IV"],
+      explanation: `Point ${label} is at (${x}, ${y}). Its x is ${x > 0 ? "positive" : "negative"} and its y is ${y > 0 ? "positive" : "negative"}, which is Quadrant ${quadrant}.`,
+      hint: "Quadrants are numbered counterclockwise from the top right.",
+      figure: gridFigure({ x, y, label, min: -6, max: 6 }),
+    });
+  }
+
+  if (level === 3) {
+    return choice(rng, {
+      instructions: "Identify the quadrant without a grid.",
+      stem: `In which quadrant does the point **(${x}, ${y})** lie?`,
+      answer: quadrant,
+      distractors: ["I", "II", "III", "IV"],
+      explanation: `x is ${x > 0 ? "positive" : "negative"} and y is ${y > 0 ? "positive" : "negative"}, which is Quadrant ${quadrant}. Quadrants run counterclockwise: I is (+,+), II is (-,+), III is (-,-), IV is (+,-).`,
+      hint: "You only need the signs, not the sizes.",
+    });
+  }
+
+  // Level 4: apply a transformation, then name the quadrant.
+  const axis = rng.pick(["x", "y"]);
+  const image: [number, number] = axis === "x" ? [x, -y] : [-x, y];
+  const imageQuadrant = quadrantOf(image[0], image[1]);
   return choice(rng, {
-    instructions: "Identify the quadrant.",
-    stem: `In which quadrant does the point **(${x}, ${y})** lie?`,
-    answer: quadrant,
+    instructions: "Reflect the point, then identify the quadrant.",
+    stem: `The point **(${x}, ${y})** is reflected across the **${axis}-axis**.\n\nIn which quadrant does the image lie?`,
+    answer: imageQuadrant,
     distractors: ["I", "II", "III", "IV"],
-    explanation: `x is ${x > 0 ? "positive" : "negative"} and y is ${y > 0 ? "positive" : "negative"}, which is Quadrant ${quadrant}.`,
-    hint: "Quadrants are numbered counterclockwise from the top right.",
+    explanation: `Reflecting across the ${axis}-axis flips the sign of ${axis === "x" ? "y" : "x"}, moving (${x}, ${y}) to (${image[0]}, ${image[1]}). That is Quadrant ${imageQuadrant}.`,
+    hint: `A reflection across the ${axis}-axis changes only the ${axis === "x" ? "y" : "x"}-coordinate.`,
   });
 };
 
@@ -902,6 +974,52 @@ function circleFigure(r: number): string {
     <line x1="${c}" y1="${c}" x2="${c + R}" y2="${c}" stroke="var(--kx-fig-stroke)" stroke-width="1.5"/>
     <circle cx="${c}" cy="${c}" r="2.5" fill="var(--kx-fig-stroke)"/>
     <text x="${c + R / 2}" y="${c - 8}" text-anchor="middle" class="kx-fig-label">${r} cm</text>
+  </svg>`;
+}
+
+/**
+ * Coordinate grid with one plotted point. Used for the levels that ask a
+ * learner to *read* a position rather than reason about signs -- those
+ * questions genuinely need the picture.
+ */
+function gridFigure({
+  x, y, label, min, max,
+}: { x: number; y: number; label: string; min: number; max: number }): string {
+  const step = 20;
+  const pad = 22;
+  const span = max - min;
+  const size = span * step;
+  const box = size + pad * 2;
+  const sx = (v: number) => pad + (v - min) * step;
+  const sy = (v: number) => pad + (max - v) * step;
+
+  const grid: string[] = [];
+  for (let v = min; v <= max; v++) {
+    grid.push(`<line x1="${sx(v)}" y1="${pad}" x2="${sx(v)}" y2="${pad + size}"/>`);
+    grid.push(`<line x1="${pad}" y1="${sy(v)}" x2="${pad + size}" y2="${sy(v)}"/>`);
+  }
+
+  // Axes sit at zero when it is on screen, otherwise along the edges.
+  const axisY = sy(Math.max(min, Math.min(max, 0)));
+  const axisX = sx(Math.max(min, Math.min(max, 0)));
+
+  const ticks: string[] = [];
+  for (let v = min; v <= max; v += 2) {
+    if (v === 0) continue;
+    ticks.push(`<text x="${sx(v)}" y="${axisY + 14}" text-anchor="middle" class="kx-fig-tick">${v}</text>`);
+    ticks.push(`<text x="${axisX - 7}" y="${sy(v) + 4}" text-anchor="end" class="kx-fig-tick">${v}</text>`);
+  }
+
+  return `<svg viewBox="0 0 ${box} ${box}" role="img" aria-label="Coordinate grid with point ${label} plotted at ${x}, ${y}">
+    <g class="kx-fig-grid">${grid.join("")}</g>
+    <g class="kx-fig-axis">
+      <line x1="${pad}" y1="${axisY}" x2="${pad + size}" y2="${axisY}"/>
+      <line x1="${axisX}" y1="${pad}" x2="${axisX}" y2="${pad + size}"/>
+    </g>
+    <text x="${axisX - 7}" y="${axisY + 14}" text-anchor="end" class="kx-fig-tick">0</text>
+    ${ticks.join("")}
+    <circle cx="${sx(x)}" cy="${sy(y)}" r="5" fill="var(--kx-fig-stroke)"/>
+    <text x="${sx(x) + 9}" y="${sy(y) - 8}" class="kx-fig-label">${label}</text>
   </svg>`;
 }
 

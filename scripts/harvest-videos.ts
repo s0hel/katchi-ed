@@ -74,7 +74,7 @@ const QUERY_HINTS: Record<string, string> = {
   volume: "volume of rectangular prisms",
   pythagorean: "pythagorean theorem intro",
   angles: "complementary and supplementary angles",
-  "coordinate-plane": "coordinate plane quadrants points",
+  "coordinate-plane": "coordinate plane quadrants negative numbers",
   "mean-median-mode": "mean median mode and range",
   probability: "basic probability intro",
   "word-problem-rate": "rate distance time word problems",
@@ -103,8 +103,18 @@ const QUERY_HINTS: Record<string, string> = {
  */
 const NO_GOOD_MATCH = new Set(["synonyms-antonyms", "analogies"]);
 
+/**
+ * Per-skill overrides, for the cases where two skills share a generator but
+ * need different lessons -- grade 5 stays in the first quadrant while grade 6
+ * introduces negative coordinates, so they should not share a video.
+ * Checked before the generator-level hints.
+ */
+const SKILL_HINTS: Record<string, string> = {
+  "math-5-points-on-a-coordinate-grid": "plotting points on the coordinate plane first quadrant",
+};
+
 function queryFor(skill: Skill): string {
-  const hint = QUERY_HINTS[skill.generator] ?? skill.name;
+  const hint = SKILL_HINTS[skill.id] ?? QUERY_HINTS[skill.generator] ?? skill.name;
   return `khan academy ${hint}`;
 }
 
@@ -147,6 +157,34 @@ function relevance(query: string, title: string): number {
 }
 
 const MIN_RELEVANCE = 0;
+
+/**
+ * Khan Academy states the grade in most titles ("... | 5th grade | Khan
+ * Academy"), which is a far stronger signal than keyword overlap. A grade-5
+ * first-quadrant skill and a grade-6 quadrants skill search alike but must not
+ * share a video, so titles that declare a grade are matched against the
+ * skill's own grade.
+ */
+function declaredGrade(title: string): number | null {
+  const t = title.toLowerCase();
+  const nth = t.match(/\b(\d{1,2})(?:st|nd|rd|th)\s+grade\b/);
+  if (nth) {
+    const g = Number(nth[1]);
+    if (g >= 1 && g <= 12) return g;
+  }
+  if (/\bkindergarten\b|\bearly math\b/.test(t)) return 0;
+  if (/\balgebra\s*(i\b|1\b)|\bhigh school\b/.test(t)) return 9;
+  if (/\bpre-?algebra\b/.test(t)) return 7;
+  return null;
+}
+
+/** Keyword relevance, adjusted by how well the title's stated grade matches. */
+function scoreFor(query: string, title: string, grade: number): number {
+  const base = relevance(query, title);
+  const declared = declaredGrade(title);
+  if (declared === null) return base;
+  return base + (declared === grade ? 0.5 : -0.12 * Math.abs(declared - grade));
+}
 
 interface SearchHit {
   videoId: string;
@@ -232,30 +270,39 @@ async function main() {
   const catalog: Record<string, VideoEntry> =
     !refresh && existsSync(OUT) ? JSON.parse(readFileSync(OUT, "utf8")) : {};
 
-  // Skills sharing a generator+params can share a video; harvest once per query.
-  const byQuery = new Map<string, Skill[]>();
-  for (const skill of SKILLS) {
-    if (NO_GOOD_MATCH.has(skill.generator)) continue;
-    const q = queryFor(skill);
-    byQuery.set(q, [...(byQuery.get(q) ?? []), skill]);
-  }
+  const todo = SKILLS.filter((s) => !NO_GOOD_MATCH.has(s.generator) && (refresh || !catalog[s.id]));
+  console.log(`${todo.length} skills to harvest (of ${SKILLS.length})\n`);
 
+  // One search per distinct query, but the pick is per skill: two skills can
+  // share a query and still land on different grade-appropriate videos.
+  const searchCache = new Map<string, SearchHit[]>();
+  const verifyCache = new Map<string, { title: string; channel: string } | null>();
   let found = 0;
   let failed = 0;
-  const queries = [...byQuery.entries()].filter(([, skills]) => refresh || skills.some((s) => !catalog[s.id]));
-  console.log(`${queries.length} queries to run for ${SKILLS.length} skills\n`);
 
-  for (const [query, skills] of queries) {
+  for (const skill of todo) {
+    const query = queryFor(skill);
     try {
-      const hits = (await search(query))
-        .filter((h) => h.owner === CHANNEL)
-        .map((h) => ({ ...h, score: relevance(query, h.title) }))
+      let hits = searchCache.get(query);
+      if (!hits) {
+        hits = (await search(query)).filter((h) => h.owner === CHANNEL);
+        searchCache.set(query, hits);
+        await sleep(2500 + Math.random() * 1500);
+      }
+
+      const ranked = hits
+        .map((h) => ({ ...h, score: scoreFor(query, h.title, skill.grade) }))
         .filter((h) => h.score >= MIN_RELEVANCE)
         .sort((a, b) => b.score - a.score);
 
       let entry: VideoEntry | null = null;
-      for (const hit of hits.slice(0, 4)) {
-        const ok = await verify(hit.videoId);
+      for (const hit of ranked.slice(0, 4)) {
+        let ok = verifyCache.get(hit.videoId);
+        if (ok === undefined) {
+          ok = await verify(hit.videoId);
+          verifyCache.set(hit.videoId, ok);
+          await sleep(400);
+        }
         if (ok) {
           entry = {
             videoId: hit.videoId,
@@ -267,27 +314,26 @@ async function main() {
           };
           break;
         }
-        await sleep(400);
       }
+
       if (entry) {
-        for (const s of skills) catalog[s.id] = entry;
+        catalog[skill.id] = entry;
         found++;
-        console.log(`  ok   ${skills[0].generator.padEnd(26)} [${entry.relevance}] ${entry.title.slice(0, 52)}`);
+        console.log(`  ok   ${skill.id.padEnd(44)} [${entry.relevance}] ${entry.title.slice(0, 44)}`);
       } else {
         failed++;
-        console.log(`  MISS ${skills[0].generator.padEnd(26)} (${query})`);
+        console.log(`  MISS ${skill.id.padEnd(44)} (${query})`);
       }
     } catch (err) {
       failed++;
-      console.log(`  ERR  ${skills[0].generator.padEnd(26)} ${(err as Error).message}`);
+      console.log(`  ERR  ${skill.id.padEnd(44)} ${(err as Error).message}`);
     }
-    await sleep(2500 + Math.random() * 1500);
   }
 
   const sorted = Object.fromEntries(Object.entries(catalog).sort(([a], [b]) => a.localeCompare(b)));
   writeFileSync(OUT, JSON.stringify(sorted, null, 2) + "\n");
   const covered = SKILLS.filter((s) => sorted[s.id]).length;
-  console.log(`\nwrote ${OUT}: ${covered}/${SKILLS.length} skills covered (${found} queries ok, ${failed} failed)`);
+  console.log(`\nwrote ${OUT}: ${covered}/${SKILLS.length} skills covered (${found} ok, ${failed} failed)`);
 }
 
 main();

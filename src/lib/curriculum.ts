@@ -99,7 +99,7 @@ const MATH_BY_GRADE: Record<number, Draft[]> = {
     m("Fractions, decimals, and percents", "Fractions & Decimals", "decimal-fraction-percent"),
     m("Evaluate expressions", "Algebra & Patterns", "evaluate-expression"),
     m("Volume of rectangular prisms", "Geometry & Measurement", "volume"),
-    m("Coordinate plane", "Geometry & Measurement", "coordinate-plane"),
+    m("Points on a coordinate grid", "Geometry & Measurement", "coordinate-plane", { firstQuadrant: true }),
     m("Median and range", "Data & Probability", "mean-median-mode", { stat: "median" }),
   ],
   6: [
@@ -112,6 +112,7 @@ const MATH_BY_GRADE: Record<number, Draft[]> = {
     m("One-step equations", "Algebra & Patterns", "one-step-equation"),
     m("Write and evaluate expressions", "Algebra & Patterns", "evaluate-expression"),
     m("Area of circles", "Geometry & Measurement", "area-perimeter", { shape: "circle", measure: "area" }),
+    m("Quadrants of the coordinate plane", "Geometry & Measurement", "coordinate-plane"),
     m("Mean, median, and range", "Data & Probability", "mean-median-mode"),
     m("Probability of a single event", "Data & Probability", "probability"),
   ],
