@@ -1,8 +1,9 @@
 import { RichText } from "./rich-text";
-import type { PlannedItem, WorksheetPlan } from "@/lib/worksheet";
+import type { WorksheetPlan } from "@/lib/worksheet";
+import type { FilledItem } from "@/lib/worksheet-questions";
 import { usesPictureIcons } from "@/lib/generators/pictures";
 import { PICTURE_CREDIT } from "@/lib/generators/pictures";
-import type { AnswerFormat, Question } from "@/lib/types";
+import type { AnswerFormat } from "@/lib/types";
 
 /**
  * The printed sheet.
@@ -13,9 +14,8 @@ import type { AnswerFormat, Question } from "@/lib/types";
  * the RSC payload and hand the whole worksheet away.
  */
 
-export interface SheetItem extends PlannedItem {
-  question: Question;
-}
+/** Named here for the sheet's own props; produced by `fillWorksheet`. */
+export type SheetItem = FilledItem;
 
 const CHOICE_LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H"];
 

@@ -15,6 +15,7 @@ import {
   specToQuery,
   type WorksheetSpec,
 } from "../worksheet";
+import { fillWorksheet, identity } from "../worksheet-questions";
 
 function spec(overrides: Partial<WorksheetSpec> = {}): WorksheetSpec {
   return {
@@ -147,8 +148,11 @@ describe("worksheet seeds stay out of the practice seed space", () => {
    * question they were being graded on straight off a crafted worksheet URL.
    */
   it("derives every item seed at or above the worksheet base", () => {
+    // Well past the largest sheet: a repeated question is re-derived from an
+    // index thousands past its own, and those seeds have to stay in the
+    // worksheet space too.
     for (const seed of [0, 1, 999, 2 ** 30, WORKSHEET_SEED_BASE - 1]) {
-      for (let i = 0; i < 64; i++) {
+      for (let i = 0; i < 9000; i++) {
         const s = itemSeed(seed, i);
         expect(s).toBeGreaterThanOrEqual(WORKSHEET_SEED_BASE);
         expect(s).toBeLessThan(2 ** 32);
@@ -172,6 +176,43 @@ describe("worksheet seeds stay out of the practice seed space", () => {
   it("varies item seeds within a sheet", () => {
     const seeds = planWorksheet(spec({ count: MAX_QUESTIONS })).items.map((i) => i.seed);
     expect(new Set(seeds).size).toBe(seeds.length);
+  });
+});
+
+describe("filling a sheet with questions", () => {
+  /**
+   * A skill backed by a content bank picks an item rather than inventing one,
+   * so the same sentence can come up twice on one sheet. On screen that reads
+   * as chance; on paper, next to itself, it reads as a mistake.
+   */
+  it("does not ask the same question twice on one sheet", () => {
+    const banked = ["cogat-1-sentence-completion", "cogat-1-picture-analogies", "ela-2-synonyms"];
+    for (const skillId of banked) {
+      const skill = SKILLS.find((s) => s.id === skillId);
+      expect(skill, skillId).toBeDefined();
+      for (const seed of [1, 7, 4242, 99999]) {
+        const plan = planWorksheet(spec({ subject: skill!.subject, grade: skill!.grade, skillIds: [skillId], count: 8, seed }));
+        const asked = fillWorksheet(plan).map((i) => identity(i.question));
+        expect(new Set(asked).size, `${skillId} seed ${seed}`).toBe(asked.length);
+      }
+    }
+  });
+
+  it("keeps a filled sheet reproducible from its seed", () => {
+    // The de-duplication retries deterministically, so the sheet is still a
+    // pure function of its URL.
+    const plan = planWorksheet(spec({ subject: "cogat", grade: 1, skillIds: ["cogat-1-sentence-completion"], count: 8, seed: 31337 }));
+    const once = fillWorksheet(plan).map((i) => `${i.seed}:${identity(i.question)}`);
+    const twice = fillWorksheet(planWorksheet(plan.spec)).map((i) => `${i.seed}:${identity(i.question)}`);
+    expect(once).toEqual(twice);
+  });
+
+  it("keeps every seed it lands on inside the worksheet space", () => {
+    const plan = planWorksheet(spec({ subject: "cogat", grade: 1, skillIds: ["cogat-1-sentence-completion"], count: 12, seed: 5 }));
+    for (const item of fillWorksheet(plan)) {
+      expect(item.seed).toBeGreaterThanOrEqual(WORKSHEET_SEED_BASE);
+      expect(item.seed).toBeLessThan(2 ** 32);
+    }
   });
 });
 

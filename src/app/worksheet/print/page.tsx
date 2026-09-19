@@ -2,8 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { PrintButton } from "@/components/print-button";
-import { WorksheetSheet, type SheetItem } from "@/components/worksheet-sheet";
-import { generateQuestion } from "@/lib/generators";
+import { WorksheetSheet } from "@/components/worksheet-sheet";
+import { fillWorksheet } from "@/lib/worksheet-questions";
 import {
   parseSpec,
   planWorksheet,
@@ -38,10 +38,7 @@ export default async function WorksheetPrintPage({ searchParams }: Props) {
   if (rawQuery(params) !== canonical) redirect(`/worksheet/print?${canonical}`);
 
   const plan = planWorksheet(spec);
-  const items: SheetItem[] = plan.items.map((item) => ({
-    ...item,
-    question: generateQuestion(item.skill, item.level, item.seed),
-  }));
+  const items = fillWorksheet(plan);
 
   return (
     <div className="py-4">
