@@ -34,6 +34,21 @@ export function text(q: Omit<GeneratedQuestion, "format"> & { placeholder?: stri
   return { ...rest, format: { kind: "text", placeholder } };
 }
 
+/**
+ * Operand range for a difficulty level.
+ *
+ * Widening a range without raising its floor lets a top-level question come
+ * out easier than a bottom-level one (level 4 was serving 2^3 while level 1
+ * served 4^3). This lifts the floor along with the ceiling, so each tier
+ * actually leaves the previous one behind.
+ */
+export function band(level: number, base: number, growth: number, lowFloor = 2): [number, number] {
+  const max = base + (level - 1) * growth;
+  if (level <= 1) return [lowFloor, max];
+  const min = Math.max(lowFloor, Math.round(max * (0.15 + 0.1 * level)));
+  return [Math.min(min, max - 1), max];
+}
+
 export function gcd(a: number, b: number): number {
   a = Math.abs(a);
   b = Math.abs(b);

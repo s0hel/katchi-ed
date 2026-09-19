@@ -1,5 +1,5 @@
 import {
-  choice, numeric, text, num, gcd, lcm, simplify, fracStr, fracAccept, round, money,
+  choice, numeric, text, num, band, gcd, lcm, simplify, fracStr, fracAccept, round, money,
   NAMES, plural, type GeneratorFn, type Frac,
 } from "./helpers";
 
@@ -98,9 +98,9 @@ const multiDigitSub: GeneratorFn = (rng, level, params) => {
 /* ---------------------------------------------------- multiplication/division */
 
 const multiplicationFacts: GeneratorFn = (rng, level, params) => {
-  const max = num(params, "max", 10) + (level - 1) * 2;
-  const a = rng.int(2, max);
-  const b = rng.int(2, max);
+  const [lo, hi] = band(level, num(params, "max", 10), 1);
+  const a = rng.int(lo, hi);
+  const b = rng.int(lo, hi);
   return numeric({
     stem: `${a} × ${b} = ?`,
     answer: `${a * b}`,
@@ -110,9 +110,9 @@ const multiplicationFacts: GeneratorFn = (rng, level, params) => {
 };
 
 const divisionFacts: GeneratorFn = (rng, level, params) => {
-  const max = num(params, "max", 10) + (level - 1) * 2;
-  const b = rng.int(2, max);
-  const q = rng.int(2, max);
+  const [lo, hi] = band(level, num(params, "max", 10), 1);
+  const b = rng.int(lo, hi);
+  const q = rng.int(lo, hi);
   return numeric({
     stem: `${b * q} ÷ ${b} = ?`,
     answer: `${q}`,
@@ -257,8 +257,23 @@ const orderOfOperations: GeneratorFn = (rng, level) => {
 };
 
 const exponents: GeneratorFn = (rng, level) => {
-  const base = rng.int(2, 4 + level);
-  const exp = rng.int(2, level >= 3 ? 4 : 3);
+  // Exponent and base rise together, but the base is held back when the
+  // exponent reaches 4 so the answer stays something a learner can work out.
+  let base: number;
+  let exp: number;
+  if (level <= 1) {
+    base = rng.int(2, 5);
+    exp = 2;
+  } else if (level === 2) {
+    base = rng.int(3, 7);
+    exp = rng.int(2, 3);
+  } else if (level === 3) {
+    base = rng.int(4, 9);
+    exp = 3;
+  } else {
+    exp = rng.int(3, 4);
+    base = exp === 4 ? rng.int(3, 5) : rng.int(6, 9);
+  }
   return numeric({
     instructions: "Evaluate the power.",
     stem: `${base}^${exp} = ?`,
@@ -496,16 +511,47 @@ const unitConversion: GeneratorFn = (rng, level) => {
 /* ------------------------------------------------------------------ algebra */
 
 const evaluateExpression: GeneratorFn = (rng, level) => {
-  const a = rng.int(2, 5 + level);
-  const b = rng.int(1, 9 + level);
-  const x = rng.int(level >= 3 ? -8 : 1, 10);
-  const value = a * x + b;
+  const x = rng.int(level >= 2 ? -9 : 1, 10);
+
+  if (level <= 2) {
+    const a = rng.int(2, 5 + level);
+    const b = rng.int(1, 9 + level);
+    return numeric({
+      instructions: "Evaluate the expression.",
+      stem: `Evaluate **${a}x + ${b}** when **x = ${x}**.`,
+      answer: `${a * x + b}`,
+      explanation: `Substitute: ${a}(${x}) + ${b} = ${a * x} + ${b} = ${a * x + b}.`,
+      hint: "Replace x with its value, then follow the order of operations.",
+    });
+  }
+
+  if (level === 3) {
+    const a = rng.int(2, 5);
+    const c = rng.int(1, 9);
+    const squared = rng.bool();
+    const value = squared ? a * x * x + c : a * (x + c);
+    return numeric({
+      instructions: "Evaluate the expression.",
+      stem: squared
+        ? `Evaluate **${a}x² + ${c}** when **x = ${x}**.`
+        : `Evaluate **${a}(x + ${c})** when **x = ${x}**.`,
+      answer: `${value}`,
+      explanation: squared
+        ? `Square first: ${x}² = ${x * x}. Then ${a} × ${x * x} = ${a * x * x}, plus ${c} gives ${value}.`
+        : `Parentheses first: ${x} + ${c} = ${x + c}. Then ${a} × ${x + c} = ${value}.`,
+      hint: squared ? "Exponents come before multiplication." : "Work inside the parentheses first.",
+    });
+  }
+
+  const a = rng.int(2, 6);
+  const b = rng.intExcept(-6, 6, [0]);
+  const y = rng.intExcept(-8, 9, [0]);
   return numeric({
-    instructions: `Evaluate the expression.`,
-    stem: `Evaluate **${a}x + ${b}** when **x = ${x}**.`,
-    answer: `${value}`,
-    explanation: `Substitute: ${a}(${x}) + ${b} = ${a * x} + ${b} = ${value}.`,
-    hint: "Replace x with its value, then follow the order of operations.",
+    instructions: "Evaluate the expression.",
+    stem: `Evaluate **${a}x ${b < 0 ? "−" : "+"} ${Math.abs(b)}y** when **x = ${x}** and **y = ${y}**.`,
+    answer: `${a * x + b * y}`,
+    explanation: `${a}(${x}) = ${a * x}, and ${b}(${y}) = ${b * y}. Together: ${a * x} + ${b * y} = ${a * x + b * y}.`,
+    hint: "Substitute both variables before you combine them.",
   });
 };
 
@@ -555,21 +601,70 @@ const twoStepEquation: GeneratorFn = (rng, level) => {
   });
 };
 
+/** Every spelling of an inequality answer we accept from a learner. */
+function ineqAccept(sign: string, x: number): string[] {
+  const ascii = sign === "≥" ? ">=" : sign === "≤" ? "<=" : sign;
+  return [`x${sign}${x}`, `${sign}${x}`, `x ${ascii} ${x}`, `x${ascii}${x}`];
+}
+
 const inequality: GeneratorFn = (rng, level) => {
-  const x = rng.int(1, 10);
-  const a = rng.int(2, 2 + level);
-  const b = rng.int(1, 10);
-  const c = a * x + b;
   const sign = rng.pick([">", "<", "≥", "≤"]);
-  return text({
-    instructions: "Solve the inequality for x.",
-    stem: `**${a}x + ${b} ${sign} ${c}**`,
-    answer: `x ${sign} ${x}`,
-    accept: [`x${sign}${x}`, `${sign}${x}`, `x ${sign === "≥" ? ">=" : sign === "≤" ? "<=" : sign} ${x}`],
-    placeholder: `e.g. x ${sign} 5`,
-    explanation: `Subtract ${b}: ${a}x ${sign} ${a * x}. Divide by ${a} (positive, so the sign stays): x ${sign} ${x}.`,
-    hint: "Solve it like an equation — but flip the sign if you divide by a negative.",
-  });
+  const flipped = ({ ">": "<", "<": ">", "≥": "≤", "≤": "≥" } as Record<string, string>)[sign];
+  const x = rng.int(1, 12);
+  const common = (stem: string, answerSign: string, explanation: string, hint: string) =>
+    text({
+      instructions: "Solve the inequality for x.",
+      stem: `**${stem}**`,
+      answer: `x ${answerSign} ${x}`,
+      accept: ineqAccept(answerSign, x),
+      placeholder: `e.g. x ${answerSign} 5`,
+      explanation,
+      hint,
+    });
+
+  if (level === 1) {
+    const b = rng.int(1, 12);
+    return common(
+      `x + ${b} ${sign} ${x + b}`,
+      sign,
+      `Subtract ${b} from both sides: x ${sign} ${x}.`,
+      "Undo the addition on both sides.",
+    );
+  }
+
+  if (level === 2) {
+    const a = rng.int(2, 5);
+    const b = rng.int(1, 10);
+    return common(
+      `${a}x + ${b} ${sign} ${a * x + b}`,
+      sign,
+      `Subtract ${b}: ${a}x ${sign} ${a * x}. Divide by ${a}; it is positive, so the sign stays: x ${sign} ${x}.`,
+      "Undo the addition first, then the multiplication.",
+    );
+  }
+
+  if (level === 3) {
+    // A negative coefficient reverses the sign -- the idea this skill is really about.
+    const a = rng.int(2, 6);
+    const b = rng.int(1, 10);
+    return common(
+      `−${a}x + ${b} ${sign} ${-a * x + b}`,
+      flipped,
+      `Subtract ${b}: −${a}x ${sign} ${-a * x}. Dividing by −${a} reverses the inequality: x ${flipped} ${x}.`,
+      "Dividing by a negative flips the inequality sign.",
+    );
+  }
+
+  const a = rng.int(3, 7);
+  const c = rng.int(1, a - 1);
+  const b = rng.int(1, 9);
+  const d = (a - c) * x + b;
+  return common(
+    `${a}x + ${b} ${sign} ${c}x + ${d}`,
+    sign,
+    `Subtract ${c}x from both sides: ${a - c}x + ${b} ${sign} ${d}. Subtract ${b}: ${a - c}x ${sign} ${d - b}. Divide by ${a - c}: x ${sign} ${x}.`,
+    "Collect the x terms on one side first.",
+  );
 };
 
 const slopeFromPoints: GeneratorFn = (rng, level) => {
@@ -592,44 +687,150 @@ const slopeIntercept: GeneratorFn = (rng, level, params) => {
   const wantSlope = params["find"] === "slope" || (params["find"] === undefined && rng.bool());
   const m = rng.intExcept(-6, 6, [0]);
   const b = rng.intExcept(-9, 9, [0]);
-  void level;
+  const what = wantSlope ? "slope" : "y-intercept";
+  const answer = `${wantSlope ? m : b}`;
+  const canonical = `y = ${m}x ${b < 0 ? "−" : "+"} ${Math.abs(b)}`;
+
+  if (level === 1) {
+    return numeric({
+      instructions: `Identify the ${what}.`,
+      stem: `What is the **${what}** of **${canonical}**?`,
+      answer,
+      explanation: `In y = mx + b, m is the slope and b is the y-intercept. Here m = ${m} and b = ${b}.`,
+      hint: "Compare the equation to y = mx + b.",
+    });
+  }
+
+  if (level === 2) {
+    // Written out of order, so the answer can't be read off by position.
+    return numeric({
+      instructions: `Identify the ${what}.`,
+      stem: `What is the **${what}** of **y = ${b} ${m < 0 ? "−" : "+"} ${Math.abs(m)}x**?`,
+      answer,
+      explanation: `Reordered into y = mx + b this is ${canonical}, so m = ${m} and b = ${b}.`,
+      hint: "The slope is whatever multiplies x, wherever it appears.",
+    });
+  }
+
+  if (level === 3) {
+    const k = rng.int(2, 4);
+    return numeric({
+      instructions: `Identify the ${what}.`,
+      stem: `What is the **${what}** of **${k}y = ${m * k}x ${b < 0 ? "−" : "+"} ${Math.abs(b * k)}**?`,
+      answer,
+      explanation: `Divide every term by ${k} to isolate y: ${canonical}. So m = ${m} and b = ${b}.`,
+      hint: "Get y by itself before reading off the slope.",
+    });
+  }
+
+  // Standard form: Ax + By = C, where y = -(A/B)x + C/B.
+  const B = rng.int(1, 3);
+  const A = -m * B;
+  const C = b * B;
   return numeric({
-    instructions: `Identify the ${wantSlope ? "slope" : "y-intercept"}.`,
-    stem: `What is the **${wantSlope ? "slope" : "y-intercept"}** of **y = ${m}x ${b < 0 ? "−" : "+"} ${Math.abs(b)}**?`,
-    answer: `${wantSlope ? m : b}`,
-    explanation: `In y = mx + b, m is the slope and b is the y-intercept. Here m = ${m} and b = ${b}.`,
-    hint: "Compare the equation to y = mx + b.",
+    instructions: `Identify the ${what}.`,
+    stem: `What is the **${what}** of **${A}x ${B < 0 ? "−" : "+"} ${Math.abs(B)}y = ${C}**?`,
+    answer,
+    explanation: `Solve for y: ${B}y = ${-A}x ${C < 0 ? "−" : "+"} ${Math.abs(C)}, so ${canonical}. That gives m = ${m} and b = ${b}.`,
+    hint: "Rearrange into y = mx + b first.",
   });
 };
 
 const systemOfEquations: GeneratorFn = (rng, level) => {
   const x = rng.intExcept(-6, 8, [0]);
   const y = rng.intExcept(-6, 8, [0]);
-  const a1 = rng.int(1, 3), b1 = rng.intExcept(-3, 3, [0]);
-  const a2 = rng.intExcept(-3, 3, [0, a1]), b2 = rng.intExcept(-3, 3, [0]);
-  void level;
+
+  // Coefficients get harder by level: a variable already isolated, then a
+  // direct cancellation, then a general system, then one needing scaling.
+  let a1: number, b1: number, a2: number, b2: number;
+  if (level === 1) {
+    a1 = 1;
+    b1 = rng.intExcept(-2, 2, [0]);
+    a2 = rng.intExcept(-3, 3, [0, 1]);
+    b2 = rng.intExcept(-3, 3, [0]);
+  } else if (level === 2) {
+    a1 = rng.int(1, 3);
+    b1 = rng.intExcept(-3, 3, [0]);
+    a2 = a1; // x cancels by subtracting one equation from the other
+    b2 = rng.intExcept(-3, 3, [0, b1]);
+  } else if (level === 3) {
+    a1 = rng.int(1, 3);
+    b1 = rng.intExcept(-3, 3, [0]);
+    a2 = rng.intExcept(-4, 4, [0, a1]);
+    b2 = rng.intExcept(-4, 4, [0]);
+  } else {
+    a1 = rng.int(2, 5);
+    b1 = rng.intExcept(-5, 5, [0]);
+    a2 = rng.intExcept(-6, 6, [0, a1]);
+    b2 = rng.intExcept(-6, 6, [0]);
+  }
+
+  // Reject a degenerate (parallel or identical) system.
+  let guard = 0;
+  while (a1 * b2 - a2 * b1 === 0 && guard++ < 12) {
+    b2 = rng.intExcept(-6, 6, [0, b2]);
+  }
+  if (a1 * b2 - a2 * b1 === 0) b2 = b1 + 1;
+
   const c1 = a1 * x + b1 * y;
   const c2 = a2 * x + b2 * y;
-  const term = (k: number, v: string) => `${k === 1 ? "" : k === -1 ? "−" : k < 0 ? `−${Math.abs(k)}` : k}${v}`;
+  const term = (k: number, v: string) => `${k === 1 ? "" : k === -1 ? "−" : k}${v}`;
+  const line = (a: number, b: number, c: number) =>
+    `${term(a, "x")} ${b < 0 ? "−" : "+"} ${term(Math.abs(b), "y")} = ${c}`;
+
   return {
     instructions: "Solve the system.",
-    stem: `**${term(a1, "x")} ${b1 < 0 ? "−" : "+"} ${term(Math.abs(b1), "y")} = ${c1}**\n\n**${term(a2, "x")} ${b2 < 0 ? "−" : "+"} ${term(Math.abs(b2), "y")} = ${c2}**`,
+    stem: `**${line(a1, b1, c1)}**\n\n**${line(a2, b2, c2)}**`,
     format: { kind: "pair", labels: ["x =", "y ="] },
     answer: `${x},${y}`,
-    explanation: `Eliminating one variable gives x = ${x}; substituting back gives y = ${y}.`,
-    hint: "Multiply one equation so a variable cancels when you add.",
+    explanation:
+      level === 1
+        ? `The first equation gives x in terms of y. Substituting into the second and solving gives y = ${y}, then x = ${x}.`
+        : level === 2
+          ? `Both equations have ${a1}x, so subtracting one from the other eliminates x and gives y = ${y}. Substituting back gives x = ${x}.`
+          : `Scale the equations so one variable cancels when you add them. That gives x = ${x} and y = ${y}.`,
+    hint:
+      level === 2
+        ? "The x terms match — try subtracting one equation from the other."
+        : "Multiply one equation so a variable cancels when you add.",
   };
 };
 
 const factorQuadratic: GeneratorFn = (rng, level) => {
-  const r1 = rng.intExcept(-7, 7, [0]);
-  const r2 = rng.intExcept(-7, 7, [0]);
-  void level;
+  const factor = (coefficient: number, root: number) =>
+    coefficient === 1
+      ? root < 0 ? `(x + ${Math.abs(root)})` : `(x − ${root})`
+      : root < 0 ? `(${coefficient}x + ${Math.abs(root)})` : `(${coefficient}x − ${root})`;
+
+  if (level >= 4) {
+    // Leading coefficient other than 1: (px + q)(x + r)
+    const p = rng.int(2, 3);
+    const q = rng.intExcept(-6, 6, [0]);
+    const r = rng.intExcept(-6, 6, [0]);
+    const b = p * r + q;
+    const c = q * r;
+    const sign = (k: number) => (k < 0 ? `− ${Math.abs(k)}` : `+ ${k}`);
+    const answer = `(${p}x ${sign(q)})(x ${sign(r)})`.replace(/\s+/g, " ");
+    const swapped = `(x ${sign(r)})(${p}x ${sign(q)})`.replace(/\s+/g, " ");
+    return text({
+      instructions: "Factor the quadratic.",
+      stem: `**${p}x² ${b < 0 ? "−" : "+"} ${Math.abs(b)}x ${c < 0 ? "−" : "+"} ${Math.abs(c)}**`,
+      answer,
+      accept: [swapped, answer.replace(/−/g, "-"), swapped.replace(/−/g, "-"), answer.replace(/ /g, ""), answer.replace(/−/g, "-").replace(/ /g, "")],
+      placeholder: "e.g. (2x + 1)(x - 3)",
+      explanation: `Split the middle term using ${p} × ${c} = ${p * c}. It factors as ${answer}.`,
+      hint: `The leading coefficient is ${p}, so one factor starts with ${p}x.`,
+    });
+  }
+
+  // Levels 1-3: monic, with the root range and sign variety growing.
+  const span = level === 1 ? 5 : level === 2 ? 7 : 9;
+  const r1 = level === 1 ? rng.int(1, span) : rng.intExcept(-span, span, [0]);
+  const r2 = level === 1 ? rng.int(1, span) : rng.intExcept(-span, span, [0]);
   const b = -(r1 + r2);
   const c = r1 * r2;
-  const fmt = (r: number) => (r < 0 ? `(x + ${Math.abs(r)})` : `(x − ${r})`);
-  const answer = `${fmt(r1)}${fmt(r2)}`;
-  const swapped = `${fmt(r2)}${fmt(r1)}`;
+  const answer = `${factor(1, r1)}${factor(1, r2)}`;
+  const swapped = `${factor(1, r2)}${factor(1, r1)}`;
   return text({
     instructions: "Factor the quadratic.",
     stem: `**x² ${b < 0 ? "−" : "+"} ${Math.abs(b)}x ${c < 0 ? "−" : "+"} ${Math.abs(c)}**`,
@@ -637,7 +838,7 @@ const factorQuadratic: GeneratorFn = (rng, level) => {
     accept: [swapped, answer.replace(/−/g, "-"), swapped.replace(/−/g, "-")],
     placeholder: "e.g. (x - 3)(x + 5)",
     explanation: `Find two numbers multiplying to ${c} and adding to ${b}: ${r1} and ${r2}. So it factors as ${answer}.`,
-    hint: `Look for a pair that multiplies to ${c}.`,
+    hint: `Look for a pair that multiplies to ${c} and adds to ${b}.`,
   });
 };
 
@@ -660,17 +861,34 @@ const sequences: GeneratorFn = (rng, level) => {
 };
 
 const functionTable: GeneratorFn = (rng, level) => {
-  const m = rng.intExcept(-4, 5, [0]);
-  const b = rng.int(-6, 9);
   const xs = rng.sample([1, 2, 3, 4, 5, 6, 7, 8], 3).sort((p, q) => p - q);
-  const missing = rng.int(level >= 3 ? 6 : 9, 12);
+
+  // The rule itself gets harder: add, then multiply, then both -- and at the
+  // top level the table is run backwards from an output to its input.
+  const m = level === 1 ? 1 : rng.intExcept(-4, 5, [0]);
+  const b = level === 2 ? 0 : rng.intExcept(-6, 9, [0]);
+  const rule = `y = ${m === 1 ? "x" : `${m}x`}${b === 0 ? "" : b < 0 ? ` − ${Math.abs(b)}` : ` + ${b}`}`;
   const rows = xs.map((x) => `| ${x} | ${m * x + b} |`).join("\n");
+
+  if (level >= 4) {
+    const missingX = rng.int(9, 14);
+    const target = m * missingX + b;
+    return numeric({
+      instructions: "Work backwards: find the input that produces this output.",
+      stem: `| x | y |\n|---|---|\n${rows}\n| ? | ${target} |`,
+      answer: `${missingX}`,
+      explanation: `The rule is ${rule}. Solving ${target} = ${m === 1 ? "x" : `${m}x`}${b === 0 ? "" : b < 0 ? ` − ${Math.abs(b)}` : ` + ${b}`} gives x = ${missingX}.`,
+      hint: "Find the rule first, then undo it.",
+    });
+  }
+
+  const missing = rng.int(9, 13);
   return numeric({
     instructions: "Use the pattern in the table to find the missing output.",
     stem: `| x | y |\n|---|---|\n${rows}\n| ${missing} | ? |`,
     answer: `${m * missing + b}`,
-    explanation: `The rule is y = ${m}x ${b < 0 ? "−" : "+"} ${Math.abs(b)}. At x = ${missing}: y = ${m * missing + b}.`,
-    hint: "Find how much y changes each time x goes up by 1.",
+    explanation: `The rule is ${rule}. At x = ${missing}: y = ${m * missing + b}.`,
+    hint: level === 1 ? "How much is added to x each time?" : "Check what x is multiplied by, then what is added.",
   });
 };
 

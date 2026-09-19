@@ -219,3 +219,75 @@ describe("assessment", () => {
     expect(result.byStrand.reduce((n, s) => n + s.total, 0)).toBe(10);
   });
 });
+
+describe("difficulty ramps", () => {
+  const SEEDS = Array.from({ length: 24 }, (_, i) => i * 7919 + 13);
+
+  /** Stem with digits collapsed, leaving only the question's shape. */
+  const shape = (s: string) => s.replace(/-?\d+(\.\d+)?/g, "#").replace(/\s+/g, " ").trim();
+
+  const magnitude = (s: string) =>
+    (s.match(/-?\d+(\.\d+)?/g) ?? []).reduce((m, n) => Math.max(m, Math.abs(Number(n))), 0);
+
+  /**
+   * Several generators once accepted `level` and ignored it, so every tier
+   * served the same question and the SmartScore ramp did nothing. A skill
+   * counts as ramping if its top level introduces question shapes the bottom
+   * level never produces, changes format or instructions, or grows the
+   * numbers involved.
+   */
+  it("makes every skill harder as the level rises", () => {
+    const flat: string[] = [];
+
+    for (const skill of SKILLS) {
+      const levels = skill.levels ?? 4;
+      const shapesByLevel: Set<string>[] = [];
+      const magByLevel: number[] = [];
+      const variants = new Set<string>();
+
+      for (let level = 1; level <= levels; level++) {
+        const shapes = new Set<string>();
+        let magSum = 0;
+        for (const seed of SEEDS) {
+          const q = generateQuestion(skill, level, seed);
+          shapes.add(shape(q.stem));
+          magSum += magnitude(q.stem);
+          variants.add(`${q.format.kind}|${q.instructions ?? ""}|${q.figure ? "fig" : ""}`);
+        }
+        shapesByLevel.push(shapes);
+        magByLevel.push(magSum / SEEDS.length);
+      }
+
+      const bottom = shapesByLevel[0];
+      const top = shapesByLevel[levels - 1];
+      const newShapes = [...top].filter((s) => !bottom.has(s)).length;
+      const grew = magByLevel[levels - 1] > magByLevel[0] * 1.15;
+
+      if (newShapes === 0 && variants.size <= 1 && !grew) flat.push(`${skill.id} (${skill.generator})`);
+    }
+
+    expect(flat).toEqual([]);
+  });
+
+  it("does not let a top-level question be easier than a bottom-level one", () => {
+    // Widening an operand range without lifting its floor let level 4 serve
+    // 2^3 while level 1 served 4^3.
+    const regressions: string[] = [];
+    // Looked up by generator so renaming or re-grading a skill can't silently
+    // skip the check.
+    for (const generator of ["exponents", "multiplication-facts", "division-facts"]) {
+      const skill = SKILLS.find((s) => s.generator === generator);
+      expect(skill, `no skill uses the ${generator} generator`).toBeDefined();
+      if (!skill) continue;
+      const id = skill.id;
+      const worst = (level: number) =>
+        Math.min(...SEEDS.map((seed) => Number(generateQuestion(skill, level, seed).answer)));
+      const easiestTop = worst(skill.levels ?? 4);
+      const easiestBottom = worst(1);
+      if (easiestTop <= easiestBottom) {
+        regressions.push(`${id}: easiest top-level answer ${easiestTop} <= easiest level-1 ${easiestBottom}`);
+      }
+    }
+    expect(regressions).toEqual([]);
+  });
+});

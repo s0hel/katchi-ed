@@ -84,6 +84,11 @@ const PASSAGES = [
       "Bees have fuzzy bodies that carry pollen.",
     ],
     vocab: { word: "pollinates", meaning: "carries pollen between flowers", distractors: ["removes insects from", "waters the roots of", "protects the petals of"] },
+    vocabHard: { word: "blossom", meaning: "a flower", distractors: ["a young bee", "a farm field", "a type of honey"] },
+    clue: { answer: "pollen sticks to their fuzzy bodies and rubs off on the next blossom", wrong: ["Honeybees do more than make honey.", "When bee populations fall, farmers notice it in their harvests."] },
+    detail: { question: "Which detail best supports the idea that bees matter to the food supply?", answer: "Pollination affects roughly one in every three bites of food people eat.", wrong: ["Bees collect nectar as they move between flowers.", "Bees have fuzzy bodies.", "Shoppers notice changes in stores."] },
+    purpose: { answer: "to explain why bees matter for reasons beyond honey", wrong: ["to describe how honey is made", "to argue that people should keep beehives", "to compare different kinds of bees"] },
+    inference: { answer: "A drop in bee numbers would show up in harvests before it showed up in stores.", wrong: ["Farmers are the only people affected by bee populations.", "Honey production matters more than pollination.", "Bees prefer some flowers to others."] },
   },
   {
     text: "For centuries, sailors navigated by the stars. A skilled navigator could fix a ship's position using only a sextant, a clock, and a clear night sky. Satellite navigation made that work almost effortless, but many naval academies still teach celestial navigation. Instruments fail, batteries die, and signals can be jammed — the stars cannot be switched off.",
@@ -94,6 +99,11 @@ const PASSAGES = [
       "Naval academies require students to study astronomy.",
     ],
     vocab: { word: "jammed", meaning: "blocked or disrupted", distractors: ["packed tightly", "repaired quickly", "sold cheaply"] },
+    vocabHard: { word: "celestial", meaning: "relating to the sky or stars", distractors: ["relating to the ocean", "relating to machinery", "relating to maps"] },
+    clue: { answer: "Instruments fail, batteries die, and signals can be jammed", wrong: ["A skilled navigator could fix a ship's position using only a sextant.", "Satellite navigation made that work almost effortless."] },
+    detail: { question: "Which detail best explains why academies still teach navigating by the stars?", answer: "Instruments can fail and signals can be disrupted, but the stars cannot.", wrong: ["Sailors have navigated by the stars for centuries.", "A sextant and a clock are inexpensive tools.", "Satellite navigation is effortless to use."] },
+    purpose: { answer: "to explain why an older skill is still worth teaching", wrong: ["to describe how a sextant works", "to argue that satellite navigation is unreliable", "to tell the history of sailing"] },
+    inference: { answer: "A navigator whose electronics failed could still determine the ship's position.", wrong: ["Naval academies no longer rely on satellites at all.", "Satellite navigation is less accurate than the stars.", "Most sailors today cannot read a sextant."] },
   },
   {
     text: "The Sonoran Desert looks empty at midday, but that is a trick of timing. Most of its animals are crepuscular, active in the cool half-light of dawn and dusk. Kangaroo rats spend the blazing hours in burrows, and cactus wrens tuck into shaded nests. A visitor who arrives at noon and leaves at two will swear nothing lives there.",
@@ -104,6 +114,11 @@ const PASSAGES = [
       "Visitors should tour the desert in the early morning.",
     ],
     vocab: { word: "crepuscular", meaning: "active at dawn and dusk", distractors: ["living underground", "able to survive without water", "hunting in large groups"] },
+    vocabHard: { word: "burrows", meaning: "holes dug in the ground for shelter", distractors: ["nests built in trees", "trails between plants", "pools of shaded water"] },
+    clue: { answer: "active in the cool half-light of dawn and dusk", wrong: ["The Sonoran Desert looks empty at midday.", "A visitor who arrives at noon will swear nothing lives there."] },
+    detail: { question: "Which detail best supports the idea that desert animals avoid midday?", answer: "Kangaroo rats spend the hottest hours underground in burrows.", wrong: ["The desert looks empty at midday.", "Cactus wrens are a kind of bird.", "Visitors often tour the desert at noon."] },
+    purpose: { answer: "to correct a mistaken impression about the desert", wrong: ["to warn visitors about desert heat", "to describe how kangaroo rats dig", "to compare two different deserts"] },
+    inference: { answer: "A visitor arriving at sunrise would likely see far more animals.", wrong: ["The Sonoran Desert has fewer species than other deserts.", "Desert animals sleep through the entire day.", "Cactus wrens and kangaroo rats compete for food."] },
   },
   {
     text: "Rosa Parks is often described as a tired seamstress who simply would not stand up. She was in fact a trained organizer who had served as secretary of her local NAACP chapter for over a decade. Her refusal on that Montgomery bus was a deliberate act by someone who understood exactly what it would set in motion.",
@@ -114,6 +129,11 @@ const PASSAGES = [
       "Bus segregation laws were common in the American South.",
     ],
     vocab: { word: "deliberate", meaning: "done on purpose", distractors: ["done in anger", "done by accident", "done in secret"] },
+    vocabHard: { word: "chapter", meaning: "a local branch of an organization", distractors: ["a section of a book", "a scheduled meeting", "a written record"] },
+    clue: { answer: "a trained organizer who had served as secretary of her local NAACP chapter for over a decade", wrong: ["Rosa Parks is often described as a tired seamstress.", "Her refusal took place on a Montgomery bus."] },
+    detail: { question: "Which detail best supports the idea that Rosa Parks was an experienced organizer?", answer: "She had served as secretary of her local NAACP chapter for over a decade.", wrong: ["She worked as a seamstress.", "She was tired at the end of the day.", "She was riding a bus in Montgomery."] },
+    purpose: { answer: "to correct a simplified version of a historical event", wrong: ["to describe daily life in Montgomery", "to explain how buses were segregated", "to list the achievements of the NAACP"] },
+    inference: { answer: "Her refusal was a planned act rather than a spontaneous one.", wrong: ["She was the first person to refuse to give up a bus seat.", "She had been planning that specific day for years.", "Her work as a seamstress prepared her for organizing."] },
   },
 ];
 
@@ -269,29 +289,91 @@ const prefixSuffix: GeneratorFn = (rng, level) => {
 
 const contextClues: GeneratorFn = (rng, level) => {
   const p = rng.pick(PASSAGES);
-  void level;
+
+  if (level >= 4) {
+    // Naming the clue is a step beyond knowing the meaning.
+    return choice(rng, {
+      instructions: "Find the context clue.",
+      stem: `${p.text}
+
+Which part of the passage best helps you work out what **${p.vocabHard.word}** means?`,
+      answer: p.clue.answer,
+      distractors: [...p.clue.wrong],
+      explanation: `That phrase is what signals the meaning of **${p.vocabHard.word}**: ${p.vocabHard.meaning}.`,
+      hint: "Look for the words around it that hint at the meaning.",
+    });
+  }
+
+  const target = level >= 3 ? p.vocabHard : p.vocab;
   return choice(rng, {
     instructions: "Use the passage to determine the meaning.",
-    stem: `${p.text}\n\nIn this passage, **${p.vocab.word}** most nearly means:`,
-    answer: p.vocab.meaning,
-    distractors: [...p.vocab.distractors],
-    explanation: `The surrounding sentences show that **${p.vocab.word}** means "${p.vocab.meaning}".`,
+    stem: `${p.text}
+
+In this passage, **${target.word}** most nearly means:`,
+    answer: target.meaning,
+    distractors: [...target.distractors],
+    explanation: `The surrounding sentences show that **${target.word}** means "${target.meaning}".`,
     hint: "Reread the sentence before and after the word.",
   });
 };
 
 const mainIdea: GeneratorFn = (rng, level) => {
   const p = rng.pick(PASSAGES);
-  void level;
+
+  if (level === 2) {
+    return choice(rng, {
+      instructions: "Find the supporting detail.",
+      stem: `${p.text}
+
+${p.detail.question}`,
+      answer: p.detail.answer,
+      distractors: [...p.detail.wrong],
+      explanation: `The main idea is that ${lowerFirst(p.mainIdea)} That detail is the one that backs it up directly.`,
+      hint: "A supporting detail gives evidence for the main point, not just any fact.",
+    });
+  }
+
+  if (level === 3) {
+    return choice(rng, {
+      instructions: "Identify the author's purpose.",
+      stem: `${p.text}
+
+Why did the author most likely write this passage?`,
+      answer: p.purpose.answer,
+      distractors: [...p.purpose.wrong],
+      explanation: `The passage works toward one point: ${lowerFirst(p.mainIdea)} That is the author's purpose.`,
+      hint: "Ask what the whole passage is trying to get you to understand.",
+    });
+  }
+
+  if (level >= 4) {
+    return choice(rng, {
+      instructions: "Draw a conclusion from the passage.",
+      stem: `${p.text}
+
+Which conclusion does the passage best support?`,
+      answer: p.inference.answer,
+      distractors: [...p.inference.wrong],
+      explanation: `The passage never states this outright, but it follows from what it does say. The other options go further than the passage supports.`,
+      hint: "Pick the statement the passage supports, not one it merely hints at.",
+    });
+  }
+
   return choice(rng, {
     instructions: "Identify the main idea.",
-    stem: `${p.text}\n\nWhat is the **main idea** of this passage?`,
+    stem: `${p.text}
+
+What is the **main idea** of this passage?`,
     answer: p.mainIdea,
     distractors: [...p.wrong],
-    explanation: `The other options are details from the passage or ideas it never claims. The main idea covers the whole passage: ${p.mainIdea}`,
+    explanation: `The other options are single details or claims the passage never makes. The main idea covers the whole passage: ${p.mainIdea}`,
     hint: "The main idea covers the whole passage, not one detail.",
   });
 };
+
+function lowerFirst(s: string): string {
+  return s.charAt(0).toLowerCase() + s.slice(1);
+}
 
 const figurativeLanguage: GeneratorFn = (rng, level) => {
   const items = [
