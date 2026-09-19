@@ -78,12 +78,40 @@ npx vite-node scripts/harvest-videos.ts --refresh  # re-harvest everything
 > ordinary linking rather than redistribution, but if this becomes a paid
 > product, get that reviewed rather than assuming the embed settles it.
 
+## Question variety and the ELA banks
+
+Math questions are computed, not stored: each one is a pure function of
+(generator, level, seed), so widening a range widens the question space and a
+student cannot exhaust a skill.
+
+ELA is different. Those generators pick from curated content — a seed chooses an
+item, it does not invent one — so the banks in `src/data/ela-banks.json` are the
+ceiling on ELA variety. `scripts/generate-ela-items.ts` raises that ceiling by
+drafting new items with Claude offline:
+
+```bash
+export ANTHROPIC_API_KEY=...   # or: ant auth login
+npx vite-node scripts/generate-ela-items.ts -- --bank passages --count 12
+npx vite-node scripts/generate-ela-items.ts -- --bank all --count 8 --dry-run
+```
+
+Generation stays offline on purpose. Grading works by re-deriving a question
+server-side from its seed, which is only possible because generation is
+deterministic; calling a model per request would break that, put unreviewed text
+in front of a child, and add latency to every question. Instead the model writes
+into the bank ahead of time, a maintainer reads the diff, and the runtime is
+unchanged.
+
+Every drafted item passes `reviewDraft` in `src/lib/generators/bank-schema.ts`
+before it lands — the same rules `npm test` enforces on what is already
+committed. Items that fail are printed and dropped, never auto-repaired.
+
 ## Development
 
 ```bash
 npm install
 npm run dev        # Turbopack dev server
-npm test           # 35 tests: generators, grading, SmartScore, diagnostic
+npm test           # 100 tests: generators, grading, SmartScore, diagnostic, content banks
 npm run lint
 npm run typecheck
 npm run build      # Turbopack production build
@@ -124,3 +152,6 @@ The production alias is public.
    seeds and checks the question is well-formed, deterministic, varied, that it
    accepts its own answer, and that it rejects a wrong one.
 4. Optionally add a search hint in `scripts/harvest-videos.ts` and re-run it.
+5. For an ELA skill, add its content bank to `src/data/ela-banks.json`, type it
+   in `src/lib/generators/banks.ts`, and give it a schema and a brief in
+   `bank-schema.ts` / `scripts/generate-ela-items.ts` so it can be extended.
