@@ -108,6 +108,78 @@
           "shout",
           "build"
         ]
+      ],
+      [
+        "tidy",
+        "neat",
+        [
+          "messy",
+          "loud",
+          "curved"
+        ]
+      ],
+      [
+        "shout",
+        "yell",
+        [
+          "whisper",
+          "crawl",
+          "paint"
+        ]
+      ],
+      [
+        "conceal",
+        "hide",
+        [
+          "reveal",
+          "measure",
+          "chase"
+        ]
+      ],
+      [
+        "fragile",
+        "delicate",
+        [
+          "tough",
+          "noisy",
+          "sweet"
+        ]
+      ],
+      [
+        "curious",
+        "inquisitive",
+        [
+          "bored",
+          "chilly",
+          "wooden"
+        ]
+      ],
+      [
+        "assist",
+        "help",
+        [
+          "hinder",
+          "wander",
+          "bake"
+        ]
+      ],
+      [
+        "damp",
+        "moist",
+        [
+          "dry",
+          "cheerful",
+          "hollow"
+        ]
+      ],
+      [
+        "weary",
+        "exhausted",
+        [
+          "refreshed",
+          "angry",
+          "distant"
+        ]
       ]
     ],
     "antonyms": [
@@ -199,6 +271,87 @@
           "modest",
           "quiet",
           "gentle"
+        ]
+      ],
+      [
+        "fragile",
+        "sturdy",
+        [
+          "delicate",
+          "breakable",
+          "thin"
+        ]
+      ],
+      [
+        "ascend",
+        "descend",
+        [
+          "climb",
+          "rise",
+          "soar"
+        ]
+      ],
+      [
+        "artificial",
+        "natural",
+        [
+          "fake",
+          "plastic",
+          "shiny"
+        ]
+      ],
+      [
+        "rigid",
+        "flexible",
+        [
+          "stiff",
+          "firm",
+          "straight"
+        ]
+      ],
+      [
+        "victory",
+        "defeat",
+        [
+          "triumph",
+          "win",
+          "trophy"
+        ]
+      ],
+      [
+        "conceal",
+        "reveal",
+        [
+          "hide",
+          "cover",
+          "bury"
+        ]
+      ],
+      [
+        "shallow",
+        "deep",
+        [
+          "wide",
+          "muddy",
+          "calm"
+        ]
+      ],
+      [
+        "frequent",
+        "rare",
+        [
+          "regular",
+          "common",
+          "usual"
+        ]
+      ],
+      [
+        "weary",
+        "energetic",
+        [
+          "tired",
+          "sleepy",
+          "drowsy"
         ]
       ]
     ]
@@ -303,6 +456,106 @@
         "expect"
       ],
       "why": "\"Accept\" means to receive; \"except\" means excluding."
+    },
+    {
+      "sentence": "The two neighbors finally made ___ after their long argument.",
+      "answer": "peace",
+      "options": [
+        "peace",
+        "piece",
+        "peas"
+      ],
+      "why": "\"Peace\" means calm or an end to conflict, while a \"piece\" is a part of something."
+    },
+    {
+      "sentence": "Please speak louder so I can ___ you from the back row.",
+      "answer": "hear",
+      "options": [
+        "hear",
+        "here",
+        "hare"
+      ],
+      "why": "The word for listening contains the word \"ear,\" while \"here\" points to a location."
+    },
+    {
+      "sentence": "Remember to ___ your name at the top of the form.",
+      "answer": "write",
+      "options": [
+        "write",
+        "right",
+        "rite"
+      ],
+      "why": "\"Write\" means to put words on paper; \"right\" means correct or the opposite of left."
+    },
+    {
+      "sentence": "We checked the ___ report before planning the hike.",
+      "answer": "weather",
+      "options": [
+        "weather",
+        "whether",
+        "wether"
+      ],
+      "why": "\"Weather\" describes rain, sun, and temperature, while \"whether\" introduces a choice between possibilities."
+    },
+    {
+      "sentence": "The cyclist squeezed the ___ to slow down at the corner.",
+      "answer": "brake",
+      "options": [
+        "brake",
+        "break",
+        "broke"
+      ],
+      "why": "A \"brake\" stops a moving thing; to \"break\" is to shatter or damage."
+    },
+    {
+      "sentence": "If the knot is too ___, the rope will slip apart.",
+      "answer": "loose",
+      "options": [
+        "loose",
+        "lose",
+        "loss"
+      ],
+      "why": "\"Loose\" rhymes with \"goose\" and means not tight; \"lose\" means to misplace or be defeated."
+    },
+    {
+      "sentence": "The express train ___ the station without stopping.",
+      "answer": "passed",
+      "options": [
+        "passed",
+        "past",
+        "pasted"
+      ],
+      "why": "\"Passed\" is the past tense of the verb \"pass,\" while \"past\" refers to earlier time or a position beyond something."
+    },
+    {
+      "sentence": "The ___ spoke to every class during the morning assembly.",
+      "answer": "principal",
+      "options": [
+        "principal",
+        "principle",
+        "principled"
+      ],
+      "why": "The head of a school ends in \"pal,\" while a \"principle\" is a rule or belief."
+    },
+    {
+      "sentence": "Our teacher asked each student to read one stanza ___.",
+      "answer": "aloud",
+      "options": [
+        "aloud",
+        "allowed",
+        "a loud"
+      ],
+      "why": "\"Aloud\" means out loud, while \"allowed\" means permitted."
+    },
+    {
+      "sentence": "From the top of the cliff we could ___ three fishing boats.",
+      "answer": "see",
+      "options": [
+        "see",
+        "sea",
+        "seas"
+      ],
+      "why": "\"See\" is the verb for using your eyes; the \"sea\" is a body of salt water."
     }
   ],
   "posSentences": [
@@ -365,6 +618,56 @@
       "s": "We waited **until** the rain stopped.",
       "word": "until",
       "pos": "conjunction"
+    },
+    {
+      "s": "The **telescope** stood on the balcony all night.",
+      "word": "telescope",
+      "pos": "noun"
+    },
+    {
+      "s": "Maya **measured** the flour before mixing the batter.",
+      "word": "measured",
+      "pos": "verb"
+    },
+    {
+      "s": "A **rusty** hinge squeaked when the gate swung open.",
+      "word": "rusty",
+      "pos": "adjective"
+    },
+    {
+      "s": "The glacier moves **slowly** down the valley.",
+      "word": "slowly",
+      "pos": "adverb"
+    },
+    {
+      "s": "Grandma handed **me** the folded map before the hike.",
+      "word": "me",
+      "pos": "pronoun"
+    },
+    {
+      "s": "The squirrel buried acorns **beneath** the porch steps.",
+      "word": "beneath",
+      "pos": "preposition"
+    },
+    {
+      "s": "Water **freezes** at zero degrees Celsius.",
+      "word": "freezes",
+      "pos": "verb"
+    },
+    {
+      "s": "The **ripe** peaches filled two baskets by noon.",
+      "word": "ripe",
+      "pos": "adjective"
+    },
+    {
+      "s": "The thunderstorm ended **suddenly** just after lunch.",
+      "word": "suddenly",
+      "pos": "adverb"
+    },
+    {
+      "s": "Thick **fog** covered the harbor at dawn.",
+      "word": "fog",
+      "pos": "noun"
     }
   ],
   "affixes": [
@@ -466,6 +769,106 @@
         "inside",
         "after",
         "against"
+      ]
+    },
+    {
+      "affix": "bi-",
+      "meaning": "two",
+      "example": "bicycle",
+      "distractors": [
+        "three",
+        "half",
+        "many"
+      ]
+    },
+    {
+      "affix": "tele-",
+      "meaning": "far off",
+      "example": "telescope",
+      "distractors": [
+        "nearby",
+        "under",
+        "after"
+      ]
+    },
+    {
+      "affix": "auto-",
+      "meaning": "self",
+      "example": "autograph",
+      "distractors": [
+        "other",
+        "again",
+        "small"
+      ]
+    },
+    {
+      "affix": "trans-",
+      "meaning": "across",
+      "example": "transatlantic",
+      "distractors": [
+        "under",
+        "before",
+        "without"
+      ]
+    },
+    {
+      "affix": "anti-",
+      "meaning": "against",
+      "example": "antifreeze",
+      "distractors": [
+        "beside",
+        "after",
+        "full of"
+      ]
+    },
+    {
+      "affix": "post-",
+      "meaning": "after",
+      "example": "postgame",
+      "distractors": [
+        "before",
+        "under",
+        "again"
+      ]
+    },
+    {
+      "affix": "micro-",
+      "meaning": "very small",
+      "example": "microscope",
+      "distractors": [
+        "very large",
+        "very fast",
+        "very old"
+      ]
+    },
+    {
+      "affix": "-ology",
+      "meaning": "the study of",
+      "example": "geology",
+      "distractors": [
+        "the fear of",
+        "a place for",
+        "the sound of"
+      ]
+    },
+    {
+      "affix": "-ward",
+      "meaning": "in the direction of",
+      "example": "westward",
+      "distractors": [
+        "made of",
+        "without",
+        "before"
+      ]
+    },
+    {
+      "affix": "super-",
+      "meaning": "above or beyond",
+      "example": "superhuman",
+      "distractors": [
+        "below",
+        "between",
+        "around"
       ]
     }
   ],
@@ -1059,6 +1462,596 @@
           "Sign languages have no grammar rules of their own."
         ]
       }
+    },
+    {
+      "text": "No single monarch butterfly makes the whole round trip. The insects that leave Canada in late summer fly south to the same mountain forests in Mexico their great-grandparents used, cling there through winter, and start north in spring. They lay eggs and die along the way, and it takes three or four short-lived generations to finish the journey back. The route is inherited, not taught, since no returning butterfly ever meets the one that left.",
+      "mainIdea": "Monarchs finish their migration across several generations, and the route is passed down rather than learned.",
+      "wrong": [
+        "Monarch butterflies spend the winter in mountain forests in Mexico.",
+        "Monarch butterflies lay eggs and then die.",
+        "Many animals travel long distances to escape cold weather."
+      ],
+      "vocab": {
+        "word": "cling",
+        "meaning": "hold on tightly",
+        "distractors": [
+          "circle overhead",
+          "feed on flowers",
+          "build nests of mud"
+        ]
+      },
+      "vocabHard": {
+        "word": "inherited",
+        "meaning": "passed down at birth instead of learned",
+        "distractors": [
+          "chosen by the strongest butterfly",
+          "copied from older butterflies",
+          "marked out along the ground"
+        ]
+      },
+      "clue": {
+        "answer": "since no returning butterfly ever meets the one that left",
+        "wrong": [
+          "The insects that leave Canada in late summer fly south",
+          "They lay eggs and die along the way"
+        ]
+      },
+      "detail": {
+        "question": "Which detail best supports the idea that no monarch learns the route from another monarch?",
+        "answer": "A butterfly heading north never meets the butterfly that flew south.",
+        "wrong": [
+          "Monarchs leave Canada in late summer.",
+          "The butterflies hold on through the winter in Mexico.",
+          "Monarchs lay their eggs in the spring."
+        ]
+      },
+      "purpose": {
+        "answer": "to explain how monarchs complete a journey no single butterfly finishes",
+        "wrong": [
+          "to describe what monarch butterflies eat",
+          "to argue that Mexico should protect its forests",
+          "to compare butterfly migration with bird migration"
+        ]
+      },
+      "inference": {
+        "answer": "Directions for the route must be carried inside the butterflies themselves.",
+        "wrong": [
+          "Older monarchs lead the younger ones south each fall.",
+          "Monarchs would migrate faster if they lived longer.",
+          "Every generation of monarchs lives the same number of days."
+        ]
+      }
+    },
+    {
+      "text": "The Pony Express carried mail across the American West by relays of riders on fast horses, cutting the trip from months to about ten days. It ran for only eighteen months. In October 1861 crews finished a telegraph line that spanned the continent, and a message that once took ten days now took minutes. The company shut down two days later. A service can be a marvel and still be obsolete almost overnight.",
+      "mainIdea": "The Pony Express was remarkably fast for its day but was replaced almost at once by the telegraph.",
+      "wrong": [
+        "Riders on fast horses carried mail across the American West.",
+        "A telegraph line was completed across the continent in October 1861.",
+        "New inventions keep changing the way people live."
+      ],
+      "vocab": {
+        "word": "relays",
+        "meaning": "teams that take turns covering parts of a route",
+        "distractors": [
+          "wagons pulled by teams of horses",
+          "long rest stops along a road",
+          "maps drawn for travelers"
+        ]
+      },
+      "vocabHard": {
+        "word": "obsolete",
+        "meaning": "no longer useful because something better exists",
+        "distractors": [
+          "too expensive for most customers",
+          "dangerous for the people who run it",
+          "forgotten by historians"
+        ]
+      },
+      "clue": {
+        "answer": "a message that once took ten days now took minutes",
+        "wrong": [
+          "It ran for only eighteen months.",
+          "cutting the trip from months to about ten days"
+        ]
+      },
+      "detail": {
+        "question": "Which detail best shows how quickly the telegraph replaced the Pony Express?",
+        "answer": "The company closed two days after the telegraph line was finished.",
+        "wrong": [
+          "The Pony Express used relays of riders on fast horses.",
+          "Mail had once taken months to cross the West.",
+          "The telegraph line stretched all the way across the continent."
+        ]
+      },
+      "purpose": {
+        "answer": "to show how a new invention made a faster mail service useless",
+        "wrong": [
+          "to describe the daily life of a Pony Express rider",
+          "to explain how a telegraph sends a message",
+          "to argue that mail once traveled more safely by horse"
+        ]
+      },
+      "inference": {
+        "answer": "Customers cared more about how fast a message arrived than about how it traveled.",
+        "wrong": [
+          "Telegraph lines cost less to build than stables and trails.",
+          "Pony Express riders were hired by the telegraph company.",
+          "Mail stopped crossing the West after 1861."
+        ]
+      }
+    },
+    {
+      "text": "A year is not a tidy 365 days. Earth takes about 365 and a quarter days to circle the sun, so a calendar of whole days drifts ahead of the seasons by roughly six hours a year. Adding February 29 every fourth year fixes most of the gap. The quarter is not exact, though, so century years skip the extra day unless they divide evenly by 400. That is why 1900 was ordinary and 2000 was a leap year.",
+      "mainIdea": "Leap days keep the calendar lined up with Earth's orbit, and an extra rule corrects what is left over.",
+      "wrong": [
+        "Earth takes about 365 and a quarter days to travel around the sun.",
+        "The year 2000 was a leap year and the year 1900 was not.",
+        "People have adjusted their calendars many times over the centuries."
+      ],
+      "vocab": {
+        "word": "drifts",
+        "meaning": "slowly slips out of line",
+        "distractors": [
+          "stops all at once",
+          "repeats exactly",
+          "doubles in length"
+        ]
+      },
+      "vocabHard": {
+        "word": "ordinary",
+        "meaning": "having the usual 365 days with no day added",
+        "distractors": [
+          "the first year of a new century",
+          "counted twice on the calendar",
+          "shared by every country"
+        ]
+      },
+      "clue": {
+        "answer": "century years skip the extra day unless they divide evenly by 400",
+        "wrong": [
+          "Earth takes about 365 and a quarter days to circle the sun",
+          "Adding February 29 every fourth year fixes most of the gap"
+        ]
+      },
+      "detail": {
+        "question": "Why is February 29 added every four years?",
+        "answer": "A calendar of whole days slips out of step with the seasons by about six hours each year.",
+        "wrong": [
+          "Century years divide evenly by 400.",
+          "The year 2000 had an extra day in February.",
+          "Earth circles the sun once each year."
+        ]
+      },
+      "purpose": {
+        "answer": "to explain why the calendar needs leap days and the rule that goes with them",
+        "wrong": [
+          "to describe how the seasons change through the year",
+          "to argue that the world should use a new calendar",
+          "to tell the history of the month of February"
+        ]
+      },
+      "inference": {
+        "answer": "The year 2100 will not include a February 29.",
+        "wrong": [
+          "Every year that divides by four is a leap year.",
+          "The seasons would stop happening without leap years.",
+          "Earth's trip around the sun is getting longer each century."
+        ]
+      }
+    },
+    {
+      "text": "Most liquids get denser as they cool, so the cold part sinks. Water does that too, until it nears freezing. Then its molecules lock into a rigid crystal pattern that holds them farther apart, and the ice that forms is lighter than the water below it. That is why a pond freezes from the top down. The sheet of ice insulates the water underneath, and fish spend the winter swimming in the liquid layer it protects.",
+      "mainIdea": "Freezing spreads water molecules apart, so ice floats and a pond stays liquid beneath it.",
+      "wrong": [
+        "Most liquids become denser as their temperature drops.",
+        "Fish are able to survive the winter under a frozen pond.",
+        "Water behaves in surprising ways that scientists study."
+      ],
+      "vocab": {
+        "word": "rigid",
+        "meaning": "stiff and holding its shape",
+        "distractors": [
+          "warm to the touch",
+          "clear and colorless",
+          "able to flow freely"
+        ]
+      },
+      "vocabHard": {
+        "word": "insulates",
+        "meaning": "keeps heat from escaping",
+        "distractors": [
+          "cleans away dirt from",
+          "presses down hard on",
+          "adds oxygen to"
+        ]
+      },
+      "clue": {
+        "answer": "fish spend the winter swimming in the liquid layer it protects",
+        "wrong": [
+          "Most liquids get denser as they cool",
+          "its molecules lock into a rigid crystal pattern"
+        ]
+      },
+      "detail": {
+        "question": "Why does ice float instead of sinking?",
+        "answer": "Freezing locks water molecules into a pattern that holds them farther apart, so ice is lighter than water.",
+        "wrong": [
+          "Fish swim beneath the ice all winter long.",
+          "Most liquids get denser as they cool.",
+          "A pond freezes from the top down."
+        ]
+      },
+      "purpose": {
+        "answer": "to explain why ice forms on the top of a pond rather than the bottom",
+        "wrong": [
+          "to describe what fish eat during the winter",
+          "to argue that frozen ponds are safe to walk on",
+          "to compare ponds with rivers and streams"
+        ]
+      },
+      "inference": {
+        "answer": "If ice sank, a shallow pond could freeze solid and leave fish nowhere to live.",
+        "wrong": [
+          "Water is the only liquid that can turn solid.",
+          "Fish stop moving once the temperature drops.",
+          "The water at the bottom of a pond is colder than the ice above it."
+        ]
+      }
+    },
+    {
+      "text": "A globe curves, but a map is flat, so something has to give. Every flat map distorts shape, area, distance, or direction, and a mapmaker only chooses which one. The common Mercator projection keeps compass directions true, which once mattered enormously to sailors, but it stretches land near the poles. On that map Greenland looks about the size of Africa. Africa is in fact roughly fourteen times larger.",
+      "mainIdea": "Because a flat map cannot copy a curved globe exactly, every projection trades away accuracy somewhere.",
+      "wrong": [
+        "The Mercator projection makes Greenland look as large as Africa.",
+        "Sailors needed maps that showed true compass directions.",
+        "Maps are useful tools for learning about the world."
+      ],
+      "vocab": {
+        "word": "stretches",
+        "meaning": "pulls out of shape so it looks larger",
+        "distractors": [
+          "hides it beneath labels",
+          "colors it a darker shade",
+          "moves it to the edge of the page"
+        ]
+      },
+      "vocabHard": {
+        "word": "distorts",
+        "meaning": "shows something differently from how it really is",
+        "distractors": [
+          "erases something completely",
+          "measures something exactly",
+          "divides something into regions"
+        ]
+      },
+      "clue": {
+        "answer": "it stretches land near the poles",
+        "wrong": [
+          "which once mattered enormously to sailors",
+          "The common Mercator projection keeps compass directions true"
+        ]
+      },
+      "detail": {
+        "question": "Which detail best shows how misleading a flat map can be?",
+        "answer": "Greenland appears about as large as Africa, which is actually about fourteen times bigger.",
+        "wrong": [
+          "Mercator maps show compass directions accurately.",
+          "A globe is curved while a map is flat.",
+          "Sailors once depended on maps at sea."
+        ]
+      },
+      "purpose": {
+        "answer": "to explain why every flat map misrepresents the world in some way",
+        "wrong": [
+          "to describe how a compass works on a ship",
+          "to argue that classrooms should use globes instead of maps",
+          "to tell the history of the country of Greenland"
+        ]
+      },
+      "inference": {
+        "answer": "A mapmaker chooses a projection based on which kind of accuracy the map needs most.",
+        "wrong": [
+          "The Mercator projection contains errors that mapmakers failed to catch.",
+          "Greenland is the largest island drawn on most maps.",
+          "Flat maps are no longer worth using for travel."
+        ]
+      }
+    },
+    {
+      "text": "Lightning heats the air around it to thousands of degrees in an instant. The air swells so violently that it slams into the cooler air beside it, and that shock is the thunder you hear. Light reaches your eyes almost the moment the bolt appears, but sound crawls along at about a fifth of a mile each second. Count the seconds between the flash and the rumble, divide by five, and you have the distance in miles.",
+      "mainIdea": "Thunder is air blasted outward by lightning, and the delay before it reveals how far off the strike was.",
+      "wrong": [
+        "Sound travels about a fifth of a mile every second.",
+        "Lightning heats the air around it to thousands of degrees.",
+        "Counting carefully is a useful skill during a storm."
+      ],
+      "vocab": {
+        "word": "crawls",
+        "meaning": "travels slowly",
+        "distractors": [
+          "moves along the ground",
+          "fades into silence",
+          "bends around obstacles"
+        ]
+      },
+      "vocabHard": {
+        "word": "shock",
+        "meaning": "a sudden push of pressure through the air",
+        "distractors": [
+          "a feeling of surprise",
+          "a jolt of electricity",
+          "a crack in the ground"
+        ]
+      },
+      "clue": {
+        "answer": "The air swells so violently that it slams into the cooler air beside it",
+        "wrong": [
+          "Lightning heats the air around it to thousands of degrees in an instant.",
+          "Count the seconds between the flash and the rumble"
+        ]
+      },
+      "detail": {
+        "question": "Why do you see the flash before you hear the thunder?",
+        "answer": "Light arrives almost instantly, while sound covers only about a fifth of a mile each second.",
+        "wrong": [
+          "Lightning heats the air to thousands of degrees.",
+          "Thunder is made by air striking cooler air.",
+          "Thunder sounds like a rumble rather than a crack."
+        ]
+      },
+      "purpose": {
+        "answer": "to explain what creates thunder and why it arrives after the flash",
+        "wrong": [
+          "to warn readers to take shelter during storms",
+          "to describe how clouds build up electric charge",
+          "to compare storms in summer with storms in winter"
+        ]
+      },
+      "inference": {
+        "answer": "Thunder heard fifteen seconds after a flash came from about three miles away.",
+        "wrong": [
+          "Lightning and thunder happen at two separate moments.",
+          "A louder rumble means the storm is moving faster.",
+          "Lightning that produces no thunder is harmless."
+        ]
+      }
+    },
+    {
+      "text": "Most birds make a whoosh with every wingbeat. Owls do not. The front edge of an owl's flight feather is fringed into tiny comb-like teeth that break the rushing air into smaller swirls, and a velvety surface on top muffles what is left. The result is a hunter that a mouse cannot hear coming. The trade is real: those soft feathers soak up water, so a soaking owl flies poorly until it dries.",
+      "mainIdea": "An owl's feathers are built to silence its flight, and that silence comes with a cost.",
+      "wrong": [
+        "The front edge of an owl's feather has tiny comb-like teeth.",
+        "Owls are able to catch mice that never hear them.",
+        "Feathers are shaped to do many different jobs for birds."
+      ],
+      "vocab": {
+        "word": "muffles",
+        "meaning": "softens a sound",
+        "distractors": [
+          "speeds up",
+          "reflects back",
+          "measures exactly"
+        ]
+      },
+      "vocabHard": {
+        "word": "fringed",
+        "meaning": "edged with a row of small narrow points",
+        "distractors": [
+          "folded over twice",
+          "coated with thin oil",
+          "curved into a hook"
+        ]
+      },
+      "clue": {
+        "answer": "tiny comb-like teeth",
+        "wrong": [
+          "a velvety surface on top muffles what is left",
+          "those soft feathers soak up water"
+        ]
+      },
+      "detail": {
+        "question": "Which detail best shows that silent flight has a drawback?",
+        "answer": "The soft feathers absorb water, so a soaked owl flies poorly.",
+        "wrong": [
+          "The feather's front edge breaks rushing air into smaller swirls.",
+          "Most birds make a whoosh with every wingbeat.",
+          "A mouse cannot hear an owl approaching."
+        ]
+      },
+      "purpose": {
+        "answer": "to explain how owls fly silently and what that ability costs them",
+        "wrong": [
+          "to describe what owls eat and when they hunt",
+          "to argue that owls are the best hunters of all birds",
+          "to explain how a bird's feathers grow in"
+        ]
+      },
+      "inference": {
+        "answer": "An owl would hunt less successfully during a long stretch of rain.",
+        "wrong": [
+          "An owl cannot leave the ground once its feathers are wet.",
+          "Mice have sharper hearing than most other animals.",
+          "Other birds would fly silently if their feathers were cleaner."
+        ]
+      }
+    },
+    {
+      "text": "Scribes in ancient Mesopotamia wrote by pressing a cut reed into damp clay, leaving wedge-shaped marks. Most tablets were meant to be temporary: receipts, school exercises, letters about grain. Then fires swept through storerooms and baked the clay as hard as pottery. Paper and papyrus from the same centuries rotted away, but hundreds of thousands of tablets survived, and much of what we know about Mesopotamian daily life comes from records nobody meant to keep.",
+      "mainIdea": "Clay records meant to be thrown away lasted by accident and became our main source on Mesopotamian life.",
+      "wrong": [
+        "Mesopotamian writers pressed wedge-shaped marks into damp clay.",
+        "Fire can harden soft clay until it is as tough as pottery.",
+        "Ancient people kept careful written records of their business."
+      ],
+      "vocab": {
+        "word": "temporary",
+        "meaning": "meant to last only a short time",
+        "distractors": [
+          "written in a secret code",
+          "copied by hand many times",
+          "read aloud to a crowd"
+        ]
+      },
+      "vocabHard": {
+        "word": "Scribes",
+        "meaning": "people whose job was writing things down",
+        "distractors": [
+          "merchants who traded grain",
+          "builders of clay storerooms",
+          "rulers of ancient cities"
+        ]
+      },
+      "clue": {
+        "answer": "wrote by pressing a cut reed into damp clay",
+        "wrong": [
+          "Then fires swept through storerooms and baked the clay as hard as pottery.",
+          "records nobody meant to keep"
+        ]
+      },
+      "detail": {
+        "question": "Why did so many clay tablets last thousands of years?",
+        "answer": "Fires in the storerooms baked the clay until it was as hard as pottery.",
+        "wrong": [
+          "Tablets held receipts, school exercises, and letters about grain.",
+          "Writers used a cut reed to press marks into the clay.",
+          "Paper from the same centuries rotted away."
+        ]
+      },
+      "purpose": {
+        "answer": "to explain how throwaway everyday records turned into lasting evidence",
+        "wrong": [
+          "to teach readers how to read wedge-shaped writing",
+          "to describe the steps in firing clay pottery",
+          "to argue that ancient schools worked students too hard"
+        ]
+      },
+      "inference": {
+        "answer": "Societies that wrote on materials that decay left behind less for us to study.",
+        "wrong": [
+          "Mesopotamian writers expected their notes to last for thousands of years.",
+          "Every clay tablet ever made has now been dug up and read.",
+          "The storeroom fires destroyed most Mesopotamian writing."
+        ]
+      }
+    },
+    {
+      "text": "A high, fast river of wind called the jet stream snakes west to east across the northern half of the globe. Airliners flying from Los Angeles to New York climb into it and ride along, sometimes gaining a hundred miles an hour over the ground. The return trip fights the same wind, so pilots steer around its cores, the narrow bands where the air moves fastest. That is why an eastbound flight can land an hour before the same route flown west.",
+      "mainIdea": "The jet stream blows west to east, so it speeds eastbound flights and slows westbound ones.",
+      "wrong": [
+        "The jet stream can add a hundred miles an hour to a plane's speed.",
+        "Pilots steer around the fastest bands of the jet stream.",
+        "Weather has a large effect on air travel."
+      ],
+      "vocab": {
+        "word": "snakes",
+        "meaning": "travels in a winding path",
+        "distractors": [
+          "blows straight downward",
+          "stops and starts again",
+          "grows steadily warmer"
+        ]
+      },
+      "vocabHard": {
+        "word": "cores",
+        "meaning": "the narrow parts where the wind is strongest",
+        "distractors": [
+          "the engines that power a plane",
+          "thick layers of storm cloud",
+          "the inner rock of the earth"
+        ]
+      },
+      "clue": {
+        "answer": "the narrow bands where the air moves fastest",
+        "wrong": [
+          "A high, fast river of wind called the jet stream",
+          "Airliners flying from Los Angeles to New York climb into it"
+        ]
+      },
+      "detail": {
+        "question": "Why can an eastbound flight arrive earlier than the same flight heading west?",
+        "answer": "The jet stream blows from west to east, pushing eastbound planes along.",
+        "wrong": [
+          "Pilots steer around the fastest bands of wind.",
+          "The jet stream sits high above the northern half of the globe.",
+          "Airliners have to climb to reach the jet stream."
+        ]
+      },
+      "purpose": {
+        "answer": "to explain how a band of high-altitude wind changes flight times",
+        "wrong": [
+          "to describe how a jet engine produces thrust",
+          "to warn readers that westbound flights are unsafe",
+          "to compare air travel with travel by train"
+        ]
+      },
+      "inference": {
+        "answer": "A pilot flying west may plan a route that stays out of the jet stream.",
+        "wrong": [
+          "The jet stream reverses direction with each change of season.",
+          "Airliners cannot climb high enough to enter the jet stream.",
+          "Flights from New York to Los Angeles are canceled on windy days."
+        ]
+      }
+    },
+    {
+      "text": "A canal cannot run uphill, so builders break the route into steps called locks. A boat enters a chamber, gates close behind it, and valves let water flow in from the higher stretch until the boat rises with it. Then the front gates swing open and the boat sails out at the new level. No pumps are needed on most canals; gravity moves every gallon, and the boat simply floats on top.",
+      "mainIdea": "Locks let boats move between water levels on a canal, and gravity does the lifting.",
+      "wrong": [
+        "Gates and valves control the water inside a lock chamber.",
+        "A canal cannot be built to run uphill.",
+        "Engineers have invented clever ways to move goods by water."
+      ],
+      "vocab": {
+        "word": "stretch",
+        "meaning": "a section of the canal",
+        "distractors": [
+          "a rope used to tow boats",
+          "a gate at the end of a canal",
+          "the act of pulling something longer"
+        ]
+      },
+      "vocabHard": {
+        "word": "locks",
+        "meaning": "chambers that raise or lower boats between water levels",
+        "distractors": [
+          "fasteners that hold a door shut",
+          "sharp bends in a waterway",
+          "strong currents that trap boats"
+        ]
+      },
+      "clue": {
+        "answer": "valves let water flow in from the higher stretch until the boat rises with it",
+        "wrong": [
+          "A canal cannot run uphill",
+          "No pumps are needed on most canals"
+        ]
+      },
+      "detail": {
+        "question": "How does a boat rise inside a lock?",
+        "answer": "Water flows in from the higher stretch and lifts the boat with it.",
+        "wrong": [
+          "The gates in front swing open after the water level changes.",
+          "Builders divide the route into steps.",
+          "A canal cannot run uphill."
+        ]
+      },
+      "purpose": {
+        "answer": "to explain how a boat moves from one water level to another on a canal",
+        "wrong": [
+          "to describe how workers dig a canal",
+          "to argue that canals move goods better than roads do",
+          "to compare canals with natural rivers"
+        ]
+      },
+      "inference": {
+        "answer": "A lock on most canals would still work during a power outage.",
+        "wrong": [
+          "Boats must be pulled through locks by machines.",
+          "A canal carries boats in only one direction.",
+          "A lock chamber fills in just a few seconds."
+        ]
+      }
     }
   ],
   "subjectVerbAgreement": [
@@ -1121,6 +2114,106 @@
         "be"
       ],
       "why": "The real subject, \"reasons,\" is plural."
+    },
+    {
+      "s": "The students in my art class ___ their own brushes.",
+      "answer": "bring",
+      "wrong": [
+        "brings",
+        "is bringing",
+        "brings in"
+      ],
+      "why": "The verb matches the plural subject \"students,\" not the singular noun inside the phrase that follows it."
+    },
+    {
+      "s": "Everyone on the two buses ___ a seat belt.",
+      "answer": "wears",
+      "wrong": [
+        "wear",
+        "are wearing",
+        "wearing"
+      ],
+      "why": "\"Everyone\" is an indefinite pronoun that always takes a singular verb, no matter how many people it covers."
+    },
+    {
+      "s": "One of my cousins ___ in Arizona.",
+      "answer": "lives",
+      "wrong": [
+        "live",
+        "are living",
+        "living"
+      ],
+      "why": "In a \"one of\" phrase, the subject is \"one,\" which is singular."
+    },
+    {
+      "s": "The flock of geese ___ over the pond every October.",
+      "answer": "flies",
+      "wrong": [
+        "fly",
+        "are flying",
+        "have flown"
+      ],
+      "why": "A collective noun like \"flock\" names one group, so it takes a singular verb."
+    },
+    {
+      "s": "Both of the windows ___ painted shut.",
+      "answer": "are",
+      "wrong": [
+        "is",
+        "was",
+        "be"
+      ],
+      "why": "\"Both\" always refers to two things, so it needs a plural verb."
+    },
+    {
+      "s": "The band ___ new uniforms this year.",
+      "answer": "has",
+      "wrong": [
+        "have",
+        "are having",
+        "having"
+      ],
+      "why": "A group acting as one unit takes a singular verb, even though it contains many members."
+    },
+    {
+      "s": "Somebody in the back rows ___ humming.",
+      "answer": "is",
+      "wrong": [
+        "are",
+        "were",
+        "be"
+      ],
+      "why": "\"Somebody\" is singular, and the phrase \"in the back rows\" cannot change the subject."
+    },
+    {
+      "s": "The list of ingredients ___ on the back of the box.",
+      "answer": "appears",
+      "wrong": [
+        "appear",
+        "are appearing",
+        "appearing"
+      ],
+      "why": "The subject is \"list,\" so the plural noun in the prepositional phrase does not control the verb."
+    },
+    {
+      "s": "Few of the seats ___ empty at the concert.",
+      "answer": "were",
+      "wrong": [
+        "was",
+        "is",
+        "has been"
+      ],
+      "why": "\"Few\" points to more than one thing, so it takes a plural verb."
+    },
+    {
+      "s": "Most of the paint ___ dried already.",
+      "answer": "has",
+      "wrong": [
+        "have",
+        "were",
+        "are"
+      ],
+      "why": "With \"most,\" the verb follows the noun after \"of,\" and \"paint\" is singular here."
     }
   ],
   "punctuation": [
@@ -1173,6 +2266,106 @@
         "no punctuation"
       ],
       "why": "Commas set off a nonessential clause."
+    },
+    {
+      "s": "Maya finished her essay ___ but she forgot to print it.",
+      "answer": ",",
+      "wrong": [
+        ";",
+        ":",
+        "no punctuation"
+      ],
+      "why": "When a coordinating conjunction joins two independent clauses, a comma comes before it."
+    },
+    {
+      "s": "Please hand me the wrench ___ Dad.",
+      "answer": ",",
+      "wrong": [
+        ":",
+        ";",
+        "no punctuation"
+      ],
+      "why": "A name used to address someone directly is set off from the rest of the sentence."
+    },
+    {
+      "s": "We moved to Denver ___ Colorado, in March.",
+      "answer": ",",
+      "wrong": [
+        ";",
+        ":",
+        "no punctuation"
+      ],
+      "why": "A comma separates the name of a city from the state that follows it."
+    },
+    {
+      "s": "Did you remember to feed the fish ___",
+      "answer": "?",
+      "wrong": [
+        ".",
+        "!",
+        ","
+      ],
+      "why": "A sentence that asks something directly ends with an end mark showing inquiry."
+    },
+    {
+      "s": "The teacher collected every student___s notebook.",
+      "answer": "'",
+      "wrong": [
+        ",",
+        "-",
+        "no punctuation"
+      ],
+      "why": "Ownership by a single person is shown by adding an apostrophe plus s."
+    },
+    {
+      "s": "She carried a ten___pound bag of flour up the stairs.",
+      "answer": "-",
+      "wrong": [
+        ",",
+        "'",
+        "no punctuation"
+      ],
+      "why": "Two words acting as one adjective before a noun are joined with a hyphen."
+    },
+    {
+      "s": "Lena said ___ \"I'll meet you at the corner.\"",
+      "answer": ",",
+      "wrong": [
+        ";",
+        ":",
+        "no punctuation"
+      ],
+      "why": "A comma separates a speech tag from the quoted words that follow it."
+    },
+    {
+      "s": "The tour stops in Lima, Peru ___ Quito, Ecuador; and Bogotá, Colombia.",
+      "answer": ";",
+      "wrong": [
+        ",",
+        ":",
+        "no punctuation"
+      ],
+      "why": "When list items already contain commas, a stronger mark keeps the items from blurring together."
+    },
+    {
+      "s": "The book on the shelf ___ belongs to Nina.",
+      "answer": "no punctuation",
+      "wrong": [
+        ",",
+        ";",
+        ":"
+      ],
+      "why": "Nothing should separate a subject from its verb, even when a phrase describes the subject."
+    },
+    {
+      "s": "Swim practice starts at 4___30 tomorrow morning.",
+      "answer": ":",
+      "wrong": [
+        ".",
+        ",",
+        ";"
+      ],
+      "why": "Hours and minutes are divided by a colon when writing a time."
     }
   ],
   "capitalization": [
@@ -1200,6 +2393,56 @@
       "wrong": "she reads the new york times on mondays.",
       "right": "She reads The New York Times on Mondays.",
       "why": "Titles of publications and days of the week are capitalized."
+    },
+    {
+      "wrong": "on thanksgiving we drive to aunt rosa's house.",
+      "right": "On Thanksgiving we drive to Aunt Rosa's house.",
+      "why": "Holiday names are proper nouns, and a family title counts as part of the name when it sits in front of one."
+    },
+    {
+      "wrong": "my brother and i study spanish on tuesdays.",
+      "right": "My brother and I study Spanish on Tuesdays.",
+      "why": "The pronoun \"I\" is always capitalized, and so are language names and days of the week."
+    },
+    {
+      "wrong": "the pacific ocean is deeper than the caribbean sea.",
+      "right": "The Pacific Ocean is deeper than the Caribbean Sea.",
+      "why": "The full name of a specific body of water is a proper noun, including the word \"Ocean\" or \"Sea\" in that name."
+    },
+    {
+      "wrong": "we toured the lincoln memorial in washington, d.c., last spring.",
+      "right": "We toured the Lincoln Memorial in Washington, D.C., last spring.",
+      "why": "Monuments and cities have proper names, but seasons of the year do not."
+    },
+    {
+      "wrong": "our class built a model of jupiter out of clay.",
+      "right": "Our class built a model of Jupiter out of clay.",
+      "why": "Planets have proper names, while ordinary nouns like materials and objects stay lower case."
+    },
+    {
+      "wrong": "ms. alvarez read charlotte's web to us after lunch.",
+      "right": "Ms. Alvarez read Charlotte's Web to us after lunch.",
+      "why": "A title used before a person's name is capitalized, and so are the main words in a book title."
+    },
+    {
+      "wrong": "the bakery on elm street sells italian bread.",
+      "right": "The bakery on Elm Street sells Italian bread.",
+      "why": "Street names and adjectives made from country names are capitalized, but a general noun like bakery is not."
+    },
+    {
+      "wrong": "we read about the boston tea party in history class.",
+      "right": "We read about the Boston Tea Party in history class.",
+      "why": "Named historical events are proper nouns, while ordinary school subjects stay lower case."
+    },
+    {
+      "wrong": "the coach said, \"practice starts at six.\"",
+      "right": "The coach said, \"Practice starts at six.\"",
+      "why": "The first word of a complete quoted sentence begins a new sentence and needs a capital."
+    },
+    {
+      "wrong": "yellowstone national park is mostly in wyoming.",
+      "right": "Yellowstone National Park is mostly in Wyoming.",
+      "why": "The official name of a park is a proper noun, as is the name of a state."
     }
   ],
   "sentenceType": [
@@ -1232,6 +2475,56 @@
       "s": "The rain stopped the sun came out the birds returned.",
       "answer": "run-on",
       "why": "Three sentences are strung together without punctuation."
+    },
+    {
+      "s": "The museum opens at nine every Saturday morning.",
+      "answer": "complete sentence",
+      "why": "A subject paired with a verb that tells what it does forms a whole thought."
+    },
+    {
+      "s": "A box of old photographs at the top of the closet.",
+      "answer": "fragment",
+      "why": "A naming phrase needs a verb before it can stand on its own."
+    },
+    {
+      "s": "The library closes early today we should return the books now.",
+      "answer": "run-on",
+      "why": "Two independent clauses must be separated by end punctuation, a semicolon, or a comma plus a joining word."
+    },
+    {
+      "s": "To finish the model airplane before Friday.",
+      "answer": "fragment",
+      "why": "A phrase beginning with \"to\" plus a verb names an action but never serves as the main verb of a thought."
+    },
+    {
+      "s": "Miguel checked the recipe twice before he turned on the oven.",
+      "answer": "complete sentence",
+      "why": "A dependent clause attached to a main clause still leaves a full thought standing."
+    },
+    {
+      "s": "Ana fed the goats, she filled the water trough next.",
+      "answer": "run-on",
+      "why": "A comma alone is too weak to join two groups of words that could each be a sentence."
+    },
+    {
+      "s": "Which my grandmother planted long before I was born.",
+      "answer": "fragment",
+      "why": "A clause opening with a relative word like \"which\" has to describe something in a larger sentence."
+    },
+    {
+      "s": "Volcanoes erupt when pressure builds under the crust.",
+      "answer": "complete sentence",
+      "why": "The main clause carries a subject and a verb, so the added time clause only gives extra detail."
+    },
+    {
+      "s": "My front tire went flat I patched it with a repair kit.",
+      "answer": "run-on",
+      "why": "Two statements crashing together with no punctuation between them make the reader guess where one ends."
+    },
+    {
+      "s": "The wind blew hard, but the tent stayed up.",
+      "answer": "complete sentence",
+      "why": "A comma placed before a joining word such as \"but\" correctly links two equal clauses."
     }
   ],
   "verbTense": [
@@ -1274,6 +2567,106 @@
         "will live"
       ],
       "why": "\"Since\" with a continuing action calls for present perfect."
+    },
+    {
+      "s": "Every morning my brother ___ the dog around the block.",
+      "answer": "walks",
+      "wrong": [
+        "walked",
+        "will walk",
+        "walking"
+      ],
+      "why": "A repeated daily habit is written in the simple present tense."
+    },
+    {
+      "s": "Tomorrow morning the crew ___ the broken gate.",
+      "answer": "will repair",
+      "wrong": [
+        "repaired",
+        "has repaired",
+        "repairing"
+      ],
+      "why": "\"Tomorrow\" points to an action that has not happened yet, so the future tense is needed."
+    },
+    {
+      "s": "She ___ her lunch already, so she isn't hungry.",
+      "answer": "has eaten",
+      "wrong": [
+        "eats",
+        "will eat",
+        "is eating"
+      ],
+      "why": "\"Already\" with a result that still matters calls for the present perfect."
+    },
+    {
+      "s": "The train ___ before we reached the platform.",
+      "answer": "had left",
+      "wrong": [
+        "leaves",
+        "will leave",
+        "is leaving"
+      ],
+      "why": "Past perfect shows which of two past actions happened first."
+    },
+    {
+      "s": "Right now the kittens ___ under the porch.",
+      "answer": "are sleeping",
+      "wrong": [
+        "slept",
+        "will sleep",
+        "sleep"
+      ],
+      "why": "\"Right now\" signals an action happening at this moment, which takes the present progressive."
+    },
+    {
+      "s": "We ___ for the bus for twenty minutes, and it still hasn't come.",
+      "answer": "have been waiting",
+      "wrong": [
+        "wait",
+        "waited",
+        "will wait"
+      ],
+      "why": "Present perfect progressive shows an action that started earlier and is still going on."
+    },
+    {
+      "s": "Last winter the lake ___ solid enough for skating.",
+      "answer": "froze",
+      "wrong": [
+        "freezes",
+        "will freeze",
+        "is freezing"
+      ],
+      "why": "A finished event in a named past season takes the simple past."
+    },
+    {
+      "s": "This time tomorrow we ___ over the mountains in a small plane.",
+      "answer": "will be flying",
+      "wrong": [
+        "flew",
+        "fly",
+        "have flown"
+      ],
+      "why": "Future progressive describes an action that will be in progress at a stated future moment."
+    },
+    {
+      "s": "Owls rarely ___ during the daylight hours.",
+      "answer": "hunt",
+      "wrong": [
+        "hunted",
+        "will hunt",
+        "hunting"
+      ],
+      "why": "General facts about how something usually behaves stay in the simple present."
+    },
+    {
+      "s": "Workers ___ this stone bridge more than a hundred years ago.",
+      "answer": "built",
+      "wrong": [
+        "build",
+        "will build",
+        "have built"
+      ],
+      "why": "The phrase \"ago\" fixes an action at a finished point in the past."
     }
   ],
   "figurativeLanguage": [
@@ -1316,6 +2709,56 @@
       "s": "The thunder grumbled all night.",
       "answer": "personification",
       "why": "Thunder is given a human behavior."
+    },
+    {
+      "s": "My backpack weighed a thousand pounds by the end of the hike.",
+      "answer": "hyperbole",
+      "why": "An impossible amount is used on purpose to stress how heavy something felt."
+    },
+    {
+      "s": "Seven seagulls settled on the sandy shore.",
+      "answer": "alliteration",
+      "why": "The same beginning consonant sound repeats across nearby words."
+    },
+    {
+      "s": "The old car coughed twice before it finally started.",
+      "answer": "personification",
+      "why": "A machine is described doing something only a living person does."
+    },
+    {
+      "s": "At dawn the lake was a sheet of glass.",
+      "answer": "metaphor",
+      "why": "One thing is named as another directly, with no comparing word in between."
+    },
+    {
+      "s": "The fresh snow crunched like cereal under our boots.",
+      "answer": "simile",
+      "why": "Two unlike things are compared using the word \"like\"."
+    },
+    {
+      "s": "Dad dropped the dusty dictionary on the desk.",
+      "answer": "alliteration",
+      "why": "Several words in a row start with the same sound."
+    },
+    {
+      "s": "I waited in that line for a hundred years.",
+      "answer": "hyperbole",
+      "why": "The stretch of time is exaggerated far past what could really happen."
+    },
+    {
+      "s": "The alarm clock yelled at us this morning.",
+      "answer": "personification",
+      "why": "A human action is handed to an object that cannot really do it."
+    },
+    {
+      "s": "The classroom was a beehive during the science fair.",
+      "answer": "metaphor",
+      "why": "The comparison is made by calling one thing the other outright."
+    },
+    {
+      "s": "His hands were as cold as river stones.",
+      "answer": "simile",
+      "why": "The comparison is signaled by the word \"as\"."
     }
   ],
   "analogies": [
@@ -1390,6 +2833,126 @@
         "year"
       ],
       "why": "Sixty seconds make a minute; seven days make a week."
+    },
+    {
+      "a": "scissors",
+      "b": "cut",
+      "c": "broom",
+      "answer": "sweep",
+      "wrong": [
+        "floor",
+        "dust",
+        "handle"
+      ],
+      "why": "Each tool is paired with the action it is used to perform."
+    },
+    {
+      "a": "page",
+      "b": "book",
+      "c": "brick",
+      "answer": "wall",
+      "wrong": [
+        "clay",
+        "mason",
+        "heavy"
+      ],
+      "why": "A single piece is paired with the whole thing it helps build."
+    },
+    {
+      "a": "warm",
+      "b": "hot",
+      "c": "damp",
+      "answer": "soaked",
+      "wrong": [
+        "dry",
+        "towel",
+        "water"
+      ],
+      "why": "The second word is a stronger degree of the first."
+    },
+    {
+      "a": "lion",
+      "b": "roar",
+      "c": "frog",
+      "answer": "croak",
+      "wrong": [
+        "pond",
+        "hop",
+        "green"
+      ],
+      "why": "An animal is paired with the sound it makes."
+    },
+    {
+      "a": "teacher",
+      "b": "classroom",
+      "c": "judge",
+      "answer": "courtroom",
+      "wrong": [
+        "law",
+        "robe",
+        "jury"
+      ],
+      "why": "A worker is paired with the room where that work happens."
+    },
+    {
+      "a": "mouse",
+      "b": "mice",
+      "c": "goose",
+      "answer": "geese",
+      "wrong": [
+        "gooses",
+        "flock",
+        "gander"
+      ],
+      "why": "The second word is the irregular plural of the first."
+    },
+    {
+      "a": "window",
+      "b": "glass",
+      "c": "tire",
+      "answer": "rubber",
+      "wrong": [
+        "wheel",
+        "road",
+        "car"
+      ],
+      "why": "An object is paired with the material it is made from."
+    },
+    {
+      "a": "France",
+      "b": "Paris",
+      "c": "Japan",
+      "answer": "Tokyo",
+      "wrong": [
+        "Osaka",
+        "Asia",
+        "yen"
+      ],
+      "why": "A country is paired with its capital city."
+    },
+    {
+      "a": "thermometer",
+      "b": "temperature",
+      "c": "scale",
+      "answer": "weight",
+      "wrong": [
+        "kitchen",
+        "ruler",
+        "heavy"
+      ],
+      "why": "An instrument is paired with the quantity it measures."
+    },
+    {
+      "a": "happy",
+      "b": "joyful",
+      "c": "tired",
+      "answer": "weary",
+      "wrong": [
+        "awake",
+        "bed",
+        "nap"
+      ],
+      "why": "The two words in each pair mean nearly the same thing."
     }
   ],
   "plurals": [
@@ -1464,6 +3027,96 @@
         "heroies",
         "heroses"
       ]
+    },
+    {
+      "sing": "tooth",
+      "answer": "teeth",
+      "wrong": [
+        "tooths",
+        "toothes",
+        "teeths"
+      ]
+    },
+    {
+      "sing": "knife",
+      "answer": "knives",
+      "wrong": [
+        "knifes",
+        "knifs",
+        "knive"
+      ]
+    },
+    {
+      "sing": "goose",
+      "answer": "geese",
+      "wrong": [
+        "gooses",
+        "geeses",
+        "goosen"
+      ]
+    },
+    {
+      "sing": "sheep",
+      "answer": "sheep",
+      "wrong": [
+        "sheeps",
+        "sheepes",
+        "sheepen"
+      ]
+    },
+    {
+      "sing": "woman",
+      "answer": "women",
+      "wrong": [
+        "womans",
+        "womens",
+        "wimen"
+      ]
+    },
+    {
+      "sing": "church",
+      "answer": "churches",
+      "wrong": [
+        "churchs",
+        "churchies",
+        "churchen"
+      ]
+    },
+    {
+      "sing": "ox",
+      "answer": "oxen",
+      "wrong": [
+        "oxs",
+        "oxies",
+        "oxi"
+      ]
+    },
+    {
+      "sing": "criterion",
+      "answer": "criteria",
+      "wrong": [
+        "criterions",
+        "criterias",
+        "criterion"
+      ]
+    },
+    {
+      "sing": "bacterium",
+      "answer": "bacteria",
+      "wrong": [
+        "bacteriums",
+        "bacteriae",
+        "bacterias"
+      ]
+    },
+    {
+      "sing": "series",
+      "answer": "series",
+      "wrong": [
+        "serieses",
+        "serie",
+        "seri"
+      ]
     }
   ],
   "pronounAntecedent": [
@@ -1506,6 +3159,106 @@
         "them"
       ],
       "why": "\"Neither\" is singular, matching a singular possessive."
+    },
+    {
+      "s": "The box of crayons is missing ___ lid.",
+      "answer": "its",
+      "wrong": [
+        "it's",
+        "their",
+        "theirs"
+      ],
+      "why": "A prepositional phrase like \"of crayons\" never changes the number of the subject it follows."
+    },
+    {
+      "s": "The players on the soccer team carried ___ own water bottles.",
+      "answer": "their",
+      "wrong": [
+        "its",
+        "his",
+        "theirs"
+      ],
+      "why": "The subject is the plural noun \"players,\" not the singular word that ends the phrase."
+    },
+    {
+      "s": "Marcus and Dana finished ___ science project a day early.",
+      "answer": "their",
+      "wrong": [
+        "his",
+        "her",
+        "theirs"
+      ],
+      "why": "Two nouns joined by \"and\" form a plural antecedent, and a possessive placed before a noun drops the final s."
+    },
+    {
+      "s": "Either Ms. Reyes or Ms. Patel will bring ___ camera on the field trip.",
+      "answer": "her",
+      "wrong": [
+        "their",
+        "hers",
+        "she's"
+      ],
+      "why": "When two singular nouns are joined by \"or,\" only one of them acts, so the pronoun stays singular."
+    },
+    {
+      "s": "Neither the boots nor the raincoat was in ___ usual spot.",
+      "answer": "its",
+      "wrong": [
+        "their",
+        "it's",
+        "theirs"
+      ],
+      "why": "With \"neither...nor,\" the pronoun matches the noun closest to the verb."
+    },
+    {
+      "s": "A pair of scissors cuts cleanly only when ___ blades are sharp.",
+      "answer": "its",
+      "wrong": [
+        "it's",
+        "their",
+        "theirs"
+      ],
+      "why": "\"Pair\" names one object, so it takes a singular pronoun even though the thing has two parts."
+    },
+    {
+      "s": "The children hung ___ coats on the hooks by the door.",
+      "answer": "their",
+      "wrong": [
+        "his",
+        "its",
+        "theirs"
+      ],
+      "why": "\"Children\" is an irregular plural, so it needs a plural pronoun even without an s at the end."
+    },
+    {
+      "s": "The geese landed on the pond and dipped ___ heads under the water.",
+      "answer": "their",
+      "wrong": [
+        "its",
+        "it's",
+        "his"
+      ],
+      "why": "\"Geese\" is the plural of \"goose,\" so the pronoun that refers to it must be plural."
+    },
+    {
+      "s": "Mathematics has ___ own vocabulary, including words like quotient and factor.",
+      "answer": "its",
+      "wrong": [
+        "it's",
+        "their",
+        "theirs"
+      ],
+      "why": "Some subject names end in s but still name one thing, so they take singular pronouns."
+    },
+    {
+      "s": "Jamal, along with his three cousins, brought ___ own tent to the campsite.",
+      "answer": "his",
+      "wrong": [
+        "their",
+        "theirs",
+        "he's"
+      ],
+      "why": "A phrase set off by commas, such as one beginning with \"along with,\" does not make a singular antecedent plural."
     }
   ]
 }
