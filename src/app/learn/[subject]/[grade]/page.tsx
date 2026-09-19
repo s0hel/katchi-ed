@@ -52,9 +52,14 @@ export default async function GradePage({ params }: Props) {
           </p>
         </div>
 
-        <Link href={`/assessment?subject=${subject}&grade=${gradeNum}`} className="kx-btn-ghost">
-          Take the {gradeLabel(gradeNum).toLowerCase()} assessment
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link href={`/worksheet?subject=${subject}&grade=${gradeNum}`} className="kx-btn-ghost">
+            Printable worksheet
+          </Link>
+          <Link href={`/assessment?subject=${subject}&grade=${gradeNum}`} className="kx-btn-ghost">
+            Take the {gradeLabel(gradeNum).toLowerCase()} assessment
+          </Link>
+        </div>
       </div>
 
       <div className="mt-8 space-y-8">

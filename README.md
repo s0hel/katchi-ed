@@ -24,6 +24,11 @@ than missing a hard one.
 **Assessments.** Fixed-form question sets spread across a grade's strands,
 answered without feedback, then scored with a per-question review.
 
+**Printable worksheets.** Any grade, or any set of skills within it, prints as
+a paper worksheet with an optional answer key. The sheet is a pure function of
+its URL, so the link you land on reprints that exact worksheet and changing the
+seed gives you form B.
+
 **Lesson videos.** Each skill links a Khan Academy lesson, embedded through
 YouTube's privacy-enhanced player.
 
@@ -37,6 +42,7 @@ src/lib/grading.ts        answer normalization and comparison
 src/lib/smartscore.ts     the mastery meter
 src/lib/diagnostic.ts     adaptive strand-level estimation
 src/lib/assessment.ts     fixed-form blueprints
+src/lib/worksheet.ts      printable worksheet specs, encoded in the URL
 src/lib/progress.ts       learner progress (localStorage, via useSyncExternalStore)
 src/app/api/              question / grade / assessment-grade endpoints
 ```
@@ -56,6 +62,31 @@ backend configuration. It is read through `useSyncExternalStore`, so the server
 render and hydration agree and cross-tab updates come for free. Everything goes
 through the API in `src/lib/progress.ts` — swapping in a database means
 implementing `read`/`commit` and the mutators, not rewriting pages.
+
+## Worksheets, PDFs, and the answer key
+
+`/worksheet` builds a sheet; `/worksheet/print` renders it. The PDF comes from
+the browser's own print dialog ("Save as PDF"), driven by the `@media print`
+block at the end of `globals.css`. That block *is* the PDF renderer, which is
+the point: a second PDF engine would have to re-draw the inline SVG figures and
+the question tables that the screen already renders correctly. Instead print
+drops the app chrome, forces the light palette (dark mode would otherwise print
+near-white text onto white paper), and keeps a question whole on one page.
+
+The sheet's whole spec lives in the query string, so `/worksheet/print` first
+canonicalizes the URL and redirects — minting a seed if there isn't one, and
+clamping anything out of range. The address you end up on reprints that exact
+worksheet; the builder links without a seed, so every click is a new one.
+
+### The answer key does not weaken `/api/grade`
+
+A worksheet prints answers and practice never does, so the two must not be able
+to name the same question. Worksheet item seeds are derived into
+`[2^31, 2^32)`; `newSeed()` and the `seed` field of every request schema in
+`api-schema.ts` stop at `2^31`. The spaces are disjoint by construction, so no
+amount of editing a worksheet URL will print the answer to a question the app
+is currently grading someone on — and the practice endpoints reject a worksheet
+seed outright. `src/lib/__tests__/worksheet.test.ts` asserts both halves.
 
 ## Lesson videos and licensing
 
@@ -111,7 +142,7 @@ committed. Items that fail are printed and dropped, never auto-repaired.
 ```bash
 npm install
 npm run dev        # Turbopack dev server
-npm test           # 100 tests: generators, grading, SmartScore, diagnostic, content banks
+npm test           # generators, grading, SmartScore, diagnostic, worksheets, content banks
 npm run lint
 npm run typecheck
 npm run build      # Turbopack production build

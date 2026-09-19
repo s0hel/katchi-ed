@@ -8,6 +8,7 @@ const NAV = [
   { href: "/learn", label: "Learn" },
   { href: "/diagnostic", label: "Diagnostic" },
   { href: "/assessment", label: "Assessments" },
+  { href: "/worksheet", label: "Worksheets" },
   { href: "/dashboard", label: "Progress" },
 ];
 
@@ -16,7 +17,7 @@ export function SiteHeader() {
   const { streakDays, ready } = useProgress();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[var(--kx-border)] bg-[var(--kx-bg)]/85 backdrop-blur">
+    <header className="kx-screen-only sticky top-0 z-40 border-b border-[var(--kx-border)] bg-[var(--kx-bg)]/85 backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center gap-2 px-4 py-3 sm:px-6">
         <Link href="/" className="flex items-center gap-2 pr-2 text-lg font-bold tracking-tight">
           <span

@@ -39,7 +39,15 @@ export default async function PracticePage({ params }: Props) {
         <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">
           <span className="text-[var(--kx-muted)]">{skill.code}</span> {skill.name}
         </h1>
-        <p className="mt-1 text-sm text-[var(--kx-muted)]">{skill.strand}</p>
+        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[var(--kx-muted)]">
+          <span>{skill.strand}</span>
+          <Link
+            href={`/worksheet?subject=${skill.subject}&grade=${skill.grade}&skills=${skill.id}`}
+            className="font-semibold text-brand-700 dark:text-brand-300"
+          >
+            Printable worksheet
+          </Link>
+        </div>
       </div>
 
       <PracticeSession skill={skill} video={videoForSkill(skill)} />

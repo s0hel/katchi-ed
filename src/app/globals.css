@@ -134,3 +134,84 @@ body {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* ------------------------------------------------------------ worksheets */
+
+/* Blanks a learner writes on. Borders print; backgrounds do not. */
+.kx-rule {
+  display: inline-block;
+  border-bottom: 1px solid var(--kx-text);
+  vertical-align: baseline;
+}
+
+.kx-choice .kx-stem p,
+.kx-key .kx-stem p { margin: 0; }
+
+.kx-sheet--2col { column-count: 2; column-gap: 2.25rem; }
+.kx-sheet-item { break-inside: avoid; }
+
+/*
+ * Figures are drawn for a screen, where they get a whole panel. A tall one
+ * (a 2 x 7 rectangle, say) has a narrow viewBox and would scale itself --
+ * labels and all -- to fill the column. Capping the height instead of only
+ * the width keeps it beside the question rather than instead of it.
+ */
+.kx-sheet .kx-figure svg { max-height: 7.5rem; }
+
+/* --------------------------------------------------------------- printing */
+
+/*
+ * The print stylesheet is the PDF renderer: a worksheet becomes a PDF through
+ * the browser's own "Save as PDF", which is what lets a printed sheet keep the
+ * SVG figures and question tables the screen shows. So this block has to drop
+ * the app chrome, force the light palette (dark mode would otherwise print
+ * near-white text on white paper), and keep a question whole on one page.
+ *
+ * It comes last in the file on purpose: it overrides the dark-mode `:root`
+ * block above at equal specificity, which only later rules can do.
+ */
+@media print {
+  @page {
+    size: letter portrait;
+    margin: 0.55in 0.6in;
+  }
+
+  :root {
+    --kx-bg: #fff;
+    --kx-surface: #fff;
+    --kx-surface-2: #fff;
+    --kx-border: #64748b;
+    --kx-text: #000;
+    --kx-muted: #334155;
+    --kx-fig-fill: #fff;
+    --kx-fig-stroke: #000;
+    --kx-shadow: none;
+  }
+
+  html, body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Anything that only makes sense on screen: nav, toolbars, help text. */
+  .kx-screen-only { display: none !important; }
+
+  /* The root layout's centered, padded shell is screen furniture; @page owns
+     the margins once we are on paper. */
+  body > main {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .kx-card {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .kx-page-break { break-before: page; }
+
+  /* URLs are noise on paper, and the sheet prints its own code instead. */
+  a { color: inherit; text-decoration: none; }
+}
