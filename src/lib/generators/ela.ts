@@ -76,6 +76,9 @@ const capitalization: GeneratorFn = (rng, level) => {
     instructions: "Rewrite the sentence with correct capitalization.",
     stem: `${item.wrong}`,
     answer: item.right,
+    // capitalization is the whole answer here, so it must be compared
+    accept: item.accept,
+    caseSensitive: true,
     placeholder: "Type the corrected sentence",
     explanation: `${item.right}\n\n${item.why}`,
     hint: "Check the first word, names, places, months, and days.",

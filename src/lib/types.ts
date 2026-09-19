@@ -2,7 +2,8 @@ export type Subject = "math" | "ela";
 
 export type AnswerFormat =
   | { kind: "numeric" }
-  | { kind: "text"; placeholder?: string }
+  /** `caseSensitive` is for questions where capitalization IS the answer. */
+  | { kind: "text"; placeholder?: string; caseSensitive?: boolean }
   | { kind: "choice"; choices: string[] }
   | { kind: "fraction" }
   | { kind: "pair"; labels: [string, string] };

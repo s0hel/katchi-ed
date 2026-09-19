@@ -60,9 +60,20 @@ function reduce({ n, d }: { n: number; d: number }): { n: number; d: number } {
   return { n: (sign * n) / g, d: (sign * d) / g };
 }
 
-/** Text answers: ignore case, punctuation spacing, and trailing periods. */
-function textish(s: string): string {
-  return normalize(s)
+/**
+ * Text answers: ignore punctuation spacing and trailing periods, and -- unless
+ * the question says otherwise -- case.
+ *
+ * `keepCase` exists for the capitalization skill. Lower-casing both sides there
+ * compares the student's answer against the prompt with the one thing being
+ * tested erased, so copying the miscapitalized sentence back unchanged scored
+ * as correct on every question.
+ */
+function textish(s: string, keepCase = false): string {
+  const base = keepCase
+    ? s.trim().replace(/[\u2212\u2013\u2014]/g, "-").replace(/[\u2019\u2018]/g, "'").replace(/[\u201c\u201d]/g, '"').replace(/\s+/g, " ")
+    : normalize(s);
+  return base
     .replace(/\s*([,;:.!?])\s*/g, "$1")
     .replace(/[.]+$/, "")
     .replace(/\s+/g, " ");
@@ -115,7 +126,10 @@ function matches(question: Question, expected: string, response: string): boolea
     }
     case "choice":
       return textish(expected) === textish(response);
-    case "text":
+    case "text": {
+      const keepCase = question.format.caseSensitive === true;
+      return textish(expected, keepCase) === textish(response, keepCase);
+    }
     default:
       return textish(expected) === textish(response);
   }

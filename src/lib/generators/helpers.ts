@@ -29,9 +29,11 @@ export function numeric(q: Omit<GeneratedQuestion, "format">): GeneratedQuestion
   return { ...q, format: { kind: "numeric" } };
 }
 
-export function text(q: Omit<GeneratedQuestion, "format"> & { placeholder?: string }): GeneratedQuestion {
-  const { placeholder, ...rest } = q;
-  return { ...rest, format: { kind: "text", placeholder } };
+export function text(
+  q: Omit<GeneratedQuestion, "format"> & { placeholder?: string; caseSensitive?: boolean },
+): GeneratedQuestion {
+  const { placeholder, caseSensitive, ...rest } = q;
+  return { ...rest, format: { kind: "text", placeholder, caseSensitive } };
 }
 
 /**

@@ -79,6 +79,8 @@ export interface CapitalizationItem {
   wrong: string;
   right: string;
   why: string;
+  /** other capitalizations a style guide would also allow */
+  accept?: string[];
 }
 
 export interface AnalogyItem {

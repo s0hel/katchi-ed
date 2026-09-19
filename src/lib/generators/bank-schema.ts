@@ -86,7 +86,7 @@ const closedSetItem = <T extends readonly [string, ...string[]]>(answers: T) =>
   z.object({ s: nonEmpty, answer: z.enum(answers), why: nonEmpty });
 
 const capitalizationItem = z
-  .object({ wrong: nonEmpty, right: nonEmpty, why: nonEmpty })
+  .object({ wrong: nonEmpty, right: nonEmpty, why: nonEmpty, accept: z.array(nonEmpty).optional() })
   .refine((c) => c.wrong !== c.right, { message: "wrong and right must differ" })
   .refine((c) => c.right !== c.right.toLowerCase(), { message: "right must contain capitals" });
 

@@ -2392,7 +2392,10 @@
     {
       "wrong": "she reads the new york times on mondays.",
       "right": "She reads The New York Times on Mondays.",
-      "why": "Titles of publications and days of the week are capitalized."
+      "why": "Titles of publications and days of the week are capitalized.",
+      "accept": [
+        "She reads the New York Times on Mondays."
+      ]
     },
     {
       "wrong": "on thanksgiving we drive to aunt rosa's house.",
@@ -2412,7 +2415,10 @@
     {
       "wrong": "we toured the lincoln memorial in washington, d.c., last spring.",
       "right": "We toured the Lincoln Memorial in Washington, D.C., last spring.",
-      "why": "Monuments and cities have proper names, but seasons of the year do not."
+      "why": "Monuments and cities have proper names, but seasons of the year do not.",
+      "accept": [
+        "We toured the Lincoln Memorial in Washington, DC, last spring."
+      ]
     },
     {
       "wrong": "our class built a model of jupiter out of clay.",
