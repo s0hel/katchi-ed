@@ -190,3 +190,38 @@ describe("grade appropriateness", () => {
     expect(missing.slice(0, 5)).toEqual([]);
   });
 });
+
+describe("question typography", () => {
+  it("uses one minus glyph per question", () => {
+    // Generators write the operator as U+2212 while interpolated negatives
+    // arrive as an ASCII hyphen, which produced "4 − 11 = -7".
+    const mixed: string[] = [];
+    for (const skill of SKILLS) {
+      for (let level = 1; level <= (skill.levels ?? 4); level++) {
+        for (const seed of [5, 136, 267, 398, 529]) {
+          const q = generateQuestion(skill, level, seed);
+          for (const field of [q.stem, q.explanation, q.hint ?? ""]) {
+            if (field.includes("−") && /-\d/.test(field)) {
+              mixed.push(`${skill.id} L${level}: ${field.replace(/\n+/g, " ").slice(0, 60)}`);
+            }
+          }
+        }
+      }
+    }
+    expect(mixed.slice(0, 5)).toEqual([]);
+  });
+
+  it("keeps multiple-choice answers matching their options exactly", () => {
+    // Display formatting rewrites choices, so the answer must be rewritten too.
+    const broken: string[] = [];
+    for (const skill of SKILLS) {
+      for (let level = 1; level <= (skill.levels ?? 4); level++) {
+        const q = generateQuestion(skill, level, 424242);
+        if (q.format.kind === "choice" && !q.format.choices.includes(q.answer)) {
+          broken.push(`${skill.id} L${level}: "${q.answer}" not among ${q.format.choices.join(" / ")}`);
+        }
+      }
+    }
+    expect(broken).toEqual([]);
+  });
+});

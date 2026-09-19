@@ -3,6 +3,9 @@ import {
   NAMES, plural, type GeneratorFn, type Frac,
 } from "./helpers";
 
+/** Wrap a negative value in parentheses, so "a − (−2)" reads clearly. */
+const paren = (v: number) => (v < 0 ? `(${v})` : `${v}`);
+
 /** Difficulty ramps: most generators scale their operand ranges off `level` (1..4+). */
 const scale = (level: number, base: number, step: number) => base + (level - 1) * step;
 
@@ -678,7 +681,7 @@ const slopeFromPoints: GeneratorFn = (rng, level) => {
     instructions: "Find the slope of the line through the two points.",
     stem: `**(${x1}, ${y1})** and **(${x2}, ${y2})**`,
     answer: `${m}`,
-    explanation: `Slope = rise ÷ run = (${y2} − ${y1}) / (${x2} − ${x1}) = ${y2 - y1}/${dx} = ${m}.`,
+    explanation: `Slope = rise ÷ run = (${paren(y2)} − ${paren(y1)}) / (${paren(x2)} − ${paren(x1)}) = ${y2 - y1}/${dx} = ${m}.`,
     hint: "m = (y₂ − y₁) / (x₂ − x₁)",
   });
 };
