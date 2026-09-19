@@ -11,16 +11,24 @@ import { BANKS } from "../generators/banks";
 describe("reviewDraft", () => {
   const goodPlural = { sing: "goose", answer: "geese", wrong: ["gooses", "geeses", "goosen"] };
 
+  // Shape rules are checked against an empty prior set on purpose. Passing the
+  // live bank would make these tests fail the day the generator happens to add
+  // the same word -- which it did -- turning a content change into a red build
+  // that says nothing about the rule under test.
+  const fresh = new Set<string>();
+
   it("keeps a well-formed item", () => {
-    const { kept, rejected } = reviewDraft("plurals", [goodPlural]);
+    const { kept, rejected } = reviewDraft("plurals", [goodPlural], fresh);
     expect(rejected).toEqual([]);
     expect(kept).toEqual([goodPlural]);
   });
 
   it("rejects an item whose distractor repeats the answer", () => {
-    const { kept, rejected } = reviewDraft("plurals", [
-      { sing: "goose", answer: "geese", wrong: ["gooses", "geese", "goosen"] },
-    ]);
+    const { kept, rejected } = reviewDraft(
+      "plurals",
+      [{ sing: "goose", answer: "geese", wrong: ["gooses", "geese", "goosen"] }],
+      fresh,
+    );
     expect(kept).toEqual([]);
     expect(rejected[0].why).toMatch(/differ/);
   });
@@ -33,7 +41,7 @@ describe("reviewDraft", () => {
   });
 
   it("rejects a duplicate within the same batch", () => {
-    const { kept, rejected } = reviewDraft("plurals", [goodPlural, { ...goodPlural }]);
+    const { kept, rejected } = reviewDraft("plurals", [goodPlural, { ...goodPlural }], fresh);
     expect(kept).toHaveLength(1);
     expect(rejected).toHaveLength(1);
     expect(rejected[0].why).toBe("duplicate");
@@ -45,29 +53,33 @@ describe("reviewDraft", () => {
       mainIdea: "A distinct main idea so this is not caught as a duplicate.",
       clue: { answer: "a sentence that never appears in the passage", wrong: ["a", "b"] },
     };
-    const { kept, rejected } = reviewDraft("passages", [passage]);
+    const { kept, rejected } = reviewDraft("passages", [passage], fresh);
     expect(kept).toEqual([]);
     expect(rejected[0].why).toMatch(/verbatim span/);
   });
 
   it("rejects a part-of-speech item that does not bold its target word", () => {
-    const { kept, rejected } = reviewDraft("posSentences", [
-      { s: "The tired runner stopped.", word: "tired", pos: "adjective" },
-    ]);
+    const { kept, rejected } = reviewDraft(
+      "posSentences",
+      [{ s: "The tired runner stopped.", word: "tired", pos: "adjective" }],
+      fresh,
+    );
     expect(kept).toEqual([]);
     expect(rejected[0].why).toMatch(/bold/);
   });
 
   it("rejects a homophone item whose options omit the answer", () => {
-    const { kept, rejected } = reviewDraft("homophones", [
-      { sentence: "We went ___ the store.", answer: "to", options: ["too", "two", "tow"], why: "..." },
-    ]);
+    const { kept, rejected } = reviewDraft(
+      "homophones",
+      [{ sentence: "We went ___ the store.", answer: "to", options: ["too", "two", "tow"], why: "..." }],
+      fresh,
+    );
     expect(kept).toEqual([]);
     expect(rejected[0].why).toMatch(/contain the answer/);
   });
 
   it("does not throw on a malformed item that has no identifying field", () => {
-    const { kept, rejected } = reviewDraft("plurals", [null]);
+    const { kept, rejected } = reviewDraft("plurals", [null], fresh);
     expect(kept).toEqual([]);
     expect(rejected).toHaveLength(1);
   });

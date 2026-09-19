@@ -24,10 +24,19 @@ import Anthropic from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { z } from "zod";
 import { BANK_NAMES, type BankName } from "../src/lib/generators/banks";
-import { reviewDraft, poolsOf, POS_TAGS, FIGURES, SENTENCE_TYPES } from "../src/lib/generators/bank-schema";
+import { reviewDraft, dedupeKey, poolsOf, POS_TAGS, FIGURES, SENTENCE_TYPES } from "../src/lib/generators/bank-schema";
 
 const OUT = "src/data/ela-banks.json";
 const MODEL = "claude-opus-5";
+
+/**
+ * How many items to ask for in one request. A passage object is an order of
+ * magnitude larger than a plurals item -- ten of them overflow the output
+ * budget and come back as truncated JSON -- so large-item banks are asked in
+ * small batches and the results accumulated.
+ */
+const BATCH_LIMIT: Partial<Record<BankName, number>> = { passages: 3 };
+const DEFAULT_BATCH = 10;
 
 /* ------------------------------------------------------------ wire schemas */
 
@@ -136,9 +145,14 @@ async function draft(bank: BankName, pool: string, count: number, prior: unknown
       ? BRIEF.wordPairs.replace("a true SYNONYM of it", "a true ANTONYM of it")
       : BRIEF[bank];
 
-  const response = await client.messages.parse({
+  // Streamed, and read back with finalMessage(): the SDK refuses a
+  // non-streaming request with an output budget this large, and a passage
+  // batch genuinely needs the room. messages.parse() is avoided for a second
+  // reason -- it throws on truncated JSON before the stop reason can be read,
+  // turning "you asked for too many items" into an unexplained syntax error.
+  const stream = client.messages.stream({
     model: MODEL,
-    max_tokens: 16000,
+    max_tokens: 32000,
     system: SYSTEM,
     thinking: { type: "adaptive" },
     output_config: { format: zodOutputFormat(z.object({ items: z.array(wire) })) },
@@ -157,11 +171,31 @@ Return ${count} items that are clearly distinct from the above.`,
       },
     ],
   });
+  const response = await stream.finalMessage();
 
   if (response.stop_reason === "refusal") {
     throw new Error(`model declined: ${response.stop_details?.explanation ?? "no explanation"}`);
   }
-  return response.parsed_output?.items ?? [];
+  if (response.stop_reason === "max_tokens") {
+    throw new Error(`response was cut off at max_tokens -- ask for fewer than ${count} items per batch`);
+  }
+
+  const body = response.content
+    .filter((b): b is Anthropic.TextBlock => b.type === "text")
+    .map((b) => b.text)
+    .join("");
+
+  let json: unknown;
+  try {
+    json = JSON.parse(body);
+  } catch (err) {
+    throw new Error(`model returned unparseable JSON: ${(err as Error).message}`);
+  }
+  const parsed = z.object({ items: z.array(wire) }).safeParse(json);
+  if (!parsed.success) {
+    throw new Error(`response did not match the requested shape: ${parsed.error.issues.slice(0, 3).map((i) => i.message).join("; ")}`);
+  }
+  return parsed.data.items;
 }
 
 /** wordPairs is stored as [word, answer, distractors]; everything else as-is. */
@@ -175,18 +209,29 @@ async function harvestBank(banks: Banks, bank: BankName, count: number, dry: boo
   for (const pool of pools) {
     const label = bank + (pool ? `/${pool}` : "");
     const prior = existing(banks, bank, pool);
-    let drafted: unknown[];
-    try {
-      drafted = await draft(bank, pool, count, prior);
-    } catch (err) {
-      console.log(`  ERR  ${label}: ${(err as Error).message}`);
-      continue;
-    }
+    const batch = BATCH_LIMIT[bank] ?? DEFAULT_BATCH;
 
-    const { kept, rejected } = reviewDraft(
-      bank,
-      drafted.map((raw) => toStored(bank, raw as Record<string, unknown>)),
-    );
+    const kept: unknown[] = [];
+    const rejected: { key: string; why: string }[] = [];
+    // Large-item banks are asked in several small requests. Each one sees the
+    // items the earlier ones produced, so batch two does not re-invent batch one.
+    for (let done = 0; done < count; done += batch) {
+      const want = Math.min(batch, count - done);
+      let drafted: unknown[];
+      try {
+        drafted = await draft(bank, pool, want, [...prior, ...kept]);
+      } catch (err) {
+        console.log(`  ERR  ${label}: ${(err as Error).message}`);
+        break;
+      }
+      const review = reviewDraft(
+        bank,
+        drafted.map((raw) => toStored(bank, raw as Record<string, unknown>)),
+        new Set([...prior, ...kept].map(dedupeKey[bank] as (i: unknown) => string)),
+      );
+      kept.push(...review.kept);
+      rejected.push(...review.rejected);
+    }
 
     console.log(`  ${label.padEnd(24)} ${kept.length} kept, ${rejected.length} rejected (bank: ${prior.length} -> ${prior.length + kept.length})`);
     for (const r of rejected) console.log(`      reject: ${r.key} -- ${r.why}`);
