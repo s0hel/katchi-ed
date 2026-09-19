@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AssessmentRunner } from "@/components/assessment-runner";
+import { isSubject } from "@/lib/curriculum";
 import type { Subject } from "@/lib/types";
 
 export const metadata: Metadata = {
@@ -13,7 +14,7 @@ export default async function AssessmentPage({
   searchParams: Promise<{ subject?: string; grade?: string }>;
 }) {
   const { subject, grade } = await searchParams;
-  const validSubject: Subject = subject === "ela" ? "ela" : "math";
+  const validSubject: Subject = subject && isSubject(subject) ? subject : "math";
   const parsedGrade = Number(grade);
   const validGrade = Number.isInteger(parsedGrade) && parsedGrade >= 0 && parsedGrade <= 9
     ? parsedGrade

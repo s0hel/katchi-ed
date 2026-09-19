@@ -1,4 +1,72 @@
 {
+  "cogat-1-figure-analogies": [
+    {
+      "videoId": "oEWuQdtgtos",
+      "title": "Figure Analogies for 1st Grade Part 1 | COGAT for 1st grade",
+      "channel": "Kiducator",
+      "channelUrl": "https://www.youtube.com/@Kiducator",
+      "label": "Lesson",
+      "verifiedAt": "2026-09-19"
+    },
+    {
+      "videoId": "5zvpDewQh5M",
+      "title": "Figure Analogies Practice Questions for 1st Grade | COGAT for 1st grade",
+      "channel": "Kiducator",
+      "channelUrl": "https://www.youtube.com/@Kiducator",
+      "label": "Practice questions",
+      "verifiedAt": "2026-09-19"
+    }
+  ],
+  "cogat-1-number-series": {
+    "videoId": "n9bN8tN7_H8",
+    "title": "Number Series for 1st Grade | COGAT for 1st grade",
+    "channel": "Kiducator",
+    "channelUrl": "https://www.youtube.com/@Kiducator",
+    "label": "Lesson",
+    "verifiedAt": "2026-09-19"
+  },
+  "cogat-1-picture-analogies": [
+    {
+      "videoId": "J28oDYmhD_Q",
+      "title": "Picture Analogies for 1st Grade Part 1 | COGAT for 1st grade",
+      "channel": "Kiducator",
+      "channelUrl": "https://www.youtube.com/@Kiducator",
+      "label": "Part 1",
+      "verifiedAt": "2026-09-19"
+    },
+    {
+      "videoId": "j6YPrKtd2tY",
+      "title": "Picture Analogies for 1st Grade Part 2 | COGAT for 1st grade",
+      "channel": "Kiducator",
+      "channelUrl": "https://www.youtube.com/@Kiducator",
+      "label": "Part 2",
+      "verifiedAt": "2026-09-19"
+    },
+    {
+      "videoId": "qBIKGjAMXL4",
+      "title": "Picture Analogies for 1st Grade Part 3 | COGAT for 1st grade",
+      "channel": "Kiducator",
+      "channelUrl": "https://www.youtube.com/@Kiducator",
+      "label": "Part 3",
+      "verifiedAt": "2026-09-19"
+    },
+    {
+      "videoId": "XjS6h9X9_G8",
+      "title": "Picture Analogies Practice Questions for 1st Grade | COGAT for 1st grade",
+      "channel": "Kiducator",
+      "channelUrl": "https://www.youtube.com/@Kiducator",
+      "label": "Practice questions",
+      "verifiedAt": "2026-09-19"
+    }
+  ],
+  "cogat-1-picture-classification": {
+    "videoId": "MvQviG_tkhw",
+    "title": "Picture Classification for 1st Grade | COGAT for 1st grade",
+    "channel": "Kiducator",
+    "channelUrl": "https://www.youtube.com/@Kiducator",
+    "label": "Lesson",
+    "verifiedAt": "2026-09-19"
+  },
   "ela-2-capitalization": {
     "videoId": "bGz1acC3Wew",
     "title": "Common and proper nouns | The parts of speech | Grammar | Khan Academy",
@@ -753,7 +821,7 @@
   },
   "math-7-percent-increase-and-decrease": {
     "videoId": "7c8eR_CCx-o",
-    "title": "Finding the percent increase in pricing | 7th grade math (IM® v.360 aligned) | Khan Academy",
+    "title": "Finding the percent increase in pricing | 7th grade math (IM\u00ae v.360 aligned) | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy percent increase and decrease discount",
     "relevance": 1,
@@ -817,7 +885,7 @@
   },
   "math-8-linear-function-tables": {
     "videoId": "h8vFG2Ov43c",
-    "title": "Rules of input-output tables | 8th grade math (IM® v.360 aligned) | Khan Academy",
+    "title": "Rules of input-output tables | 8th grade math (IM\u00ae v.360 aligned) | Khan Academy",
     "channel": "Khan Academy",
     "query": "khan academy function tables input output rule",
     "relevance": 1.3,

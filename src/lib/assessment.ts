@@ -1,4 +1,4 @@
-import { SKILLS } from "./curriculum";
+import { SKILLS, subjectKind, subjectName } from "./curriculum";
 import { Rng } from "./rng";
 import type { Skill, Subject } from "./types";
 
@@ -69,7 +69,9 @@ export function buildAssessment(
     id: `${subject}-${grade}-${seed.toString(36)}`,
     subject,
     grade,
-    title: `${subject === "math" ? "Math" : "Language arts"} checkpoint`,
+    // A test-prep form is a rehearsal of a real exam, not a checkpoint on a
+    // course, and calling it one would misdescribe what the score means.
+    title: `${subjectName(subject)} ${subjectKind(subject) === "test-prep" ? "practice test" : "checkpoint"}`,
     items,
     createdAt: Date.now(),
   };

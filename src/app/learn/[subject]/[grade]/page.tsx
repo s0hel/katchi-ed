@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { SKILLS, byStrand, gradeLabel, skillsFor, subjectName } from "@/lib/curriculum";
+import { SKILLS, byStrand, gradeLabel, isSubject, skillsFor, subjectName, subjectNameLower } from "@/lib/curriculum";
 import { SkillRow } from "@/components/skill-row";
 import { hasVideo } from "@/lib/videos";
 import type { Subject } from "@/lib/types";
@@ -27,13 +27,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function GradePage({ params }: Props) {
   const { subject, grade } = await params;
   const gradeNum = Number(grade);
-  if (!["math", "ela"].includes(subject) || Number.isNaN(gradeNum)) notFound();
+  if (!isSubject(subject) || Number.isNaN(gradeNum)) notFound();
 
-  const skills = skillsFor(subject as Subject, gradeNum);
+  const skills = skillsFor(subject, gradeNum);
   if (!skills.length) notFound();
 
   const groups = byStrand(skills);
-  const withVideo = skills.filter((s) => hasVideo(s.id)).length;
+  const withVideo = skills.filter((s) => hasVideo(s)).length;
 
   return (
     <div className="py-4">
@@ -44,7 +44,7 @@ export default async function GradePage({ params }: Props) {
       <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-black tracking-tight">
-            {gradeLabel(gradeNum)} {subjectName(subject as Subject).toLowerCase()}
+            {gradeLabel(gradeNum)} {subjectNameLower(subject)}
           </h1>
           <p className="mt-1 text-sm text-[var(--kx-muted)]">
             {skills.length} skills
@@ -70,7 +70,7 @@ export default async function GradePage({ params }: Props) {
             </h2>
             <ul className="kx-card divide-y divide-[var(--kx-border)] overflow-hidden">
               {group.skills.map((skill) => (
-                <SkillRow key={skill.id} skill={skill} hasVideo={hasVideo(skill.id)} />
+                <SkillRow key={skill.id} skill={skill} hasVideo={hasVideo(skill)} />
               ))}
             </ul>
           </section>

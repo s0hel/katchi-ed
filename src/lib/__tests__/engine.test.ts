@@ -252,7 +252,11 @@ describe("difficulty ramps", () => {
           const q = generateQuestion(skill, level, seed);
           shapes.add(shape(q.stem));
           magSum += magnitude(q.stem);
-          variants.add(`${q.format.kind}|${q.instructions ?? ""}|${q.figure ? "fig" : ""}`);
+          // The option count is part of the shape of a question: a picture
+          // item that goes from three choices to four got harder without a
+          // word of its stem changing.
+          const options = q.format.kind === "choice" ? q.format.choices.length : 0;
+          variants.add(`${q.format.kind}|${options}|${q.instructions ?? ""}|${q.figure ? "fig" : ""}`);
         }
         shapesByLevel.push(shapes);
         magByLevel.push(magSum / SEEDS.length);

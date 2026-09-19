@@ -13,8 +13,13 @@ export default function LearnPage() {
       </p>
 
       <div className="mt-8 space-y-10">
-        {SUBJECTS.map((subject) => (
+        {SUBJECTS.map((subject, i) => (
           <section key={subject.id} id={subject.id} className="scroll-mt-20">
+            {subject.kind === "test-prep" && SUBJECTS[i - 1]?.kind !== "test-prep" && (
+              <h2 className="mb-6 border-t border-[var(--kx-border)] pt-8 text-xs font-bold uppercase tracking-[0.2em] text-[var(--kx-muted)]">
+                Test prep
+              </h2>
+            )}
             <h2 className="text-xl font-bold">{subject.name}</h2>
             <p className="mt-1 text-sm text-[var(--kx-muted)]">{subject.blurb}</p>
 

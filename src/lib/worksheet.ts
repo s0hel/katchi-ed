@@ -1,4 +1,4 @@
-import { gradeLabel, skillsFor, subjectName } from "./curriculum";
+import { gradeLabel, isSubject, skillsFor, subjectNameLower } from "./curriculum";
 import { Rng } from "./rng";
 import type { Skill, Subject } from "./types";
 
@@ -128,7 +128,7 @@ export function planWorksheet(spec: WorksheetSpec): WorksheetPlan {
   const levelLabel = spec.level === "mixed" ? "mixed levels" : `level ${spec.level}`;
   return {
     spec,
-    title: `${gradeLabel(spec.grade)} ${subjectName(spec.subject).toLowerCase()}`,
+    title: `${gradeLabel(spec.grade)} ${subjectNameLower(spec.subject)}`,
     subtitle:
       skills.length === 1
         ? `${skills[0].code} · ${skills[0].name} · ${items.length} questions`
@@ -195,7 +195,7 @@ export function rawQuery(params: Params): string {
 /** Returns null only when the subject/grade pair isn't one we teach. */
 export function parseSpec(params: Params): WorksheetSpec | null {
   const subject = one(params.subject);
-  if (subject !== "math" && subject !== "ela") return null;
+  if (!subject || !isSubject(subject)) return null;
 
   const grade = Number(one(params.grade));
   const gradeSkills = Number.isInteger(grade) ? skillsFor(subject, grade) : [];

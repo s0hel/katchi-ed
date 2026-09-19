@@ -1,5 +1,7 @@
 import { RichText } from "./rich-text";
 import type { PlannedItem, WorksheetPlan } from "@/lib/worksheet";
+import { usesPictureIcons } from "@/lib/generators/pictures";
+import { PICTURE_CREDIT } from "@/lib/generators/pictures";
 import type { AnswerFormat, Question } from "@/lib/types";
 
 /**
@@ -53,7 +55,7 @@ export function WorksheetSheet({ plan, items }: { plan: WorksheetPlan; items: Sh
         ))}
       </div>
 
-      <SheetFooter plan={plan} />
+      <SheetFooter plan={plan} pictures={plan.skills.some((s) => usesPictureIcons(s.generator))} />
 
       {plan.spec.answerKey && <AnswerKey plan={plan} items={items} />}
     </article>
@@ -146,6 +148,25 @@ function QuestionItem({
 /** Somewhere to write the answer, shaped like the format the question expects. */
 function AnswerSpace({ format }: { format: AnswerFormat }) {
   if (format.kind === "choice") {
+    // Picture options print as the pictures themselves, laid out wide enough
+    // to tell apart with a pencil in hand; the letter beside each is what the
+    // learner circles.
+    if (format.figures) {
+      return (
+        <ul className="kx-choice mt-1.5 flex flex-wrap gap-x-4 gap-y-2">
+          {format.figures.map((figure, i) => (
+            <li key={format.choices[i]} className="flex items-center gap-1.5">
+              <span className="text-[0.9rem] font-semibold">{format.choices[i]}.</span>
+              <span
+                className="kx-figure w-24"
+                // Figures are SVG strings built by our own generators, never user input.
+                dangerouslySetInnerHTML={{ __html: figure }}
+              />
+            </li>
+          ))}
+        </ul>
+      );
+    }
     return (
       <ul className="kx-choice mt-1.5 flex flex-wrap gap-x-5 gap-y-0.5 text-[0.9rem]">
         {format.choices.map((choice, i) => (
@@ -180,10 +201,13 @@ function AnswerSpace({ format }: { format: AnswerFormat }) {
   );
 }
 
-function SheetFooter({ plan }: { plan: WorksheetPlan }) {
+function SheetFooter({ plan, pictures }: { plan: WorksheetPlan; pictures: boolean }) {
   return (
     <p className="mt-8 border-t border-[var(--kx-border)] pt-2 text-[0.65rem] text-[var(--kx-muted)]">
       katchi-ed · sheet {plan.code} — reprint this exact worksheet, or change the code for a new one.
+      {/* CC BY 4.0 asks for attribution wherever the artwork appears, and a
+          printed sheet travels further from the app than anything else does. */}
+      {pictures && ` ${PICTURE_CREDIT.text}`}
     </p>
   );
 }
@@ -223,7 +247,16 @@ function answerLabel(item: SheetItem): string {
   if (format.kind === "choice") {
     const index = format.choices.indexOf(answer);
     const letter = index >= 0 ? CHOICE_LETTERS[index] : undefined;
-    return letter ? `${letter}. ${answer}` : answer;
+    if (!letter) return answer;
+    // A picture item answers with a letter, so "C. C" is all the key could
+    // say from the choices alone. The figure describes itself for a screen
+    // reader, and that description is exactly what a parent marking the sheet
+    // needs: "C. pencil".
+    if (format.figures) {
+      const described = /aria-label="([^"]*)"/.exec(format.figures[index] ?? "")?.[1];
+      return described ? `${letter}. ${described}` : letter;
+    }
+    return `${letter}. ${answer}`;
   }
 
   if (format.kind === "pair") {

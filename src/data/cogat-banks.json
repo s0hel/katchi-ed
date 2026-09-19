@@ -1,0 +1,324 @@
+{
+  "pictureAnalogies": [
+    {
+      "a": "🧦 sock",
+      "b": "🦶 foot",
+      "c": "🧤 glove",
+      "answer": "✋ hand",
+      "wrong": ["👃 nose", "🦷 tooth", "👂 ear"],
+      "why": "A sock goes on a foot, so a glove goes on a hand."
+    },
+    {
+      "a": "🐄 cow",
+      "b": "🥛 milk",
+      "c": "🐔 chicken",
+      "answer": "🥚 egg",
+      "wrong": ["🌽 corn", "🧀 cheese", "🪶 feather"],
+      "why": "A cow gives us milk, so a chicken gives us eggs."
+    },
+    {
+      "a": "🐟 fish",
+      "b": "🌊 water",
+      "c": "🐦 bird",
+      "answer": "☁️ sky",
+      "wrong": ["🪨 rock", "🔥 fire", "🚗 car"],
+      "why": "A fish lives in the water, so a bird belongs in the sky."
+    },
+    {
+      "a": "🧊 ice",
+      "b": "🥶 cold",
+      "c": "🔥 fire",
+      "answer": "🥵 hot",
+      "wrong": ["💧 wet", "🌑 dark", "🔊 loud"],
+      "why": "Ice is cold, so fire is hot."
+    },
+    {
+      "a": "👩‍🏫 teacher",
+      "b": "🏫 school",
+      "c": "👨‍⚕️ doctor",
+      "answer": "🏥 hospital",
+      "wrong": ["🏪 store", "🌳 park", "🏖️ beach"],
+      "why": "A teacher works at a school, so a doctor works at a hospital."
+    },
+    {
+      "a": "🚗 car",
+      "b": "🛣️ road",
+      "c": "🚂 train",
+      "answer": "🛤️ tracks",
+      "wrong": ["🌊 ocean", "☁️ cloud", "🏔️ mountain"],
+      "why": "A car drives on a road, so a train runs on tracks."
+    },
+    {
+      "a": "❄️ cold weather",
+      "b": "🧥 coat",
+      "c": "🌧️ rain",
+      "answer": "☂️ umbrella",
+      "wrong": ["🕶️ sunglasses", "👟 sneakers", "🧢 cap"],
+      "why": "You put on a coat when it is cold, so you take an umbrella when it rains."
+    },
+    {
+      "a": "✂️ scissors",
+      "b": "📄 paper",
+      "c": "🥄 spoon",
+      "answer": "🍲 soup",
+      "wrong": ["🪑 chair", "📺 television", "🧦 sock"],
+      "why": "You use scissors on paper, so you use a spoon for soup."
+    },
+    {
+      "a": "🐣 chick",
+      "b": "🐔 chicken",
+      "c": "🐛 caterpillar",
+      "answer": "🦋 butterfly",
+      "wrong": ["🐜 ant", "🐌 snail", "🕷️ spider"],
+      "why": "A chick grows up into a chicken, so a caterpillar grows up into a butterfly."
+    },
+    {
+      "a": "🌳 tree",
+      "b": "🍃 leaf",
+      "c": "📖 book",
+      "answer": "📄 page",
+      "wrong": ["🪑 chair", "🚗 car", "🧦 sock"],
+      "why": "A leaf is one part of a tree, so a page is one part of a book."
+    },
+    {
+      "a": "🧢 cap",
+      "b": "🙂 head",
+      "c": "👓 glasses",
+      "answer": "👀 eyes",
+      "wrong": ["🦶 feet", "🤚 hands", "👂 ears"],
+      "why": "A cap goes on your head, so glasses go over your eyes."
+    },
+    {
+      "a": "📖 book",
+      "b": "👀 read",
+      "c": "🎵 song",
+      "answer": "👂 listen",
+      "wrong": ["🏃 run", "🍽️ eat", "😴 sleep"],
+      "why": "You read a book, so you listen to a song."
+    },
+    {
+      "a": "🐝 bee",
+      "b": "🍯 honey",
+      "c": "🐑 sheep",
+      "answer": "🧶 wool",
+      "wrong": ["🥛 milk", "🥚 egg", "🍎 apple"],
+      "why": "A bee makes honey, so a sheep gives us wool."
+    },
+    {
+      "a": "🔑 key",
+      "b": "🚪 door",
+      "c": "🔨 hammer",
+      "answer": "🪵 nail",
+      "wrong": ["📄 paper", "🍌 banana", "🎈 balloon"],
+      "why": "A key is used on a door, so a hammer is used on a nail."
+    },
+    {
+      "a": "🌙 night",
+      "b": "😴 sleep",
+      "c": "🌅 morning",
+      "answer": "⏰ wake up",
+      "wrong": ["🏊 swim", "🛒 shop", "🧹 sweep"],
+      "why": "You sleep at night, so you wake up in the morning."
+    },
+    {
+      "a": "🐘 elephant",
+      "b": "🐁 mouse",
+      "c": "🌳 tree",
+      "answer": "🌱 seedling",
+      "wrong": ["🏠 house", "🐋 whale", "🏔️ mountain"],
+      "why": "An elephant is big and a mouse is small, so next to a tall tree a tiny seedling is the small one."
+    }
+  ],
+
+  "pictureGroups": [
+    {
+      "group": ["🐶 dog", "🐱 cat", "🐴 horse"],
+      "answer": "🐄 cow",
+      "wrong": ["🌳 tree", "🚲 bicycle", "🍞 bread"],
+      "why": "They are all animals."
+    },
+    {
+      "group": ["🍎 apple", "🍌 banana", "🍇 grapes"],
+      "answer": "🍓 strawberry",
+      "wrong": ["🥕 carrot", "🐟 fish", "🚗 car"],
+      "why": "They are all fruit. A carrot is a vegetable."
+    },
+    {
+      "group": ["👕 shirt", "👖 pants", "🧥 coat"],
+      "answer": "🧦 socks",
+      "wrong": ["🪑 chair", "🍎 apple", "🚪 door"],
+      "why": "They are all clothes you wear."
+    },
+    {
+      "group": ["☀️ sun", "🌙 moon", "⭐ star"],
+      "answer": "☁️ cloud",
+      "wrong": ["🪨 rock", "🐟 fish", "🛏️ bed"],
+      "why": "They are all things you see in the sky."
+    },
+    {
+      "group": ["🚗 car", "🚌 bus", "🚲 bicycle"],
+      "answer": "✈️ airplane",
+      "wrong": ["🏠 house", "🍕 pizza", "🐦 bird"],
+      "why": "They all carry people from place to place. A bird moves, but nobody rides one."
+    },
+    {
+      "group": ["🍞 bread", "🧀 cheese", "🥣 soup"],
+      "answer": "🍚 rice",
+      "wrong": ["🧦 sock", "📖 book", "🚲 bicycle"],
+      "why": "They are all food."
+    },
+    {
+      "group": ["✏️ pencil", "🖍️ crayon", "🖊️ pen"],
+      "answer": "🖌️ paintbrush",
+      "wrong": ["🍽️ plate", "🛏️ bed", "🚗 car"],
+      "why": "They are all things you make marks with."
+    },
+    {
+      "group": ["🌹 rose", "🌻 sunflower", "🌷 tulip"],
+      "answer": "🌼 daisy",
+      "wrong": ["🌳 tree", "🪨 rock", "🐝 bee"],
+      "why": "They are all flowers. A tree is a plant, but it is not a flower."
+    },
+    {
+      "group": ["🔨 hammer", "🪚 saw", "🪛 screwdriver"],
+      "answer": "🔧 wrench",
+      "wrong": ["🍴 fork", "🎈 balloon", "📚 book"],
+      "why": "They are all tools for building and fixing."
+    },
+    {
+      "group": ["🥕 carrot", "🥦 broccoli", "🌽 corn"],
+      "answer": "🥔 potato",
+      "wrong": ["🍰 cake", "🐕 dog", "👟 shoe"],
+      "why": "They are all vegetables."
+    },
+    {
+      "group": ["⚽ soccer ball", "🏀 basketball", "🎾 tennis ball"],
+      "answer": "⚾ baseball",
+      "wrong": ["🧊 ice cube", "📦 box", "🔑 key"],
+      "why": "They are all balls, and a ball is round."
+    },
+    {
+      "group": ["🐟 fish", "🐋 whale", "🦈 shark"],
+      "answer": "🐙 octopus",
+      "wrong": ["🐈 cat", "🦅 eagle", "🐄 cow"],
+      "why": "They all live in the ocean."
+    },
+    {
+      "group": ["🏫 school", "🏥 hospital", "🏪 store"],
+      "answer": "📚 library",
+      "wrong": ["🌳 tree", "☁️ cloud", "🚲 bicycle"],
+      "why": "They are all buildings people go to."
+    },
+    {
+      "group": ["🐝 bee", "🦋 butterfly", "🐜 ant"],
+      "answer": "🐞 ladybug",
+      "wrong": ["🕷️ spider", "🐟 fish", "🐦 bird"],
+      "why": "They are all insects. A spider is not an insect — it has eight legs."
+    },
+    {
+      "group": ["1️⃣ one", "3️⃣ three", "5️⃣ five"],
+      "answer": "7️⃣ seven",
+      "wrong": ["2️⃣ two", "4️⃣ four", "6️⃣ six"],
+      "why": "They are all odd numbers — they cannot be split into two equal groups."
+    }
+  ],
+
+  "sentenceCompletion": [
+    {
+      "s": "You wear shoes on your ___.",
+      "answer": "🦶 feet",
+      "wrong": ["👃 nose", "✋ hands", "👂 ears"],
+      "why": "Shoes are made to fit feet."
+    },
+    {
+      "s": "We eat soup with a ___.",
+      "answer": "🥄 spoon",
+      "wrong": ["🍴 fork", "✂️ scissors", "🖍️ crayon"],
+      "why": "A spoon holds liquid; a fork lets it run through."
+    },
+    {
+      "s": "A fish swims in the ___.",
+      "answer": "🌊 water",
+      "wrong": ["🔥 fire", "☁️ cloud", "🪨 rock"],
+      "why": "A fish breathes underwater, so water is the only place it can live."
+    },
+    {
+      "s": "At night you sleep in a ___.",
+      "answer": "🛏️ bed",
+      "wrong": ["🪑 chair", "🚌 bus", "🧊 ice"],
+      "why": "A bed is the thing in a house made for sleeping."
+    },
+    {
+      "s": "You write your name with a ___.",
+      "answer": "✏️ pencil",
+      "wrong": ["🥄 spoon", "🔑 key", "🧦 sock"],
+      "why": "A pencil is the one that makes marks on paper."
+    },
+    {
+      "s": "You use your ___ to hear a song.",
+      "answer": "👂 ears",
+      "wrong": ["👀 eyes", "👃 nose", "✋ hands"],
+      "why": "Each part of the body has its own job, and ears do the hearing."
+    },
+    {
+      "s": "A cow gives us ___.",
+      "answer": "🥛 milk",
+      "wrong": ["🥚 egg", "🍞 bread", "🍯 honey"],
+      "why": "Eggs come from chickens and honey from bees, but milk comes from a cow."
+    },
+    {
+      "s": "When it rains you open an ___.",
+      "answer": "☂️ umbrella",
+      "wrong": ["🕶️ sunglasses", "🧦 sock", "🎈 balloon"],
+      "why": "An umbrella keeps the rain off you; sunglasses are for a bright day."
+    },
+    {
+      "s": "You open a door with a ___.",
+      "answer": "🔑 key",
+      "wrong": ["🍌 banana", "🖍️ crayon", "🧦 sock"],
+      "why": "A key is the one shaped to fit a lock."
+    },
+    {
+      "s": "Every morning you brush your ___.",
+      "answer": "🦷 teeth",
+      "wrong": ["👂 ears", "🦶 feet", "👃 nose"],
+      "why": "Brushing keeps teeth clean. You wash the rest of you a different way."
+    },
+    {
+      "s": "A bird builds a ___ to live in.",
+      "answer": "🪺 nest",
+      "wrong": ["🚗 car", "👟 shoe", "🍎 apple"],
+      "why": "Birds gather twigs and grass to make a nest."
+    },
+    {
+      "s": "A bee makes ___.",
+      "answer": "🍯 honey",
+      "wrong": ["🥛 milk", "🧀 cheese", "🍞 bread"],
+      "why": "Bees collect nectar from flowers and turn it into honey."
+    },
+    {
+      "s": "A caterpillar turns into a ___.",
+      "answer": "🦋 butterfly",
+      "wrong": ["🐝 bee", "🐦 bird", "🐟 fish"],
+      "why": "A caterpillar changes shape as it grows up, and it becomes a butterfly."
+    },
+    {
+      "s": "A doctor takes care of people at the ___.",
+      "answer": "🏥 hospital",
+      "wrong": ["🏫 school", "🏪 store", "🌳 park"],
+      "why": "A teacher works at a school and a doctor works at a hospital."
+    },
+    {
+      "s": "To send a letter you put it in the ___.",
+      "answer": "📫 mailbox",
+      "wrong": ["🛏️ bed", "🍽️ plate", "🎈 balloon"],
+      "why": "A letter has to go somewhere a mail carrier will collect it."
+    },
+    {
+      "s": "When it snows outside you put on a warm ___.",
+      "answer": "🧥 coat",
+      "wrong": ["👕 t-shirt", "🩳 shorts", "🕶️ sunglasses"],
+      "why": "A coat holds your heat in. A t-shirt and shorts are for a hot day."
+    }
+  ]
+}

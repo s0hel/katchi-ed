@@ -2,11 +2,15 @@ import { Rng } from "../rng";
 import type { GeneratedQuestion, Question, Skill } from "../types";
 import { mathGenerators } from "./math";
 import { elaGenerators } from "./ela";
+import { cogatGenerators } from "./cogat";
+import { iseeGenerators } from "./isee";
 import type { GeneratorFn } from "./helpers";
 
 export const generators: Record<string, GeneratorFn> = {
   ...mathGenerators,
   ...elaGenerators,
+  ...cogatGenerators,
+  ...iseeGenerators,
 };
 
 export function hasGenerator(name: string): boolean {

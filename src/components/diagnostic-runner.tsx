@@ -17,6 +17,14 @@ type Stage = "setup" | "running" | "done";
 
 const LENGTHS = [10, 20, 30];
 
+/**
+ * Only subjects that span grades. The diagnostic's whole output is a grade
+ * estimate per strand, which a single-grade test-prep subject cannot produce:
+ * every item would sit at the same point on the scale and the estimate would
+ * report back whatever it started with.
+ */
+const DIAGNOSTIC_SUBJECTS = SUBJECTS.filter((s) => s.kind === "core");
+
 export function DiagnosticRunner() {
   const { profile, ready, setGrade, recordDiagnostic } = useProgress();
   const [stage, setStage] = useState<Stage>("setup");
@@ -125,12 +133,16 @@ export function DiagnosticRunner() {
 
         <Field label="Subject">
           <div className="flex gap-2">
-            {SUBJECTS.map((s) => (
+            {DIAGNOSTIC_SUBJECTS.map((s) => (
               <Choice key={s.id} active={subject === s.id} onClick={() => setSubject(s.id)}>
                 {s.name}
               </Choice>
             ))}
           </div>
+          <p className="mt-1.5 text-xs text-[var(--kx-muted)]">
+            Test prep isn&apos;t offered here: a diagnostic reports the grade level you are working
+            at, and CogAT and the ISEE are each pitched at one grade. Use an assessment for those.
+          </p>
         </Field>
 
         <Field label="Your current grade">

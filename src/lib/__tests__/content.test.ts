@@ -44,8 +44,13 @@ describe("question generation", () => {
           if (!q.stem?.trim()) problems.push(`${where}: empty stem`);
           if (!q.answer?.trim()) problems.push(`${where}: empty answer`);
           if (!q.explanation?.trim()) problems.push(`${where}: empty explanation`);
-          if (/NaN|undefined|Infinity/.test(q.stem + q.answer + q.explanation)) {
-            problems.push(`${where}: bad value in text -> ${q.stem} | ${q.answer}`);
+          // Figures are checked alongside the text: a picture question shows
+          // the learner an SVG, and "one small undefined circle" is as broken
+          // there as it would be in a stem.
+          const figures = [q.figure ?? "", ...(q.format.kind === "choice" ? (q.format.figures ?? []) : [])];
+          const rendered = q.stem + q.answer + q.explanation + figures.join("");
+          if (/NaN|undefined|Infinity/.test(rendered)) {
+            problems.push(`${where}: bad value in question -> ${q.stem} | ${q.answer}`);
           }
           if (q.format.kind === "choice") {
             if (q.format.choices.length < 2) problems.push(`${where}: too few choices`);
@@ -69,10 +74,20 @@ describe("question generation", () => {
   });
 
   it("varies across seeds", () => {
+    // Fingerprinted rather than compared on the stem alone: a nonverbal item
+    // asks the same sentence every time ("which picture belongs here?") and
+    // varies entirely in the figure and the options, so a stem-only check
+    // would call a perfectly varied generator broken.
+    const fingerprint = (skill: (typeof SKILLS)[number], seed: number) => {
+      const q = generateQuestion(skill, 3, seed);
+      const options = q.format.kind === "choice" ? q.format.choices.join("|") : "";
+      const figures = q.format.kind === "choice" ? (q.format.figures ?? []).join("|") : "";
+      return `${q.stem}::${q.figure ?? ""}::${options}::${figures}`;
+    };
     for (const skill of SKILLS) {
-      const stems = new Set(SEEDS.map((s) => generateQuestion(skill, 3, s).stem));
+      const seen = new Set(SEEDS.map((s) => fingerprint(skill, s)));
       // a few generators draw from small banks; require at least some variety
-      expect(stems.size, `${skill.id} produced identical stems`).toBeGreaterThan(1);
+      expect(seen.size, `${skill.id} produced identical questions`).toBeGreaterThan(1);
     }
   });
 

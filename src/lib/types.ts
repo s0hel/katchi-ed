@@ -1,10 +1,19 @@
-export type Subject = "math" | "ela";
+/**
+ * Core subjects teach a grade band; test-prep subjects rehearse one exam at
+ * one entry point, which is why they pin a single grade in the catalog.
+ */
+export type Subject = "math" | "ela" | "cogat" | "isee";
 
 export type AnswerFormat =
   | { kind: "numeric" }
   /** `caseSensitive` is for questions where capitalization IS the answer. */
   | { kind: "text"; placeholder?: string; caseSensitive?: boolean }
-  | { kind: "choice"; choices: string[] }
+  /**
+   * `figures`, when present, is one inline SVG per choice, in the same order.
+   * A nonverbal item is a picture question all the way down: the choices are
+   * shapes and the strings are just the labels ("A", "B") used to answer.
+   */
+  | { kind: "choice"; choices: string[]; figures?: string[] }
   | { kind: "fraction" }
   | { kind: "pair"; labels: [string, string] };
 

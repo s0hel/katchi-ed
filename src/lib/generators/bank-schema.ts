@@ -10,10 +10,10 @@ import { BANKS, type BankName } from "./banks";
  * the next generated batch and every item already in the bank.
  */
 
-const nonEmpty = z.string().trim().min(1);
+export const nonEmpty = z.string().trim().min(1);
 
 /** Three wrong options, all distinct from each other. */
-const distractors = z.array(nonEmpty).length(3);
+export const distractors = z.array(nonEmpty).length(3);
 
 /** Closed answer sets that a generator builds its distractors from. The
  *  answer must be one of these or the question renders without a right one. */
@@ -22,10 +22,10 @@ export const FIGURES = ["simile", "metaphor", "personification", "hyperbole", "a
 export const SENTENCE_TYPES = ["fragment", "run-on", "complete sentence"] as const;
 
 /** No option may repeat, or a question shows the same choice twice. */
-const allDistinct = (values: string[]) =>
+export const allDistinct = (values: string[]) =>
   new Set(values.map((v) => v.trim().toLowerCase())).size === values.length;
 
-const wordItem = z
+export const wordItem = z
   .tuple([nonEmpty, nonEmpty, distractors])
   .refine(([word, answer, wrong]) => allDistinct([word, answer, ...wrong]), {
     message: "word, answer and distractors must all differ",
@@ -45,11 +45,11 @@ const affix = z
   .object({ affix: nonEmpty, meaning: nonEmpty, example: nonEmpty, distractors })
   .refine((a) => allDistinct([a.meaning, ...a.distractors]), { message: "meaning must differ from distractors" });
 
-const vocabTarget = z
+export const vocabTarget = z
   .object({ word: nonEmpty, meaning: nonEmpty, distractors })
   .refine((v) => allDistinct([v.meaning, ...v.distractors]), { message: "meaning must differ from distractors" });
 
-const answerAndWrong = z
+export const answerAndWrong = z
   .object({ answer: nonEmpty, wrong: distractors })
   .refine((x) => allDistinct([x.answer, ...x.wrong]), { message: "answer must differ from wrong options" });
 
@@ -77,7 +77,7 @@ const passage = z
   .refine((p) => p.text.toLowerCase().includes(p.vocabHard.word.toLowerCase()), { message: "vocabHard.word must appear in text" })
   .refine((p) => p.vocab.word.toLowerCase() !== p.vocabHard.word.toLowerCase(), { message: "vocab words must differ" });
 
-const sentenceItem = z
+export const sentenceItem = z
   .object({ s: nonEmpty, answer: nonEmpty, wrong: distractors, why: nonEmpty })
   .refine((i) => i.s.includes("___"), { message: "s must contain a ___ blank" })
   .refine((i) => allDistinct([i.answer, ...i.wrong]), { message: "answer must differ from wrong options" });
@@ -176,9 +176,22 @@ export interface Review {
  * not collide with an existing item or an earlier item in the same batch.
  */
 export function reviewDraft(bank: BankName, drafted: unknown[], priorKeys?: Iterable<string>): Review {
-  const schema = ITEM_SCHEMA[bank];
   const key = dedupeKey[bank] as (item: unknown) => string;
-  const seen = new Set(priorKeys ?? poolsOf(bank).flat().map(key));
+  return reviewItems(ITEM_SCHEMA[bank], key, drafted, priorKeys ?? poolsOf(bank).flat().map(key));
+}
+
+/**
+ * The gate itself, with the bank lookup factored out: the exam banks in
+ * exam-bank-schema.ts are a different set of names over the same rules, and a
+ * second copy of this loop would be a second place for the rules to drift.
+ */
+export function reviewItems(
+  schema: z.ZodTypeAny,
+  key: (item: unknown) => string,
+  drafted: unknown[],
+  priorKeys: Iterable<string>,
+): Review {
+  const seen = new Set(priorKeys);
   const kept: unknown[] = [];
   const rejected: { key: string; why: string }[] = [];
 

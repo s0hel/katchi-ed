@@ -30,10 +30,14 @@ export function AnswerInput({
   }, [autoFocus, disabled, format]);
 
   if (format.kind === "choice") {
+    // A picture item answers with a letter and shows a shape, so the letter is
+    // a label on the button rather than its content.
+    const figures = format.figures;
     return (
       <div role="radiogroup" aria-label="Answer choices" className="grid gap-2 sm:grid-cols-2">
-        {format.choices.map((option) => {
+        {format.choices.map((option, i) => {
           const selected = value === option;
+          const figure = figures?.[i];
           return (
             <button
               key={option}
@@ -46,12 +50,24 @@ export function AnswerInput({
               className={`rounded-xl border px-4 py-3.5 text-left text-base font-medium transition
                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500
                 disabled:cursor-not-allowed disabled:opacity-60 ${
+                  figure ? "flex items-center gap-3" : ""
+                } ${
                   selected
                     ? "border-brand-500 bg-brand-50 text-brand-900 ring-2 ring-brand-500/25 dark:bg-brand-900/40 dark:text-brand-100"
                     : "border-[var(--kx-border)] bg-[var(--kx-surface)] hover:border-brand-300 hover:bg-[var(--kx-surface-2)]"
                 }`}
             >
-              {option}
+              <span className={figure ? "font-bold text-[var(--kx-muted)]" : undefined}>{option}</span>
+              {figure && (
+                <span
+                  // A fixed width, not flex-1: an option that stretches with
+                  // its button renders bigger than the prompt above it, and a
+                  // question about size cannot be read across two scales.
+                  className="kx-figure w-28 shrink-0 sm:w-32"
+                  // Figures are SVG strings built by our own generators, never user input.
+                  dangerouslySetInnerHTML={{ __html: figure }}
+                />
+              )}
             </button>
           );
         })}

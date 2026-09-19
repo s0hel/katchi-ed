@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { SKILLS, getSkill, gradeLabel, subjectName } from "@/lib/curriculum";
+import { SKILLS, getSkill, gradeLabel, subjectNameLower } from "@/lib/curriculum";
 import { PracticeSession } from "@/components/practice-session";
-import { videoForSkill } from "@/lib/videos";
+import { videosForSkill } from "@/lib/videos";
+import { usesPictureIcons } from "@/lib/generators/pictures";
+import { PictureCredit } from "@/components/picture-credit";
 
 interface Props {
   params: Promise<{ skillId: string }>;
@@ -34,7 +36,7 @@ export default async function PracticePage({ params }: Props) {
           href={`/learn/${skill.subject}/${skill.grade}`}
           className="text-sm font-semibold text-brand-700 dark:text-brand-300"
         >
-          ← {gradeLabel(skill.grade)} {subjectName(skill.subject).toLowerCase()}
+          ← {gradeLabel(skill.grade)} {subjectNameLower(skill.subject)}
         </Link>
         <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">
           <span className="text-[var(--kx-muted)]">{skill.code}</span> {skill.name}
@@ -50,7 +52,9 @@ export default async function PracticePage({ params }: Props) {
         </div>
       </div>
 
-      <PracticeSession skill={skill} video={videoForSkill(skill)} />
+      <PracticeSession skill={skill} videos={videosForSkill(skill)} />
+
+      {usesPictureIcons(skill.generator) && <PictureCredit className="mt-6" />}
     </div>
   );
 }

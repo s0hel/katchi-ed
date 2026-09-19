@@ -22,7 +22,9 @@ interface Feedback {
   delta: number;
 }
 
-export function PracticeSession({ skill, video }: { skill: Skill; video: LessonVideo | null }) {
+export function PracticeSession({ skill, videos }: { skill: Skill; videos: LessonVideo[] }) {
+  // "Watch the lesson" offers the first one; the panel handles the rest.
+  const video = videos[0] ?? null;
   const state = useSkillState(skill.id);
   const ready = useHydrated();
   const [question, setQuestion] = useState<ClientQuestion | null>(null);
@@ -141,7 +143,7 @@ export function PracticeSession({ skill, video }: { skill: Skill; video: LessonV
         <div ref={videoRef} className="scroll-mt-20">
           <VideoPanel
             skill={skill}
-            video={video}
+            videos={videos}
             open={videoOpen}
             onToggle={() => setVideoOpen((v) => !v)}
           />

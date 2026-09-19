@@ -104,6 +104,14 @@ const QUERY_HINTS: Record<string, string> = {
 const NO_GOOD_MATCH = new Set(["synonyms-antonyms", "analogies"]);
 
 /**
+ * Entrance-exam formats. Khan Academy teaches topics, not test formats, so a
+ * search for "figure analogies" or "quantitative comparison" returns something
+ * confidently unrelated. These are curated by hand or left empty; the app
+ * says so rather than offering a lesson about something else.
+ */
+const isExamFormat = (generator: string) => generator.startsWith("cogat-") || generator.startsWith("isee-");
+
+/**
  * Per-skill overrides, for the cases where two skills share a generator but
  * need different lessons -- grade 5 stays in the first quadrant while grade 6
  * introduces negative coordinates, so they should not share a video.
@@ -267,10 +275,26 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 async function main() {
   const refresh = process.argv.includes("--refresh");
-  const catalog: Record<string, VideoEntry> =
-    !refresh && existsSync(OUT) ? JSON.parse(readFileSync(OUT, "utf8")) : {};
+  const existing: Record<string, VideoEntry | VideoEntry[]> = existsSync(OUT)
+    ? JSON.parse(readFileSync(OUT, "utf8"))
+    : {};
 
-  const todo = SKILLS.filter((s) => !NO_GOOD_MATCH.has(s.generator) && (refresh || !catalog[s.id]));
+  // A refresh re-harvests this channel from scratch, but entries curated by
+  // hand from somewhere else are not ours to re-derive -- there is no search
+  // that would find them again. They survive both modes.
+  const curated = Object.fromEntries(
+    Object.entries(existing).filter(([, entry]) =>
+      (Array.isArray(entry) ? entry : [entry]).some((v) => v.channel !== CHANNEL),
+    ),
+  );
+  const catalog: Record<string, VideoEntry | VideoEntry[]> = refresh ? { ...curated } : existing;
+  if (refresh && Object.keys(curated).length) {
+    console.log(`keeping ${Object.keys(curated).length} hand-curated entr${Object.keys(curated).length === 1 ? "y" : "ies"}\n`);
+  }
+
+  const todo = SKILLS.filter(
+    (s) => !NO_GOOD_MATCH.has(s.generator) && !isExamFormat(s.generator) && !catalog[s.id],
+  );
   console.log(`${todo.length} skills to harvest (of ${SKILLS.length})\n`);
 
   // One search per distinct query, but the pick is per skill: two skills can

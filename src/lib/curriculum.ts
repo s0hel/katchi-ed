@@ -13,10 +13,40 @@ export const GRADES: GradeInfo[] = [
   { grade: 9, label: "Algebra 1", short: "A1" },
 ];
 
-export const SUBJECTS: { id: Subject; name: string; blurb: string }[] = [
-  { id: "math", name: "Math", blurb: "Counting through Algebra 1 — every skill adapts as you go." },
-  { id: "ela", name: "Language arts", blurb: "Vocabulary, grammar, and reading comprehension." },
+export interface SubjectInfo {
+  id: Subject;
+  name: string;
+  /** The name as it reads mid-sentence ("fifth grade math"). An acronym keeps its capitals. */
+  lower: string;
+  /** Core subjects teach a grade band; test prep rehearses one exam. */
+  kind: "core" | "test-prep";
+  blurb: string;
+}
+
+export const SUBJECTS: SubjectInfo[] = [
+  { id: "math", name: "Math", lower: "math", kind: "core", blurb: "Counting through Algebra 1 — every skill adapts as you go." },
+  { id: "ela", name: "Language arts", lower: "language arts", kind: "core", blurb: "Vocabulary, grammar, and reading comprehension." },
+  {
+    id: "cogat",
+    name: "CogAT",
+    lower: "CogAT",
+    kind: "test-prep",
+    blurb: "Cognitive Abilities Test, Level 7 — the form first graders sit. All three batteries.",
+  },
+  {
+    id: "isee",
+    name: "ISEE",
+    lower: "ISEE",
+    kind: "test-prep",
+    blurb: "Independent School Entrance Exam, Middle Level — taken in sixth grade for entry to grades 7–8.",
+  },
 ];
+
+export const SUBJECT_IDS = SUBJECTS.map((s) => s.id);
+
+export function isSubject(value: string): value is Subject {
+  return (SUBJECT_IDS as string[]).includes(value);
+}
 
 export const MATH_STRANDS = [
   "Numbers & Operations",
@@ -27,6 +57,19 @@ export const MATH_STRANDS = [
 ] as const;
 
 export const ELA_STRANDS = ["Vocabulary", "Grammar & Mechanics", "Reading Comprehension"] as const;
+
+/** CogAT reports three batteries, and a practice catalog that blurs them is
+ *  useless for reading a score report. */
+export const COGAT_STRANDS = ["Verbal Battery", "Quantitative Battery", "Nonverbal Battery"] as const;
+
+/** The four scored ISEE sections. The essay is sent unscored, so it has no
+ *  strand here -- there would be nothing to grade against. */
+export const ISEE_STRANDS = [
+  "Verbal Reasoning",
+  "Quantitative Reasoning",
+  "Reading Comprehension",
+  "Mathematics Achievement",
+] as const;
 
 type Draft = {
   name: string;
@@ -40,6 +83,14 @@ const m = (name: string, strand: (typeof MATH_STRANDS)[number], generator: strin
   ({ name, strand, generator, params, levels });
 const e = (name: string, strand: (typeof ELA_STRANDS)[number], generator: string, params?: Skill["params"], levels?: number): Draft =>
   ({ name, strand, generator, params, levels });
+/** Test-prep draft: the strand is a section of the exam, not a school strand. */
+const t = (
+  name: string,
+  strand: (typeof COGAT_STRANDS)[number] | (typeof ISEE_STRANDS)[number],
+  generator: string,
+  params?: Skill["params"],
+  levels?: number,
+): Draft => ({ name, strand, generator, params, levels });
 
 const MATH_BY_GRADE: Record<number, Draft[]> = {
   0: [
@@ -207,6 +258,64 @@ const ELA_BY_GRADE: Record<number, Draft[]> = {
   ],
 };
 
+
+/**
+ * CogAT Level 7 (first grade).
+ *
+ * Nine skills, three per battery, matching the item types the form actually
+ * uses. The grade is 1 because that is who sits Level 7; the catalog has room
+ * for Level 5/6 (kindergarten) and Level 8 (second grade) as further grades
+ * whenever the banks and ramps are written for them.
+ */
+const COGAT_BY_GRADE: Record<number, Draft[]> = {
+  1: [
+    t("Picture analogies", "Verbal Battery", "cogat-picture-analogies"),
+    t("Picture classification", "Verbal Battery", "cogat-picture-groups"),
+    t("Sentence completion", "Verbal Battery", "cogat-sentence-completion"),
+    t("Number analogies", "Quantitative Battery", "cogat-number-analogies"),
+    t("Number puzzles", "Quantitative Battery", "cogat-number-puzzles"),
+    t("Number series", "Quantitative Battery", "cogat-number-series"),
+    t("Figure analogies", "Nonverbal Battery", "cogat-figure-analogies"),
+    t("Figure classification", "Nonverbal Battery", "cogat-figure-classification"),
+    t("Paper folding", "Nonverbal Battery", "cogat-paper-folding"),
+  ],
+};
+
+/**
+ * ISEE Middle Level (sixth grade).
+ *
+ * Mathematics Achievement reuses the math generators rather than duplicating
+ * them: the section tests the arithmetic, pre-algebra and geometry of grades
+ * 6-8, which the math catalog already produces. Only the items that exist
+ * nowhere but an entrance exam -- synonyms in capitals, quantitative
+ * comparison, ISEE-pitched passages -- get their own generators.
+ */
+const ISEE_BY_GRADE: Record<number, Draft[]> = {
+  6: [
+    t("Synonyms", "Verbal Reasoning", "isee-synonyms"),
+    t("Sentence completion", "Verbal Reasoning", "isee-sentence-completion"),
+    t("Quantitative comparison", "Quantitative Reasoning", "isee-quantitative-comparison"),
+    t("Ratios, rates, and proportions", "Quantitative Reasoning", "ratio-proportion"),
+    t("Rate word problems", "Quantitative Reasoning", "word-problem-rate"),
+    t("Averages", "Quantitative Reasoning", "mean-median-mode", { stat: "mean" }),
+    t("Probability", "Quantitative Reasoning", "probability"),
+    t("Main idea", "Reading Comprehension", "isee-reading", { ask: "main-idea" }),
+    t("Supporting details", "Reading Comprehension", "isee-reading", { ask: "detail" }),
+    t("Vocabulary in context", "Reading Comprehension", "isee-reading", { ask: "vocabulary" }),
+    t("Inference", "Reading Comprehension", "isee-reading", { ask: "inference" }),
+    t("Tone and attitude", "Reading Comprehension", "isee-reading", { ask: "tone" }),
+    t("Order of operations", "Mathematics Achievement", "order-of-operations"),
+    t("Integers and absolute value", "Mathematics Achievement", "integer-ops"),
+    t("Fractions, decimals, and percents", "Mathematics Achievement", "decimal-fraction-percent"),
+    t("Percent problems", "Mathematics Achievement", "percent-change"),
+    t("Exponents and powers", "Mathematics Achievement", "exponents"),
+    t("Multi-step equations", "Mathematics Achievement", "two-step-equation"),
+    t("Area, perimeter, and circles", "Mathematics Achievement", "area-perimeter", { shape: "circle" }),
+    t("Volume and surface area", "Mathematics Achievement", "volume"),
+    t("Coordinate geometry", "Mathematics Achievement", "coordinate-plane"),
+  ],
+};
+
 /** Letters used for IXL-style skill codes within a grade: A.1, A.2, B.1 ... */
 const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -215,6 +324,8 @@ function build(): Skill[] {
   for (const [subject, table] of [
     ["math", MATH_BY_GRADE],
     ["ela", ELA_BY_GRADE],
+    ["cogat", COGAT_BY_GRADE],
+    ["isee", ISEE_BY_GRADE],
   ] as const) {
     for (const [gradeStr, drafts] of Object.entries(table)) {
       const grade = Number(gradeStr);
@@ -284,6 +395,15 @@ export function gradeLabel(grade: number): string {
 
 export function subjectName(subject: Subject): string {
   return SUBJECTS.find((s) => s.id === subject)?.name ?? subject;
+}
+
+/** The subject as it reads inside a phrase: "sixth grade ISEE", not "isee". */
+export function subjectNameLower(subject: Subject): string {
+  return SUBJECTS.find((s) => s.id === subject)?.lower ?? subject;
+}
+
+export function subjectKind(subject: Subject): "core" | "test-prep" {
+  return SUBJECTS.find((s) => s.id === subject)?.kind ?? "core";
 }
 
 export function searchSkills(query: string, limit = 12): Skill[] {

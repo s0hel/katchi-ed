@@ -1,12 +1,14 @@
 /**
  * Curation script (run by a maintainer, not at runtime).
  *
- * Drafts new ELA bank items with Claude and merges the ones that survive
- * validation into src/data/ela-banks.json.
+ * Drafts new content-bank items with Claude and merges the ones that survive
+ * validation into src/data/. Banks are addressed by name: an ELA bank as
+ * itself ("passages"), an exam bank qualified by its test ("isee.passages").
  *
  *   export ANTHROPIC_API_KEY=...            # or: ant auth login
- *   npx vite-node scripts/generate-ela-items.ts -- --bank passages --count 12
- *   npx vite-node scripts/generate-ela-items.ts -- --bank all --count 8 --dry-run
+ *   npx vite-node scripts/generate-items.ts -- --bank passages --count 12
+ *   npx vite-node scripts/generate-items.ts -- --bank isee.synonyms --count 20
+ *   npx vite-node scripts/generate-items.ts -- --bank all --count 8 --dry-run
  *
  * Why offline: a question is graded by re-deriving it server-side from
  * (skill, level, seed), which only works because generation is deterministic.
@@ -25,8 +27,25 @@ import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { z } from "zod";
 import { BANK_NAMES, type BankName } from "../src/lib/generators/banks";
 import { reviewDraft, dedupeKey, poolsOf, POS_TAGS, FIGURES, SENTENCE_TYPES } from "../src/lib/generators/bank-schema";
+import { EXAM_BANK_NAMES, type ExamBankName } from "../src/lib/generators/exam-banks";
+import { reviewExamDraft, examDedupeKey } from "../src/lib/generators/exam-bank-schema";
 
-const OUT = "src/data/ela-banks.json";
+/** Every bank this script can extend, and the file it lives in. */
+type AnyBankName = BankName | ExamBankName;
+
+const ALL_BANKS: AnyBankName[] = [...BANK_NAMES, ...EXAM_BANK_NAMES];
+
+const FILE_OF = (bank: AnyBankName): string =>
+  bank.startsWith("cogat.")
+    ? "src/data/cogat-banks.json"
+    : bank.startsWith("isee.")
+      ? "src/data/isee-banks.json"
+      : "src/data/ela-banks.json";
+
+/** The key inside its file: "isee.synonyms" is stored as `synonyms`. */
+const FIELD_OF = (bank: AnyBankName): string => bank.split(".").pop()!;
+
+const isExam = (bank: AnyBankName): bank is ExamBankName => bank.includes(".");
 const MODEL = "claude-opus-5";
 
 /**
@@ -35,7 +54,7 @@ const MODEL = "claude-opus-5";
  * budget and come back as truncated JSON -- so large-item banks are asked in
  * small batches and the results accumulated.
  */
-const BATCH_LIMIT: Partial<Record<BankName, number>> = { passages: 3 };
+const BATCH_LIMIT: Partial<Record<AnyBankName, number>> = { passages: 3, "isee.passages": 2 };
 const DEFAULT_BATCH = 10;
 
 /* ------------------------------------------------------------ wire schemas */
@@ -50,7 +69,9 @@ const three = z.array(z.string()).length(3);
 const vocab = z.object({ word: z.string(), meaning: z.string(), distractors: three });
 const answerWrong = { answer: z.string(), wrong: three };
 
-const WIRE = {
+const picture = z.string().describe('an emoji followed by its word, e.g. "🧦 sock"');
+
+const WIRE: Record<AnyBankName, z.ZodTypeAny> = {
   wordPairs: z.object({ word: z.string(), answer: z.string(), distractors: three }),
   homophones: z.object({ sentence: z.string(), answer: z.string(), options: z.array(z.string()).length(3), why: z.string() }),
   posSentences: z.object({ s: z.string(), word: z.string(), pos: z.enum(POS_TAGS) }),
@@ -75,10 +96,32 @@ const WIRE = {
   analogies: z.object({ a: z.string(), b: z.string(), c: z.string(), ...answerWrong, why: z.string() }),
   plurals: z.object({ sing: z.string(), ...answerWrong }),
   pronounAntecedent: z.object({ s: z.string(), ...answerWrong, why: z.string() }),
-} as const satisfies Record<BankName, z.ZodTypeAny>;
+
+  "cogat.pictureAnalogies": z.object({
+    a: picture, b: picture, c: picture, answer: picture, wrong: z.array(picture).length(3), why: z.string(),
+  }),
+  "cogat.pictureGroups": z.object({
+    group: z.array(picture).length(3), answer: picture, wrong: z.array(picture).length(3), why: z.string(),
+  }),
+  "cogat.sentenceCompletion": z.object({
+    s: z.string(), answer: picture, wrong: z.array(picture).length(3), why: z.string(),
+  }),
+
+  "isee.synonyms": z.object({ word: z.string(), answer: z.string(), distractors: three }),
+  "isee.sentenceCompletion": z.object({ s: z.string(), ...answerWrong, why: z.string() }),
+  "isee.passages": z.object({
+    text: z.string(),
+    mainIdea: z.string(),
+    wrong: three,
+    vocab,
+    detail: z.object({ question: z.string(), ...answerWrong }),
+    inference: z.object(answerWrong),
+    tone: z.object(answerWrong),
+  }),
+};
 
 /** What each bank is for, and the rules a draft has to respect. */
-const BRIEF: Record<BankName, string> = {
+const BRIEF: Record<AnyBankName, string> = {
   wordPairs:
     "Vocabulary items. `word` is the prompt word; `answer` is a true SYNONYM of it; the three distractors must be plainly wrong, not near-misses or antonyms of each other.",
   homophones:
@@ -107,6 +150,20 @@ const BRIEF: Record<BankName, string> = {
     "Plural forms. `answer` is the correct plural of `sing`. Every wrong option must be genuinely incorrect -- never list a second acceptable plural (e.g. `cactuses` is a real plural of `cactus`, so it cannot be a distractor).",
   pronounAntecedent:
     "Pronoun-antecedent agreement. `s` contains one `___` and an antecedent whose number is easy to mistake.",
+
+  "cogat.pictureAnalogies":
+    "CogAT Level 7 picture analogies, for a SIX-YEAR-OLD. Every picture field is an emoji, a space, then the word it shows: `🧦 sock`. The item reads \"a goes with b; what goes with c the same way?\", so the a-b relationship must be one a first grader can state out loud (what it is worn on, where it lives, what it turns into, what it gives us, what it is used on). Use only emoji a child recognises instantly. `c` must NOT appear among the options. `why` states the relationship in one plain sentence.",
+  "cogat.pictureGroups":
+    "CogAT Level 7 picture classification, for a SIX-YEAR-OLD. `group` is three pictures that share ONE obvious category; `answer` is a fourth that belongs; the three wrong options must be outside the category in a way a first grader can see. Every picture is an emoji, a space, then its word. Say the category in `why`, and where a wrong option is a near miss (a carrot among fruit), say why it does not belong.",
+  "cogat.sentenceCompletion":
+    "CogAT Level 7 sentence completion -- the \"Can you find it?\" item -- read ALOUD to a six-year-old, who answers by pointing at a PICTURE. `s` holds one `___`. Every option is an emoji, a space, then its word, and must be a thing a child can point at: no answer like `greater`, `sick` or `loud`, however good the sentence is. The sentence may use any words a grown-up can say; the reasoning is what should make it hard -- what an object is for, where something lives, what an animal gives us, what you wear when.",
+
+  "isee.synonyms":
+    "ISEE Middle Level synonyms (sat by sixth graders). `word` is a single word at the level of `reluctant`, `candid` or `meticulous`; `answer` is its closest meaning in one or two plain words; the three distractors must be plainly wrong -- not shades of the same meaning, and not the exact opposite of each other. Avoid words a sixth grader would never meet in a book.",
+  "isee.sentenceCompletion":
+    "ISEE Middle Level sentence completion. `s` holds one `___` in a sentence whose OWN WORDS decide the answer: a contrast signal (although, rather than, but), a definition after a colon or semicolon, or a cause introduced by because. A sixth grader should be able to predict the blank before reading the options. `why` names the signal, it does not restate the answer.",
+  "isee.passages":
+    "ISEE Middle Level reading passages. `text` is 110-160 words of original expository prose -- never adapted from a published source -- at the reading level of a good sixth-grade nonfiction book, on history, science, or the arts. Then: `mainIdea` plus three wrong ones that are too narrow, too broad, or unsupported; `vocab`, a hard word that appears verbatim in `text`, with its in-context meaning and three wrong meanings; `detail`, a question answerable only from the passage; `inference`, one step beyond the text and no further; and `tone`, the author's attitude as a single adjective (Measured, Admiring, Wry, Analytical) with three attitudes the passage does not support. Tone options should not all be extreme.",
 };
 
 const SYSTEM = `You write practice items for Katchi, a K-8 math and language-arts practice app.
@@ -131,13 +188,24 @@ type Banks = Record<string, unknown> & {
 };
 
 /** Existing items, shown to the model so it writes around them, not over them. */
-function existing(banks: Banks, bank: BankName, pool: string): unknown[] {
+function existing(banks: Banks, bank: AnyBankName, pool: string): unknown[] {
   return bank === "wordPairs"
     ? (banks.wordPairs[pool as "synonyms" | "antonyms"] ?? [])
-    : ((banks[bank] as unknown[]) ?? []);
+    : ((banks[FIELD_OF(bank)] as unknown[]) ?? []);
 }
 
-async function draft(bank: BankName, pool: string, count: number, prior: unknown[]) {
+/** The gate an item has to pass, whichever family of banks it belongs to. */
+function review(bank: AnyBankName, drafted: unknown[], priorKeys: Set<string>) {
+  return isExam(bank)
+    ? reviewExamDraft(bank, drafted, priorKeys)
+    : reviewDraft(bank, drafted, priorKeys);
+}
+
+function keyOf(bank: AnyBankName): (item: unknown) => string {
+  return (isExam(bank) ? examDedupeKey[bank] : dedupeKey[bank]) as (item: unknown) => string;
+}
+
+async function draft(bank: AnyBankName, pool: string, count: number, prior: unknown[]) {
   const client = new Anthropic();
   const wire = WIRE[bank];
   const brief =
@@ -198,12 +266,18 @@ Return ${count} items that are clearly distinct from the above.`,
   return parsed.data.items;
 }
 
-/** wordPairs is stored as [word, answer, distractors]; everything else as-is. */
-function toStored(bank: BankName, item: Record<string, unknown>): unknown {
-  return bank === "wordPairs" ? [item.word, item.answer, item.distractors] : item;
+/**
+ * Both synonym banks are stored as [word, answer, distractors] tuples, which
+ * the model cannot return directly -- a JSON schema names its fields. It
+ * drafts an object and the tuple is assembled here.
+ */
+function toStored(bank: AnyBankName, item: Record<string, unknown>): unknown {
+  return bank === "wordPairs" || bank === "isee.synonyms"
+    ? [item.word, item.answer, item.distractors]
+    : item;
 }
 
-async function harvestBank(banks: Banks, bank: BankName, count: number, dry: boolean) {
+async function harvestBank(banks: Banks, bank: AnyBankName, count: number, dry: boolean) {
   const pools = bank === "wordPairs" ? ["synonyms", "antonyms"] : [""];
 
   for (const pool of pools) {
@@ -224,13 +298,13 @@ async function harvestBank(banks: Banks, bank: BankName, count: number, dry: boo
         console.log(`  ERR  ${label}: ${(err as Error).message}`);
         break;
       }
-      const review = reviewDraft(
+      const verdict = review(
         bank,
         drafted.map((raw) => toStored(bank, raw as Record<string, unknown>)),
-        new Set([...prior, ...kept].map(dedupeKey[bank] as (i: unknown) => string)),
+        new Set([...prior, ...kept].map(keyOf(bank))),
       );
-      kept.push(...review.kept);
-      rejected.push(...review.rejected);
+      kept.push(...verdict.kept);
+      rejected.push(...verdict.rejected);
     }
 
     console.log(`  ${label.padEnd(24)} ${kept.length} kept, ${rejected.length} rejected (bank: ${prior.length} -> ${prior.length + kept.length})`);
@@ -247,31 +321,43 @@ async function main() {
   const which = arg("bank");
 
   if (!which) {
-    console.log(`usage: --bank <${BANK_NAMES.join("|")}|all> [--count N] [--dry-run]`);
+    console.log(`usage: --bank <${ALL_BANKS.join("|")}|all> [--count N] [--dry-run]`);
     process.exit(1);
   }
-  const banksToRun: BankName[] =
-    which === "all" ? [...BANK_NAMES] : BANK_NAMES.filter((b) => b === which);
+  const banksToRun: AnyBankName[] = which === "all" ? [...ALL_BANKS] : ALL_BANKS.filter((b) => b === which);
   if (!banksToRun.length) {
     console.log(`unknown bank "${which}"`);
     process.exit(1);
   }
 
-  const banks = JSON.parse(readFileSync(OUT, "utf8")) as Banks;
   console.log(`${MODEL}${dry ? " (dry run -- nothing will be written)" : ""}\n`);
 
+  // Banks are grouped by the file they live in so each file is read once,
+  // filled, and written once -- three separate runs over ela-banks.json would
+  // each overwrite the last one's work.
+  const byFile = new Map<string, AnyBankName[]>();
   for (const bank of banksToRun) {
-    await harvestBank(banks, bank, count, dry);
+    byFile.set(FILE_OF(bank), [...(byFile.get(FILE_OF(bank)) ?? []), bank]);
+  }
+
+  for (const [file, banks] of byFile) {
+    const loaded = JSON.parse(readFileSync(file, "utf8")) as Banks;
+    console.log(file);
+    for (const bank of banks) await harvestBank(loaded, bank, count, dry);
+    if (!dry) {
+      writeFileSync(file, JSON.stringify(loaded, null, 2) + "\n");
+      console.log(`  wrote ${file}`);
+    }
+    console.log("");
   }
 
   if (dry) {
-    console.log("\ndry run -- no changes written");
+    console.log("dry run -- no changes written");
     return;
   }
-  writeFileSync(OUT, JSON.stringify(banks, null, 2) + "\n");
   const total = BANK_NAMES.reduce((n, b) => n + poolsOf(b).flat().length, 0);
-  console.log(`\nwrote ${OUT}. Review the diff, then run: npm test`);
-  console.log(`(bank total before this run: ${total} items)`);
+  console.log(`Review the diff, then run: npm test`);
+  console.log(`(ELA bank total before this run: ${total} items)`);
 }
 
 main();

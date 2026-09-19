@@ -134,3 +134,55 @@ export const OBJECTS = [
 export function plural(rng: Rng): readonly [string, string] {
   return rng.pick(OBJECTS);
 }
+
+/**
+ * A multiple-choice question whose options are pictures.
+ *
+ * The learner answers with a letter, so the choice strings are labels and the
+ * figures carry the content. Options are shuffled together with their labels,
+ * then relabelled in display order -- the answer is always whichever letter
+ * the correct picture landed on, never a fixed position.
+ */
+export function figureChoice(
+  rng: Rng,
+  q: Omit<GeneratedQuestion, "format" | "answer" | "figure"> & {
+    /** the correct option's SVG */
+    answerFigure: string;
+    /** wrong options' SVGs; duplicates and repeats of the answer are dropped */
+    distractorFigures: string[];
+    /** optional prompt figure shown above the choices */
+    figure?: string;
+    /** how many options to offer, answer included (default 4) */
+    options?: number;
+  },
+): GeneratedQuestion {
+  const { answerFigure, distractorFigures, options = 4, ...rest } = q;
+  const seen = new Set([answerFigure]);
+  const wrong: string[] = [];
+  for (const f of distractorFigures) {
+    if (seen.has(f)) continue;
+    seen.add(f);
+    wrong.push(f);
+  }
+  const figures = rng.shuffle([answerFigure, ...wrong.slice(0, Math.max(1, options - 1))]);
+  const choices = figures.map((_, i) => CHOICE_LABELS[i]);
+  return {
+    ...rest,
+    answer: CHOICE_LABELS[figures.indexOf(answerFigure)],
+    format: { kind: "choice", choices, figures },
+  };
+}
+
+export const CHOICE_LABELS = ["A", "B", "C", "D", "E"] as const;
+
+/**
+ * A multiple-choice question whose options must keep their written order --
+ * ISEE quantitative comparison always offers the same four in the same
+ * sequence, and shuffling them would make the item unrecognisable.
+ */
+export function fixedChoice(
+  q: Omit<GeneratedQuestion, "format"> & { choices: string[] },
+): GeneratedQuestion {
+  const { choices, ...rest } = q;
+  return { ...rest, format: { kind: "choice", choices } };
+}

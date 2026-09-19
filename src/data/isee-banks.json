@@ -1,0 +1,368 @@
+{
+  "synonyms": [
+    ["abundant", "plentiful", ["scarce", "fragile", "hidden"]],
+    ["conceal", "hide", ["reveal", "repair", "enlarge"]],
+    ["reluctant", "unwilling", ["eager", "careless", "honest"]],
+    ["frail", "weak", ["sturdy", "clever", "loud"]],
+    ["vacant", "empty", ["crowded", "noisy", "costly"]],
+    ["drowsy", "sleepy", ["alert", "angry", "hungry"]],
+    ["hasty", "hurried", ["careful", "gentle", "silent"]],
+    ["mimic", "imitate", ["insult", "ignore", "invent"]],
+    ["sturdy", "strong", ["flimsy", "polite", "curious"]],
+    ["peculiar", "strange", ["ordinary", "polite", "heavy"]],
+    ["vital", "essential", ["optional", "dull", "temporary"]],
+    ["dismal", "gloomy", ["cheerful", "spacious", "sudden"]],
+    ["persuade", "convince", ["forbid", "confuse", "postpone"]],
+    ["prohibit", "forbid", ["encourage", "describe", "borrow"]],
+    ["immense", "huge", ["tiny", "hollow", "brief"]],
+    ["abandon", "give up", ["defend", "gather", "repair"]],
+    ["remote", "far away", ["nearby", "crowded", "recent"]],
+    ["irate", "angry", ["calm", "curious", "generous"]],
+    ["ample", "sufficient", ["meager", "rigid", "hollow"]],
+    ["novice", "beginner", ["expert", "rival", "witness"]],
+    ["diminish", "shrink", ["expand", "repeat", "approve"]],
+    ["obstacle", "barrier", ["shortcut", "reward", "invitation"]],
+    ["tranquil", "peaceful", ["chaotic", "bitter", "steep"]],
+    ["hinder", "obstruct", ["assist", "announce", "borrow"]],
+    ["candid", "honest", ["secretive", "clumsy", "weary"]],
+    ["monotonous", "unvarying", ["lively", "urgent", "fragile"]],
+    ["lenient", "not strict", ["harsh", "hasty", "timid"]],
+    ["vigilant", "watchful", ["careless", "drowsy", "boastful"]],
+    ["futile", "useless", ["effective", "joyful", "distant"]],
+    ["elaborate", "detailed", ["simple", "sudden", "damp"]],
+    ["plausible", "believable", ["absurd", "fragile", "hidden"]],
+    ["deter", "discourage", ["invite", "enlarge", "measure"]],
+    ["benevolent", "kind", ["cruel", "wealthy", "talkative"]],
+    ["scrutinize", "examine closely", ["glance at", "ignore", "destroy"]],
+    ["obsolete", "out of date", ["modern", "costly", "fragile"]],
+    ["prudent", "sensible", ["reckless", "wealthy", "gloomy"]],
+    ["meticulous", "extremely careful", ["sloppy", "rapid", "generous"]],
+    ["gregarious", "sociable", ["shy", "stubborn", "wealthy"]],
+    ["resilient", "quick to recover", ["fragile", "hostile", "idle"]],
+    ["sever", "cut off", ["join", "polish", "predict"]]
+  ],
+
+  "sentenceCompletion": [
+    {
+      "s": "Volunteers spent the weekend working to ___ the damage the flood had left behind.",
+      "answer": "repair",
+      "wrong": ["worsen", "ignore", "predict"],
+      "why": "Volunteers who give up a weekend after a flood are there to put things right."
+    },
+    {
+      "s": "Although the hikers were exhausted, they ___ up the final slope without complaining.",
+      "answer": "trudged",
+      "wrong": ["sprinted", "tumbled", "hesitated"],
+      "why": "\"Although ... exhausted\" signals slow, heavy effort; sprinting would contradict it."
+    },
+    {
+      "s": "The museum's collection is ___, spanning four continents and six centuries.",
+      "answer": "extensive",
+      "wrong": ["meager", "fragile", "recent"],
+      "why": "The detail after the comma defines the blank: four continents and six centuries is a large range."
+    },
+    {
+      "s": "The critic's review was unusually ___; she found nothing whatever to praise.",
+      "answer": "harsh",
+      "wrong": ["generous", "brief", "uncertain"],
+      "why": "The semicolon introduces an explanation, and finding nothing to praise explains harshness."
+    },
+    {
+      "s": "Because the instructions were ___, several students assembled the model incorrectly.",
+      "answer": "ambiguous",
+      "wrong": ["precise", "lengthy", "colorful"],
+      "why": "\"Because\" makes the blank the cause of the mistakes; only unclear instructions cause them."
+    },
+    {
+      "s": "The senator spoke in ___ terms, avoiding any detail that might commit her to a position.",
+      "answer": "vague",
+      "wrong": ["specific", "hostile", "cheerful"],
+      "why": "Avoiding detail is the definition of speaking vaguely."
+    },
+    {
+      "s": "The novel's plot is entirely ___: most readers guess the ending by the third chapter.",
+      "answer": "predictable",
+      "wrong": ["intricate", "obscure", "controversial"],
+      "why": "A colon introduces evidence, and guessing the ending early is evidence of predictability."
+    },
+    {
+      "s": "Scientists remain ___ about the claim, insisting on far more evidence before they accept it.",
+      "answer": "skeptical",
+      "wrong": ["enthusiastic", "indifferent", "frantic"],
+      "why": "Demanding more evidence is doubt, not indifference — an indifferent scientist would not insist."
+    },
+    {
+      "s": "Rather than accept the first offer, she ___ for several days until the terms improved.",
+      "answer": "negotiated",
+      "wrong": ["surrendered", "apologized", "departed"],
+      "why": "\"Rather than accept\" sets up the opposite of accepting: bargaining for something better."
+    },
+    {
+      "s": "The treaty was intended to ___ tensions between the two countries, but it inflamed them instead.",
+      "answer": "ease",
+      "wrong": ["heighten", "record", "declare"],
+      "why": "\"But\" reverses direction, so the blank must be the opposite of inflaming."
+    },
+    {
+      "s": "His account of the accident was ___ with the security footage, so investigators accepted it.",
+      "answer": "consistent",
+      "wrong": ["inconsistent", "impatient", "unfamiliar"],
+      "why": "Investigators accepted the account, which they would only do if it matched the footage."
+    },
+    {
+      "s": "A ___ reader, he finished three long novels during a single week of vacation.",
+      "answer": "voracious",
+      "wrong": ["reluctant", "careless", "inexperienced"],
+      "why": "Three novels in a week describes an enormous appetite for reading."
+    },
+    {
+      "s": "The once-bustling mill now stands ___, its windows broken and its gates chained shut.",
+      "answer": "derelict",
+      "wrong": ["renovated", "crowded", "fragrant"],
+      "why": "Broken windows and chained gates describe a building left to fall apart."
+    },
+    {
+      "s": "Because the evidence was ___, the jury deliberated for six days without reaching a verdict.",
+      "answer": "inconclusive",
+      "wrong": ["overwhelming", "inadmissible", "recent"],
+      "why": "Evidence that settles nothing is what leaves a jury unable to decide."
+    },
+    {
+      "s": "Her ___ nature made her the obvious choice to welcome new students on their first day.",
+      "answer": "gregarious",
+      "wrong": ["solitary", "impatient", "secretive"],
+      "why": "Welcoming strangers suits someone who enjoys company."
+    },
+    {
+      "s": "Though the tremor was small, it was ___ enough to rattle dishes throughout the town.",
+      "answer": "perceptible",
+      "wrong": ["imaginary", "inaudible", "gradual"],
+      "why": "Rattling dishes across a town means the tremor could be noticed, however small it was."
+    },
+    {
+      "s": "The lawyer's closing argument was so ___ that even the opposing side conceded the point.",
+      "answer": "compelling",
+      "wrong": ["trivial", "rambling", "hesitant"],
+      "why": "\"So ... that\" links cause to effect: only a powerful argument makes an opponent concede."
+    },
+    {
+      "s": "Early mapmakers were ___ about the interior of the continent, filling it with guesswork and blank space.",
+      "answer": "uninformed",
+      "wrong": ["meticulous", "enthusiastic", "secretive"],
+      "why": "Guesswork and blank space are what a mapmaker resorts to without knowledge."
+    }
+  ],
+
+  "passages": [
+    {
+      "text": "In 1901 sponge divers working off the Greek island of Antikythera brought up a corroded lump of bronze from a Roman-era shipwreck. For decades it sat in a museum drawer, too damaged to interpret. X-ray imaging in the 1970s, and CT scanning thirty years later, finally revealed what it was: at least thirty interlocking gears, cut by hand, arranged to model the movements of the sun and moon. The device could track the lunar calendar and predict eclipses. Nothing of comparable intricacy survives from the next thousand years of European history. The mechanism does not prove that ancient Greek engineering was lost and rediscovered, but it does show that a single surviving object can overturn what historians thought a period was capable of.",
+      "mainIdea": "A corroded object from a shipwreck turned out to be a geared astronomical calculator, and its discovery forced historians to revise their sense of ancient technical skill.",
+      "wrong": [
+        "Sponge divers made the most important archaeological discoveries of the twentieth century.",
+        "X-ray and CT imaging are the most valuable tools available to modern archaeologists.",
+        "Ancient Greek astronomers understood eclipses better than European astronomers did a thousand years later."
+      ],
+      "vocab": {
+        "word": "intricacy",
+        "meaning": "complexity of detail",
+        "distractors": ["age", "monetary value", "fragility"]
+      },
+      "detail": {
+        "question": "According to the passage, what finally revealed the structure of the mechanism?",
+        "answer": "Imaging that could see inside the corroded metal",
+        "wrong": [
+          "Careful cleaning of the bronze by museum staff",
+          "The discovery of a second, better-preserved device",
+          "Written descriptions found aboard the same wreck"
+        ]
+      },
+      "inference": {
+        "answer": "An object can sit unexamined for years before the tools needed to understand it exist.",
+        "wrong": [
+          "Most museum collections contain undiscovered scientific instruments.",
+          "Roman ships routinely carried astronomical equipment.",
+          "Greek engineers were more advanced than modern engineers in some respects."
+        ]
+      },
+      "tone": {
+        "answer": "Appreciative",
+        "wrong": ["Skeptical", "Nostalgic", "Indifferent"]
+      }
+    },
+    {
+      "text": "Mangroves are the only trees that can live with their roots in salt water. They manage it in several ways: some species filter salt at the root, others push it out through their leaves, and all of them send up stiff aerial roots that take in air the waterlogged mud cannot supply. For a long time coastal developers treated mangrove swamps as wasteland to be drained. The 2004 Indian Ocean tsunami changed that calculation. Villages behind intact mangrove belts suffered measurably less damage than villages whose belts had been cleared for shrimp ponds, because the tangle of roots dissipates wave energy before it reaches shore. Replanting has since become policy in several countries, though a young plantation does not protect a coast the way a mature forest does.",
+      "mainIdea": "Mangroves survive in salt water through several adaptations, and the storm protection they provide has changed how coastal land is managed.",
+      "wrong": [
+        "The 2004 Indian Ocean tsunami was more destructive than it needed to be.",
+        "Shrimp farming is the greatest threat facing tropical coastlines today.",
+        "Mangroves are the most unusual trees in the world because of their aerial roots."
+      ],
+      "vocab": {
+        "word": "dissipates",
+        "meaning": "scatters and weakens",
+        "distractors": ["reflects entirely", "measures", "stores up"]
+      },
+      "detail": {
+        "question": "According to the passage, why do mangroves grow aerial roots?",
+        "answer": "Because waterlogged mud does not supply the air the tree needs",
+        "wrong": [
+          "Because they filter salt more efficiently than buried roots",
+          "Because they anchor the tree against tsunami waves",
+          "Because they allow the tree to spread into deeper water"
+        ]
+      },
+      "inference": {
+        "answer": "Clearing a mangrove belt transfers a risk to the people living behind it.",
+        "wrong": [
+          "Shrimp ponds will eventually be banned throughout the tropics.",
+          "Replanting mangroves restores a coastline's protection within a few years.",
+          "Coastal development is incompatible with any form of storm protection."
+        ]
+      },
+      "tone": {
+        "answer": "Measured",
+        "wrong": ["Alarmed", "Sentimental", "Scornful"]
+      }
+    },
+    {
+      "text": "Before the 1880s, each town in North America kept its own noon: clocks were set so that twelve o'clock fell when the sun stood highest over that particular town. The arrangement was perfectly reasonable until railways made it absurd. A traveller crossing the continent passed through hundreds of local times, and a railway junction might post half a dozen clocks, one for each line meeting there. The timetables were a hazard as much as an inconvenience, since two trains working from different local times could be scheduled onto the same stretch of track. In 1883 the railway companies simply imposed a solution, dividing the continent into standard zones and adopting them on a single November day. Governments ratified the arrangement afterward, which is the usual order of events when a technology outgrows the rules written for an earlier one.",
+      "mainIdea": "Local timekeeping became unworkable once railways spanned the continent, so the railways themselves imposed standard time zones and governments followed.",
+      "wrong": [
+        "Nineteenth-century railway travel was more dangerous than most passengers realized.",
+        "Governments are usually too slow to regulate new technologies.",
+        "Setting clocks by the sun is a less accurate method than using standard zones."
+      ],
+      "vocab": {
+        "word": "ratified",
+        "meaning": "formally approved",
+        "distractors": ["rejected", "drafted", "reversed"]
+      },
+      "detail": {
+        "question": "According to the passage, what made local time a safety problem rather than merely an inconvenience?",
+        "answer": "Trains working from different local times could be scheduled onto the same track",
+        "wrong": [
+          "Railway junctions could not afford to maintain six clocks",
+          "Passengers frequently missed connections between lines",
+          "Sunlight was an unreliable way to set a clock in winter"
+        ]
+      },
+      "inference": {
+        "answer": "Private companies sometimes set standards that governments later formalize.",
+        "wrong": [
+          "Railway companies in the 1880s were more powerful than national governments.",
+          "Standard time was resisted by most travellers when it was introduced.",
+          "No useful standard has ever originated inside a government."
+        ]
+      },
+      "tone": {
+        "answer": "Wry",
+        "wrong": ["Indignant", "Mournful", "Anxious"]
+      }
+    },
+    {
+      "text": "An octopus has about five hundred million neurons, roughly as many as a dog, but only a third of them sit in its brain. The rest are distributed through its arms, which means each arm can taste what it touches, sort through a pile of shells and reject the wrong ones without the central brain issuing instructions. In laboratory tanks, octopuses open screw-top jars, recognize individual keepers, and escape enclosures by routes they were never shown. What makes these abilities difficult to interpret is the evolutionary distance involved: the last common ancestor of an octopus and a human was probably a flattened wormlike creature with almost no brain at all. Whatever intelligence an octopus has, it was not inherited from a shared clever ancestor. It was invented separately, which makes the octopus the closest thing biology offers to a mind built on a different plan.",
+      "mainIdea": "Octopus intelligence is remarkable partly because so much of it is distributed through the arms, and partly because it evolved independently of our own.",
+      "wrong": [
+        "Octopuses are as intelligent as dogs because they have a comparable number of neurons.",
+        "Laboratory experiments are the only reliable way to measure animal intelligence.",
+        "Octopuses and humans share an ancestor that was more intelligent than biologists assumed."
+      ],
+      "vocab": {
+        "word": "distributed",
+        "meaning": "spread out",
+        "distractors": ["donated", "duplicated", "concentrated"]
+      },
+      "detail": {
+        "question": "According to the passage, what can an octopus arm do without instruction from the central brain?",
+        "answer": "Taste what it touches and reject the wrong shells",
+        "wrong": [
+          "Open a screw-top jar",
+          "Recognize an individual keeper",
+          "Regrow itself after an injury"
+        ]
+      },
+      "inference": {
+        "answer": "Intelligence can take more than one form, depending on how a nervous system is arranged.",
+        "wrong": [
+          "Animals with more neurons outside the brain are more intelligent than animals without them.",
+          "Octopuses would outperform dogs on most laboratory tasks.",
+          "Biologists have largely stopped studying the intelligence of mammals."
+        ]
+      },
+      "tone": {
+        "answer": "Fascinated",
+        "wrong": ["Alarmed", "Dismissive", "Sentimental"]
+      }
+    },
+    {
+      "text": "The Dust Bowl of the 1930s is often described as a drought, which it was, but drought alone does not lift topsoil into clouds that darken cities a thousand miles away. The southern plains had been ploughed for wheat during the high prices of the First World War, and ploughing destroyed the deep-rooted native grasses that had held the soil through every previous dry decade. When the rains failed in 1931, there was nothing left to anchor the ground. The federal response was unusual for its time: soil conservation districts, payments to farmers who planted cover crops, and more than two hundred million trees set out in a shelterbelt from the Dakotas to Texas. Much of that shelterbelt has since been cut down. The rains, in any case, returned before anyone could prove which measure had worked.",
+      "mainIdea": "The Dust Bowl resulted from farming practices as much as from drought, and the remedies adopted were never conclusively tested.",
+      "wrong": [
+        "The Dust Bowl was caused by a drought more severe than any the plains had seen before.",
+        "Planting shelterbelts is the most effective way to prevent soil erosion.",
+        "Federal farm programs of the 1930s were poorly designed and largely wasteful."
+      ],
+      "vocab": {
+        "word": "anchor",
+        "meaning": "hold firmly in place",
+        "distractors": ["moisten", "fertilize", "shade"]
+      },
+      "detail": {
+        "question": "According to the passage, what had previously held the plains soil through dry periods?",
+        "answer": "Native grasses with deep roots",
+        "wrong": [
+          "Shelterbelts of planted trees",
+          "Regular rainfall in most decades",
+          "Cover crops planted between wheat harvests"
+        ]
+      },
+      "inference": {
+        "answer": "A disaster with a natural trigger can still have a human cause.",
+        "wrong": [
+          "Wheat should never have been grown on the southern plains.",
+          "The soil conservation program was a failure.",
+          "Droughts of the 1930s were worse than droughts today."
+        ]
+      },
+      "tone": {
+        "answer": "Analytical",
+        "wrong": ["Outraged", "Wistful", "Celebratory"]
+      }
+    },
+    {
+      "text": "Honeybees returning from a good flower patch perform a looping figure-eight on the vertical face of the comb, and the angle of the straight run through the middle tells the other bees where to fly. The angle is measured against the direction of the sun, transposed onto a vertical surface in the dark, and the duration of the run encodes distance. Karl von Frisch worked this out in the 1940s, and for years afterward some researchers doubted that bees actually used the information rather than simply following the scent on the dancer. The question was settled by a robotic bee that could be made to dance a chosen angle: hives sent foragers to the indicated place, including places where no food had ever been. A honeybee colony, it turns out, transmits a location abstractly, from an insect that will never see the place it is describing.",
+      "mainIdea": "The honeybee waggle dance encodes direction and distance, and experiments with a robotic dancer confirmed that bees really do act on that information.",
+      "wrong": [
+        "Karl von Frisch's account of the waggle dance was largely disproved by later researchers.",
+        "Honeybees navigate primarily by following scent left behind by other foragers.",
+        "Robotic models are now the standard method for studying insect behavior."
+      ],
+      "vocab": {
+        "word": "transposed",
+        "meaning": "shifted into a different frame of reference",
+        "distractors": ["exaggerated", "concealed", "measured twice"]
+      },
+      "detail": {
+        "question": "According to the passage, what does the duration of the straight run encode?",
+        "answer": "How far away the flowers are",
+        "wrong": [
+          "The angle of the sun at that hour",
+          "How much nectar the patch holds",
+          "How many bees should be sent"
+        ]
+      },
+      "inference": {
+        "answer": "A claim about animal communication is strongest when the signal can be produced artificially.",
+        "wrong": [
+          "Bees rely on scent only when the dance is unclear.",
+          "Von Frisch's contemporaries were unwilling to consider evidence.",
+          "Honeybees can describe locations they have only been told about."
+        ]
+      },
+      "tone": {
+        "answer": "Admiring",
+        "wrong": ["Doubtful", "Impatient", "Detached"]
+      }
+    }
+  ]
+}

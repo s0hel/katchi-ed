@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { WorksheetBuilder } from "@/components/worksheet-builder";
-import { gradesFor, skillsFor } from "@/lib/curriculum";
+import { gradesFor, isSubject, skillsFor } from "@/lib/curriculum";
 import type { Subject } from "@/lib/types";
 
 export const metadata: Metadata = {
@@ -15,7 +15,7 @@ interface Props {
 export default async function WorksheetPage({ searchParams }: Props) {
   const { subject, grade, skills } = await searchParams;
 
-  const validSubject: Subject = subject === "ela" ? "ela" : "math";
+  const validSubject: Subject = subject && isSubject(subject) ? subject : "math";
   const parsedGrade = Number(grade);
   const validGrade =
     Number.isInteger(parsedGrade) && skillsFor(validSubject, parsedGrade).length
