@@ -31,6 +31,7 @@ export function PracticeSession({ skill, video }: { skill: Skill; video: LessonV
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [showHint, setShowHint] = useState(false);
   const [sessionCount, setSessionCount] = useState(0);
+  const [videoOpen, setVideoOpen] = useState(false);
 
   // The score is held in a ref while a question is open, so the meter reflects
   // the score the question was chosen for rather than jumping mid-question.
@@ -38,6 +39,7 @@ export function PracticeSession({ skill, video }: { skill: Skill; video: LessonV
   const startedAt = useRef(0);
   const loadedFor = useRef<string | null>(null);
   const continueRef = useRef<HTMLButtonElement>(null);
+  const videoRef = useRef<HTMLDivElement>(null);
 
   const fetchQuestion = useCallback(
     async (score: number) => {
@@ -124,11 +126,27 @@ export function PracticeSession({ skill, video }: { skill: Skill; video: LessonV
     return () => window.removeEventListener("keydown", onKey);
   }, [phase, next]);
 
+  // Offered after a wrong answer: open the lesson and bring it into view, so
+  // the video is reachable at the moment the learner actually needs it.
+  const openVideo = useCallback(() => {
+    setVideoOpen(true);
+    requestAnimationFrame(() => videoRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  }, []);
+
   const mastered = state.score >= MASTERY;
 
   return (
     <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
-      <div className="order-2 lg:order-1">
+      <div className="order-2 space-y-4 lg:order-1">
+        <div ref={videoRef} className="scroll-mt-20">
+          <VideoPanel
+            skill={skill}
+            video={video}
+            open={videoOpen}
+            onToggle={() => setVideoOpen((v) => !v)}
+          />
+        </div>
+
         <section className="kx-card p-5 sm:p-7" aria-live="polite">
           {phase === "error" ? (
             <div className="py-10 text-center">
@@ -191,6 +209,7 @@ export function PracticeSession({ skill, video }: { skill: Skill; video: LessonV
                   feedback={feedback}
                   message={feedbackLine(feedback.correct, state, feedback.delta)}
                   onNext={next}
+                  onWatch={video && !videoOpen ? openVideo : null}
                   buttonRef={continueRef}
                 />
               )}
@@ -199,7 +218,7 @@ export function PracticeSession({ skill, video }: { skill: Skill; video: LessonV
         </section>
 
         {mastered && (
-          <p className="mt-4 rounded-xl bg-emerald-50 p-4 text-sm font-semibold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-200">
+          <p className="rounded-xl bg-emerald-50 p-4 text-sm font-semibold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-200">
             🎉 You&apos;ve mastered this skill. Keep going to stay sharp, or{" "}
             <Link href={`/learn/${skill.subject}/${skill.grade}`} className="underline underline-offset-2">
               pick another skill
@@ -221,8 +240,6 @@ export function PracticeSession({ skill, video }: { skill: Skill; video: LessonV
             />
           </dl>
         </div>
-
-        <VideoPanel skill={skill} video={video} />
       </aside>
     </div>
   );
@@ -232,11 +249,13 @@ function FeedbackPanel({
   feedback,
   message,
   onNext,
+  onWatch,
   buttonRef,
 }: {
   feedback: Feedback;
   message: string;
   onNext: () => void;
+  onWatch: (() => void) | null;
   buttonRef: React.RefObject<HTMLButtonElement | null>;
 }) {
   return (
@@ -270,9 +289,16 @@ function FeedbackPanel({
         <RichText text={feedback.explanation} />
       </div>
 
-      <button ref={buttonRef} type="button" className="kx-btn-primary mt-4" onClick={onNext}>
-        Next question →
-      </button>
+      <div className="mt-4 flex flex-wrap items-center gap-3">
+        <button ref={buttonRef} type="button" className="kx-btn-primary" onClick={onNext}>
+          Next question →
+        </button>
+        {!feedback.correct && onWatch && (
+          <button type="button" className="kx-btn-ghost" onClick={onWatch}>
+            ▶ Watch the lesson
+          </button>
+        )}
+      </div>
     </div>
   );
 }
