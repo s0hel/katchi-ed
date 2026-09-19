@@ -96,10 +96,12 @@ const analogyItem = z
 
 const pluralItem = z
   .object({ sing: nonEmpty, answer: nonEmpty, wrong: distractors })
-  // the singular itself is a deliberate distractor ("the plural of deer is
-  // deer"), so it may repeat in `wrong` -- only the keyed answer must be unique
-  .refine((p) => allDistinct([p.answer, ...p.wrong]), { message: "answer must differ from wrong options" })
-  .refine((p) => p.answer.toLowerCase() !== p.sing.toLowerCase(), { message: "answer must differ from the singular" });
+  // Two shapes are both valid here and they pull in opposite directions: an
+  // invariant plural answers with the singular ("sheep" -> "sheep"), while a
+  // regular one often uses the singular as a distractor. Requiring the answer
+  // to differ from `sing` would ban the first; requiring it to match would ban
+  // the second. So only the options themselves must be distinct.
+  .refine((p) => allDistinct([p.answer, ...p.wrong]), { message: "answer must differ from wrong options" });
 
 /** The per-item schema for each bank, keyed by bank name. */
 export const ITEM_SCHEMA = {

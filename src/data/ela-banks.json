@@ -705,6 +705,360 @@
           "Her work as a seamstress prepared her for organizing."
         ]
       }
+    },
+    {
+      "text": "Each year a tree adds a new layer of wood beneath its bark, and those layers show up as rings in a cut trunk. Wide rings mean a wet, easy growing season; narrow rings mean drought or cold. Because the ring pattern is consistent across a whole region, scientists can match rings from old beams in barns to rings in living trees and date a building to a single year.",
+      "mainIdea": "Tree rings record yearly growing conditions, which lets scientists date old wood precisely.",
+      "wrong": [
+        "A tree adds a new layer of wood under its bark every year.",
+        "Wide rings form in wet years and narrow rings form in dry ones.",
+        "Scientists study old barns to learn about the past."
+      ],
+      "vocab": {
+        "word": "drought",
+        "meaning": "a long stretch with little rain",
+        "distractors": [
+          "a sudden flood",
+          "a cold winter storm",
+          "a season of strong wind"
+        ]
+      },
+      "vocabHard": {
+        "word": "consistent",
+        "meaning": "the same from one tree to the next",
+        "distractors": [
+          "easy to see without a lens",
+          "changing in every season",
+          "recorded in careful notes"
+        ]
+      },
+      "clue": {
+        "answer": "scientists can match rings from old beams in barns to rings in living trees",
+        "wrong": [
+          "those layers show up as rings in a cut trunk",
+          "narrow rings mean drought or cold"
+        ]
+      },
+      "detail": {
+        "question": "Which detail best supports the idea that rings can date a building?",
+        "answer": "The ring pattern repeats across a region, so beams can be matched to living trees.",
+        "wrong": [
+          "Narrow rings can mean a cold season.",
+          "Rings are visible in a cut trunk.",
+          "Old barns often contain wooden beams."
+        ]
+      },
+      "purpose": {
+        "answer": "to explain how tree rings store information scientists can use",
+        "wrong": [
+          "to describe how a tree grows from a seed",
+          "to argue that old barns should be preserved",
+          "to compare wet climates with dry ones"
+        ]
+      },
+      "inference": {
+        "answer": "Two trees growing in the same region in the same years would show similar ring patterns.",
+        "wrong": [
+          "Trees stop growing completely during a drought.",
+          "Wide rings are far more common than narrow rings.",
+          "Barns are the oldest buildings in most regions."
+        ]
+      }
+    },
+    {
+      "text": "Louis Braille was blind by age five and frustrated by books with raised printed letters, which were bulky and slow to read. As a teenager he reworked a military code of raised dots into a system of six-dot cells, each standing for a letter or a number. A fingertip can feel an entire cell at once, so a reader moves down a line instead of tracing the shape of every letter.",
+      "mainIdea": "Braille's system of raised dots made reading by touch far faster than raised printed letters.",
+      "wrong": [
+        "Louis Braille lost his sight when he was a young child.",
+        "Books for blind readers once used large raised letters.",
+        "Armies have used codes made of raised dots."
+      ],
+      "vocab": {
+        "word": "bulky",
+        "meaning": "large and awkward to handle",
+        "distractors": [
+          "costly to buy",
+          "printed in bright colors",
+          "written in a secret code"
+        ]
+      },
+      "vocabHard": {
+        "word": "cells",
+        "meaning": "small groups of dot positions that each stand for one character",
+        "distractors": [
+          "the smallest living parts of a body",
+          "small rooms where people are locked in",
+          "parts inside a battery"
+        ]
+      },
+      "clue": {
+        "answer": "each standing for a letter or a number",
+        "wrong": [
+          "Louis Braille was blind by age five",
+          "which were bulky and slow to read"
+        ]
+      },
+      "detail": {
+        "question": "Which detail best explains why raised printed letters were hard to use?",
+        "answer": "They made books bulky and were slow to read.",
+        "wrong": [
+          "Louis Braille was blind by age five.",
+          "The dot code came from the military.",
+          "A cell holds six dots."
+        ]
+      },
+      "purpose": {
+        "answer": "to explain how one invention improved reading for blind people",
+        "wrong": [
+          "to tell the full life story of Louis Braille",
+          "to describe how military codes are written",
+          "to argue that all books should be printed in Braille"
+        ]
+      },
+      "inference": {
+        "answer": "A system built for one purpose can be reshaped to serve a very different one.",
+        "wrong": [
+          "Braille is too difficult for most people to learn.",
+          "Raised printed letters were never used in schools.",
+          "Louis Braille invented the military dot code himself."
+        ]
+      }
+    },
+    {
+      "text": "A sourdough starter is nothing but flour and water left out until wild yeast and bacteria move in from the air and the grain. The yeast feeds on sugars in the flour and gives off carbon dioxide, which inflates the dough into bubbles. The bacteria produce acids at the same time, and those acids give sourdough its tang. Bakers keep a starter working for years by feeding it fresh flour every few days.",
+      "mainIdea": "Sourdough rises and tastes sour because of the yeast and bacteria living in its starter.",
+      "wrong": [
+        "Yeast releases carbon dioxide when it feeds on sugar.",
+        "Bakers have to add fresh flour to a starter every few days.",
+        "Baking bread is a complicated science."
+      ],
+      "vocab": {
+        "word": "tang",
+        "meaning": "a sharp, sour flavor",
+        "distractors": [
+          "a crisp outer crust",
+          "a golden brown color",
+          "a strong smell of grain"
+        ]
+      },
+      "vocabHard": {
+        "word": "inflates",
+        "meaning": "fills with gas and swells",
+        "distractors": [
+          "bakes until firm",
+          "cuts into even pieces",
+          "cools down slowly"
+        ]
+      },
+      "clue": {
+        "answer": "gives off carbon dioxide",
+        "wrong": [
+          "A sourdough starter is nothing but flour and water",
+          "Bakers keep a starter working for years"
+        ]
+      },
+      "detail": {
+        "question": "Which detail explains why sourdough tastes sour?",
+        "answer": "Bacteria in the starter produce acids.",
+        "wrong": [
+          "Yeast gives off carbon dioxide.",
+          "A starter begins as flour and water.",
+          "Bakers feed the starter fresh flour."
+        ]
+      },
+      "purpose": {
+        "answer": "to explain what makes sourdough rise and taste the way it does",
+        "wrong": [
+          "to give step-by-step directions for baking bread",
+          "to compare sourdough with store-bought bread",
+          "to persuade readers to bake at home"
+        ]
+      },
+      "inference": {
+        "answer": "A starter that is never fed will eventually stop working.",
+        "wrong": [
+          "Dough cannot rise unless bacteria are present.",
+          "Wild yeast is found only inside flour.",
+          "Sourdough is healthier than every other bread."
+        ]
+      }
+    },
+    {
+      "text": "Mangrove trees grow in salty water along tropical coasts, standing on tangled roots that arch above the surface. Those roots slow incoming waves and trap mud and sand, so the shoreline behind them erodes far more slowly during storms. The same tangle shelters young fish until they are big enough for open water. Coastal towns that cleared their mangroves for docks and shrimp ponds have since spent millions building seawalls to do the same job.",
+      "mainIdea": "Mangroves guard coastlines and shelter young fish, so clearing them turns out to be expensive.",
+      "wrong": [
+        "Mangrove trees can grow in salty water along tropical coasts.",
+        "Young fish hide among the tangled roots of mangroves.",
+        "Seawalls cost millions of dollars to build."
+      ],
+      "vocab": {
+        "word": "trap",
+        "meaning": "catch and hold in place",
+        "distractors": [
+          "wash out to sea",
+          "dry out in the sun",
+          "break into pieces"
+        ]
+      },
+      "vocabHard": {
+        "word": "erodes",
+        "meaning": "gets worn away bit by bit",
+        "distractors": [
+          "grows farther outward",
+          "hardens into solid rock",
+          "floods with rainwater"
+        ]
+      },
+      "clue": {
+        "answer": "Those roots slow incoming waves and trap mud and sand",
+        "wrong": [
+          "Mangrove trees grow in salty water along tropical coasts",
+          "shelters young fish until they are big enough for open water"
+        ]
+      },
+      "detail": {
+        "question": "Which detail best supports the idea that clearing mangroves is costly?",
+        "answer": "Towns that removed them have spent millions on seawalls instead.",
+        "wrong": [
+          "Mangrove roots arch above the water's surface.",
+          "Mangroves grow along tropical coasts.",
+          "Roots hold on to mud and sand."
+        ]
+      },
+      "purpose": {
+        "answer": "to explain what mangroves do for a coast and why they are worth keeping",
+        "wrong": [
+          "to describe how fish lay their eggs",
+          "to explain the steps in building a seawall",
+          "to compare tropical coasts with cold ones"
+        ]
+      },
+      "inference": {
+        "answer": "A stretch of coast without mangroves takes more storm damage than one with them.",
+        "wrong": [
+          "Seawalls protect a shoreline better than mangroves do.",
+          "Most tropical towns have already removed their mangroves.",
+          "Young fish cannot survive in open water at any age."
+        ]
+      }
+    },
+    {
+      "text": "Steel expands when it warms and shrinks when it cools. On a long bridge, that change can add up to several inches between a January morning and a July afternoon. Engineers leave gaps at the end of each span and cover them with metal fingers that slide past one another, which is the clacking you hear when tires cross. Without those gaps, the deck would push against itself and buckle.",
+      "mainIdea": "Bridges are built with gaps because the steel in them changes size with temperature.",
+      "wrong": [
+        "Steel gets longer in heat and shorter in cold.",
+        "The clacking sound on a bridge comes from sliding metal fingers.",
+        "Engineers have to plan for every kind of weather."
+      ],
+      "vocab": {
+        "word": "gaps",
+        "meaning": "open spaces left between parts",
+        "distractors": [
+          "heavy supports underneath",
+          "warning signs for drivers",
+          "layers of fresh paint"
+        ]
+      },
+      "vocabHard": {
+        "word": "buckle",
+        "meaning": "bend out of shape under pressure",
+        "distractors": [
+          "come unfastened",
+          "freeze solid",
+          "slide downhill"
+        ]
+      },
+      "clue": {
+        "answer": "the deck would push against itself",
+        "wrong": [
+          "Steel expands when it warms and shrinks when it cools",
+          "metal fingers that slide past one another"
+        ]
+      },
+      "detail": {
+        "question": "Which detail shows how much a bridge's size can change?",
+        "answer": "The change can total several inches between a winter morning and a summer afternoon.",
+        "wrong": [
+          "Metal fingers slide past one another.",
+          "Steel shrinks as it cools.",
+          "Tires make a clacking sound."
+        ]
+      },
+      "purpose": {
+        "answer": "to explain why bridges are built with gaps in them",
+        "wrong": [
+          "to describe the sounds cars make on a highway",
+          "to warn drivers that some bridges are damaged",
+          "to explain how steel is manufactured"
+        ]
+      },
+      "inference": {
+        "answer": "A bridge built with no room to expand could damage itself on a hot day.",
+        "wrong": [
+          "Driving across a bridge is safer in winter than in summer.",
+          "A clacking sound means the bridge needs repair.",
+          "Engineers would rather build bridges out of concrete."
+        ]
+      }
+    },
+    {
+      "text": "People often assume there is one sign language used everywhere, the way numerals look much the same in many countries. There is not. American Sign Language and British Sign Language developed separately and share little vocabulary, even though both countries speak English. A signer from Chicago and a signer from London may need an interpreter. Sign languages grow inside communities, just as spoken languages do, and each one follows its own grammar.",
+      "mainIdea": "Sign languages are separate, complete languages that differ from one community to another.",
+      "wrong": [
+        "American Sign Language and British Sign Language are different from each other.",
+        "Numerals look almost the same in many countries.",
+        "Languages change as the years go by."
+      ],
+      "vocab": {
+        "word": "assume",
+        "meaning": "take something to be true without checking",
+        "distractors": [
+          "forget on purpose",
+          "announce to a crowd",
+          "doubt strongly"
+        ]
+      },
+      "vocabHard": {
+        "word": "interpreter",
+        "meaning": "a person who translates between two languages",
+        "distractors": [
+          "a printed dictionary",
+          "a teacher of grammar",
+          "a machine that records speech"
+        ]
+      },
+      "clue": {
+        "answer": "developed separately and share little vocabulary",
+        "wrong": [
+          "People often assume there is one sign language used everywhere",
+          "each one follows its own grammar"
+        ]
+      },
+      "detail": {
+        "question": "Which detail best shows that sign language is not the same everywhere?",
+        "answer": "ASL and BSL share little vocabulary even though both countries speak English.",
+        "wrong": [
+          "Sign languages follow their own grammar.",
+          "Numerals look similar from country to country.",
+          "People often assume there is a single sign language."
+        ]
+      },
+      "purpose": {
+        "answer": "to correct a common misunderstanding about sign language",
+        "wrong": [
+          "to teach readers a few signs in ASL",
+          "to compare English in America with English in Britain",
+          "to argue that every school should offer sign language"
+        ]
+      },
+      "inference": {
+        "answer": "Knowing which spoken language a country uses does not tell you which sign language is used there.",
+        "wrong": [
+          "British Sign Language is older than American Sign Language.",
+          "Deaf people in London cannot communicate with anyone from abroad.",
+          "Sign languages have no grammar rules of their own."
+        ]
+      }
     }
   ],
   "subjectVerbAgreement": [
