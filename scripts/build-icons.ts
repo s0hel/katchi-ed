@@ -23,6 +23,7 @@
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { COGAT_BANKS } from "../src/lib/generators/exam-banks";
+import { COUNTABLE_OBJECTS } from "../src/lib/generators/pictures";
 
 const OUT = "src/data/picture-icons.json";
 const SRC = "node_modules/@twemoji/svg";
@@ -54,6 +55,9 @@ function usedEmoji(): string[] {
   for (const item of COGAT_BANKS.sentenceCompletion) {
     pictures.push(item.answer, ...item.wrong);
   }
+  // Not from a bank: number analogies count these, and an object with no
+  // artwork would be drawn as a text glyph six times over.
+  pictures.push(...COUNTABLE_OBJECTS);
   return [...new Set(pictures.map(emojiOf))].sort();
 }
 

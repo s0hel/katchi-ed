@@ -6,7 +6,10 @@ import {
   type Attribute, type Fig, type Fold, type Hole, type Shading,
 } from "./shapes";
 import { abacusSvg, trainsSvg } from "./counters";
-import { parsePicture, pictureAnalogySvg, pictureCardSvg, pictureRowSvg } from "./pictures";
+import {
+  COUNTABLE_OBJECTS, countAnalogySvg, countCardSvg, parsePicture, pictureAnalogySvg, pictureCardSvg,
+  pictureRowSvg,
+} from "./pictures";
 import type { Rng } from "../rng";
 
 /**
@@ -90,36 +93,57 @@ function nearby(rng: Rng, answer: number, spread: number): string[] {
 }
 
 /**
- * Number analogies: two worked pairs establish a rule, the third pair applies
- * it. On the test these are drawn as sets of objects; at this age the rule is
- * always a single step.
+ * Number analogies, as sets of objects.
+ *
+ * Three pens become five pens, so two basketballs become how many? The rule is
+ * about how many, never about which object, so the two rows deliberately use
+ * different things: a child who matched on the object rather than the count
+ * would get it wrong, which is the point.
+ *
+ * Counts stay between one and six. Seven of anything in a box is a counting
+ * test, and this is not one.
  */
 const numberAnalogies: GeneratorFn = (rng, level) => {
-  const rules =
-    level <= 1
-      ? [{ delta: 1 }, { delta: 2 }]
-      : level === 2
-        ? [{ delta: 2 }, { delta: 3 }, { delta: -1 }]
-        : level === 3
-          ? [{ delta: 3 }, { delta: 4 }, { delta: -2 }, { delta: 5 }]
-          : [{ delta: 5 }, { delta: -3 }, { delta: 10 }, { delta: -4 }];
-  const { delta } = rng.pick(rules);
-  const top = level <= 2 ? 12 : 20;
-  const floor = Math.max(1, 1 - delta);
-  const ceiling = top - Math.max(0, delta);
-  const a = rng.int(floor, ceiling);
-  const b = rng.intExcept(floor, ceiling, [a]);
-  const c = rng.intExcept(floor, ceiling, [a, b]);
-  const answer = c + delta;
+  const MAX_SET = 6;
+  const deltas =
+    level <= 1 ? [1, 2] : level === 2 ? [1, 2, 3] : level === 3 ? [2, 3, -1, -2] : [2, 3, 4, -2, -3];
+  const delta = rng.pick(deltas);
 
-  const move = delta > 0 ? `${delta} more` : `${-delta} less`;
-  return choice(rng, {
-    instructions: "Work out the rule, then finish the last pair.",
-    stem: `**[ ${a} → ${a + delta} ]**   **[ ${b} → ${b + delta} ]**   **[ ${c} → ? ]**`,
-    answer: `${answer}`,
-    distractors: nearby(rng, answer, level <= 2 ? 3 : 5),
-    explanation: `In each pair the second number is ${move} than the first: ${a} → ${a + delta} and ${b} → ${b + delta}. So ${c} → ${answer}.`,
-    hint: "Compare the two numbers in the first box. Did it get bigger or smaller?",
+  // Both pairs have to fit in the box at both ends of the rule.
+  const low = Math.max(1, 1 - delta);
+  const high = Math.min(MAX_SET, MAX_SET - delta);
+  const topFrom = rng.int(low, high);
+  // A second pair that starts somewhere else, so the rule cannot be read as
+  // "copy the box above".
+  const bottomFrom = rng.intExcept(low, high, [topFrom]);
+  const answer = bottomFrom + delta;
+
+  const [topPicture, bottomPicture] = rng.sample(COUNTABLE_OBJECTS, 2);
+
+  // Wrong counts, nearest first: the count that did not change, the rule
+  // applied the wrong way, and one either side.
+  const candidates = [bottomFrom, bottomFrom - delta, answer + 1, answer - 1, answer + 2];
+  const seen = new Set([answer]);
+  const distractors: string[] = [];
+  for (const n of candidates) {
+    if (n < 1 || n > MAX_SET || seen.has(n)) continue;
+    seen.add(n);
+    distractors.push(countCardSvg(bottomPicture, n));
+  }
+
+  const move = delta > 0 ? `${delta} more` : `${-delta} fewer`;
+  return figureChoice(rng, {
+    instructions: "Work out what happens in the top row, then do the same in the bottom row.",
+    stem: "How many belong in the empty box?",
+    figure: countAnalogySvg(
+      { picture: topPicture, from: topFrom, to: topFrom + delta },
+      { picture: bottomPicture, from: bottomFrom },
+    ),
+    answerFigure: countCardSvg(bottomPicture, answer),
+    distractorFigures: distractors,
+    options: optionsFor(level),
+    explanation: `The top row goes from ${topFrom} to ${topFrom + delta} — ${move}. Doing the same to ${bottomFrom} gives ${answer}.`,
+    hint: "Count the first box, then the second. How many were added or taken away?",
   });
 };
 
@@ -213,7 +237,7 @@ const numberSeries: GeneratorFn = (rng, level) => {
 
   const steps = level <= 1 ? [1] : level === 2 ? [1, 2] : level === 3 ? [2, 3, -1] : [2, 3, -2, -3];
   const step = rng.pick(steps);
-  // Every rod in the series, the answer included, has to fit on a rod.
+  // Every rod in the series, the answer included, has to fit on the frame.
   const start =
     step > 0
       ? rng.int(1, MAX_BEADS - step * shown)

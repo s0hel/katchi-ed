@@ -160,7 +160,7 @@ batteries the test reports, matching the item types the form actually uses:
 | Battery | Skills |
 | --- | --- |
 | Verbal | Picture analogies, Picture classification, Sentence completion *(read aloud)* |
-| Quantitative | Number analogies, Number series *(abacus)*, Number puzzles *(trains)* |
+| Quantitative | Number analogies *(sets of objects)*, Number series *(abacus)*, Number puzzles *(trains)* |
 | Nonverbal | Figure analogies, Figure classification, Paper folding |
 
 Adding Level 5/6 (kindergarten) or Level 8 (second grade) is a matter of adding
@@ -185,10 +185,13 @@ one confound the format exists to avoid. So:
   This constrains the writing, and the schema enforces it: every option has to
   be a thing a six-year-old can point at. A sentence whose answer is "greater"
   or "sick" cannot be asked this way, however good the sentence is.
-- **The quantitative battery is counted, not read** (`counters.ts`). Number
-  series is an abacus whose rods gain a bead at a time; number puzzles are two
-  trains that have to carry the same load, with one car left empty. Both are
-  equations with nothing to read.
+- **The quantitative battery is counted, not read** (`counters.ts`, and the
+  set builders in `pictures.ts`). A number analogy shows three pens becoming
+  five pens, then asks what two basketballs become; number series is an abacus
+  whose rods gain a bead at a time; number puzzles are two trains that have to
+  carry the same load, with one car left empty. All three are arithmetic with
+  no numerals on the page — the rule is about how many, and a child who has
+  only just met the symbols should not have to read them to show they know it.
 - **The nonverbal battery is drawn** (`shapes.ts`), out of four attributes —
   shape, shading, size, count — with each generator stating a rule over them.
   A figure analogy applies one attribute change to a second pair,

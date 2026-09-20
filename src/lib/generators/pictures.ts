@@ -33,7 +33,23 @@ const PICTURE_GENERATORS = new Set([
   "cogat-picture-analogies",
   "cogat-picture-groups",
   "cogat-sentence-completion",
+  "cogat-number-analogies",
 ]);
+
+/**
+ * Objects a set-size item counts.
+ *
+ * Which object is used carries no meaning -- the item is about how many --
+ * so these are chosen for one thing only: a silhouette that stays countable
+ * when six of them share a box. Anything long and thin, or busy in the middle,
+ * turns a row of six into a smear.
+ */
+export const COUNTABLE_OBJECTS = [
+  "🏀 basketball", "🖊️ pen", "🍎 apple", "⭐ star", "🎈 balloon", "🍌 banana",
+  "🔑 key", "🐟 fish", "🌼 flower", "🚗 car", "📕 book", "🍪 cookie",
+  "🧦 sock", "🐝 bee", "🍦 ice cream", "🪁 kite", "🐚 shell", "🧊 ice cube",
+  "🦋 butterfly", "🍄 mushroom", "🥕 carrot", "🔔 bell",
+];
 
 export function usesPictureIcons(generator: string): boolean {
   return PICTURE_GENERATORS.has(generator);
@@ -163,5 +179,116 @@ export function pictureCardSvg(picture: string): string {
   const x = (W - CELL_W) / 2;
   return `<svg viewBox="0 0 ${W} ${CELL_H}" role="img" aria-label="${words(picture)}">
     ${cell(picture, x, 0)}
+  </svg>`;
+}
+
+/* ------------------------------------------------------- sets of objects */
+
+/**
+ * Number analogies, drawn the way Level 7 asks them: three pens become five
+ * pens, so two basketballs become how many?
+ *
+ * The rule is about *how many*, so the objects carry no meaning and the
+ * numerals never appear. Writing the same item as "3 → 5, 2 → ?" would be a
+ * reading-and-symbols task for a child who has only just met either.
+ */
+const SET_W = 82;
+const SET_H = 64;
+
+/** `count` copies of one object, packed to stay countable inside the box. */
+function objectSet(picture: string, count: number, x: number, y: number): string {
+  const { emoji } = parsePicture(picture);
+  const art = ICONS[emoji];
+  // Four reads as a square, not as a row of three with one stranded below.
+  const perRow = count <= 3 ? count : count === 4 ? 2 : 3;
+  const rows = Math.ceil(count / perRow);
+  const size = rows === 1 ? (count <= 2 ? 27 : 23) : count <= 4 ? 24 : 21;
+  const stepX = size + 2;
+  const stepY = size + 1;
+
+  const drawn: string[] = [];
+  for (let i = 0; i < count; i++) {
+    const row = Math.floor(i / perRow);
+    const inRow = Math.min(perRow, count - row * perRow);
+    const col = i % perRow;
+    const cx = x + SET_W / 2 + (col - (inRow - 1) / 2) * stepX;
+    const cy = y + SET_H / 2 + (row - (rows - 1) / 2) * stepY;
+    drawn.push(
+      art
+        ? `<svg x="${(cx - size / 2).toFixed(1)}" y="${(cy - size / 2).toFixed(1)}"
+            width="${size}" height="${size}" viewBox="0 0 ${ART} ${ART}">${art}</svg>`
+        : `<text x="${cx.toFixed(1)}" y="${(cy + size / 3).toFixed(1)}" text-anchor="middle"
+            font-size="${size}">${emoji}</text>`,
+    );
+  }
+  return drawn.join("");
+}
+
+const setBox = (x: number, y: number) =>
+  `<rect x="${x}" y="${y}" width="${SET_W}" height="${SET_H}" rx="6"
+    fill="none" stroke="var(--kx-fig-stroke)" stroke-width="1.5" opacity="0.45"/>`;
+
+/**
+ * "3 kites", "5 butterflies", "2 fish".
+ *
+ * This reaches the printed answer key, not just the accessibility label, so
+ * "butterflys" is a mistake a parent reads while marking a sheet.
+ */
+const INVARIANT_PLURALS = new Set(["fish", "sheep", "deer"]);
+
+function plural(picture: string, n: number): string {
+  const word = words(picture);
+  if (n === 1 || INVARIANT_PLURALS.has(word)) return `${n} ${word}`;
+  if (/[^aeiou]y$/.test(word)) return `${n} ${word.slice(0, -1)}ies`;
+  if (/(s|x|z|ch|sh)$/.test(word)) return `${n} ${word}es`;
+  return `${n} ${word}s`;
+}
+
+/** One of something becomes; several of them become. */
+const verb = (n: number) => (n === 1 ? "becomes" : "become");
+
+export interface ObjectSet {
+  picture: string;
+  from: number;
+  to?: number;
+}
+
+/**
+ * Two rows: a worked pair above, the pair to finish below. The layout matches
+ * the picture and figure analogies -- box, arrow, box -- so a child meets one
+ * shape of question across the whole test rather than three.
+ */
+export function countAnalogySvg(top: Required<ObjectSet>, bottom: ObjectSet): string {
+  const span = 24;
+  const rowGap = 10;
+  const W = SET_W * 2 + span;
+  const H = SET_H * 2 + rowGap;
+  const right = SET_W + span;
+
+  const row = (y: number, set: ObjectSet, filled: boolean) =>
+    `${setBox(0, y)}${objectSet(set.picture, set.from, 0, y)}
+     ${arrow(SET_W, y + SET_H / 2, span)}
+     ${setBox(right, y)}${
+       filled && set.to !== undefined
+         ? objectSet(set.picture, set.to, right, y)
+         : `<text x="${right + SET_W / 2}" y="${y + SET_H / 2 + 10}" text-anchor="middle"
+             font-size="28" font-weight="700" fill="var(--kx-fig-stroke)">?</text>`
+     }`;
+
+  return `<svg viewBox="0 0 ${W} ${H}" role="img"
+    aria-label="${plural(top.picture, top.from)} ${verb(top.from)} ${plural(top.picture, top.to)}. ${plural(bottom.picture, bottom.from)} ${verb(bottom.from)} how many?">
+    ${row(0, top, true)}
+    ${row(SET_H + rowGap, bottom, false)}
+  </svg>`;
+}
+
+/** One answer option: a box holding some number of the same object. */
+export function countCardSvg(picture: string, count: number): string {
+  // Barely padded: an option is scaled to its button, and the wide box this
+  // started with drew objects half the size of the ones in the question.
+  const pad = 5;
+  const W = SET_W + pad * 2;
+  return `<svg viewBox="0 0 ${W} ${SET_H}" role="img" aria-label="${plural(picture, count)}">
+    ${setBox(pad, 0)}${objectSet(picture, count, pad, 0)}
   </svg>`;
 }

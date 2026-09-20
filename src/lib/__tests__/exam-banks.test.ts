@@ -179,11 +179,36 @@ describe("CogAT items", () => {
     }
   });
 
+  it("applies one rule to both rows of a number analogy", () => {
+    // The keyed option is checked against the picture, not against the
+    // generator's own arithmetic: the child answers by counting what is drawn.
+    const skill = SKILLS.find((s) => s.id === "cogat-1-number-analogies")!;
+    for (let level = 1; level <= 4; level++) {
+      for (const seed of SEEDS) {
+        const q = generateQuestion(skill, level, seed);
+        const where = `${skill.id} L${level} seed ${seed}`;
+        const label = /aria-label="([^"]*)"/.exec(q.figure ?? "")?.[1] ?? "";
+        // Objects can be two words ("ice cream"), so the counts are read by
+        // position around the verb rather than by counting words.
+        const [, from, to, bottomFrom] = /^(\d+) [^.]*?becomes? (\d+) [^.]*\. (\d+) /.exec(label)!;
+        if (q.format.kind !== "choice") throw new Error(`${where}: not multiple choice`);
+        const keyed = q.format.figures![q.format.choices.indexOf(q.answer)];
+        const answer = Number(/aria-label="(\d+) /.exec(keyed)![1]);
+        expect(answer, `${where}: ${label}`).toBe(Number(bottomFrom) + (Number(to) - Number(from)));
+        // Nothing on the page counts past what a six-year-old can take in.
+        for (const n of [from, to, bottomFrom, `${answer}`]) {
+          expect(Number(n), where).toBeGreaterThanOrEqual(1);
+          expect(Number(n), where).toBeLessThanOrEqual(6);
+        }
+      }
+    }
+  });
+
   it("draws the quantitative battery instead of writing it", () => {
     // Level 7 asks number series on an abacus and number puzzles on trains,
     // and the reason is not decoration: a six-year-old who has to read the
     // item is being tested on reading, not on quantitative reasoning.
-    for (const id of ["cogat-1-number-series", "cogat-1-number-puzzles"]) {
+    for (const id of ["cogat-1-number-series", "cogat-1-number-puzzles", "cogat-1-number-analogies"]) {
       const skill = SKILLS.find((s) => s.id === id)!;
       expect(skill, id).toBeDefined();
       for (let level = 1; level <= 4; level++) {
