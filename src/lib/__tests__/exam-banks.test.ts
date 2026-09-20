@@ -99,6 +99,27 @@ describe("exam content banks", () => {
     expect(pictures.filter((p) => !hasIcon(p))).toEqual([]);
   });
 
+  it("asks several questions of each passage", () => {
+    // One question per passage per type made the passage bank the ceiling on
+    // the skill: ten passages meant ten possible detail questions, and a
+    // student met the same one every second session.
+    for (const p of ISEE_BANKS.passages) {
+      const where = p.mainIdea.slice(0, 40);
+      expect(p.details.length, `${where}: details`).toBeGreaterThanOrEqual(2);
+      expect(p.inferences.length, `${where}: inferences`).toBeGreaterThanOrEqual(2);
+      expect(p.vocab.length, `${where}: vocab`).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it("keeps every vocabulary word inside the passage that defines it", () => {
+    // A vocabulary-in-context item with no context is unanswerable.
+    for (const p of ISEE_BANKS.passages) {
+      for (const v of p.vocab) {
+        expect(p.text.toLowerCase(), p.mainIdea.slice(0, 40)).toContain(v.word.toLowerCase());
+      }
+    }
+  });
+
   it("keeps ISEE passages long enough to carry a vocabulary question", () => {
     for (const p of ISEE_BANKS.passages) {
       expect(p.text.split(/\s+/).length, p.mainIdea.slice(0, 40)).toBeGreaterThanOrEqual(80);
@@ -362,6 +383,24 @@ describe("ISEE items", () => {
     expect(q.format.choices[1]).toContain("Column B is greater");
     expect(q.format.choices[2]).toContain("equal");
     expect(q.format.choices[3]).toContain("cannot be determined");
+  });
+
+  it("draws on the whole set of questions a passage carries", () => {
+    // Every question in the bank should be reachable, not just the first one
+    // behind each passage.
+    const seeds = Array.from({ length: 600 }, (_, i) => i * 7919 + 3);
+    const reachable = (ask: string) => {
+      const skill = isee.find((s) => s.params?.ask === ask)!;
+      return new Set(seeds.map((seed) => generateQuestion(skill, 4, seed).stem)).size;
+    };
+    const { passages } = ISEE_BANKS;
+    const total = (count: (p: (typeof passages)[number]) => number) => passages.reduce((n, p) => n + count(p), 0);
+
+    expect(reachable("detail"), "detail").toBe(total((p) => p.details.length));
+    expect(reachable("vocabulary"), "vocabulary").toBe(total((p) => p.vocab.length));
+    expect(reachable("inference"), "inference").toBe(total((p) => p.inferences.length));
+    // Main idea asks what the passage says or why it was written.
+    expect(reachable("main-idea"), "main idea").toBe(passages.length * 2);
   });
 
   it("asks a different question of the passage for each reading skill", () => {

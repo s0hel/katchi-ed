@@ -1222,32 +1222,90 @@
         "X-ray and CT imaging are the most valuable tools available to modern archaeologists.",
         "Ancient Greek astronomers understood eclipses better than European astronomers did a thousand years later."
       ],
-      "vocab": {
-        "word": "intricacy",
-        "meaning": "complexity of detail",
-        "distractors": [
-          "age",
-          "monetary value",
-          "fragility"
-        ]
-      },
-      "detail": {
-        "question": "According to the passage, what finally revealed the structure of the mechanism?",
-        "answer": "Imaging that could see inside the corroded metal",
+      "purpose": {
+        "answer": "To show how a single object changed what historians believed a period was capable of.",
         "wrong": [
-          "Careful cleaning of the bronze by museum staff",
-          "The discovery of a second, better-preserved device",
-          "Written descriptions found aboard the same wreck"
+          "To argue that Greek engineering surpassed anything medieval Europe produced.",
+          "To describe the imaging techniques archaeologists use on fragile finds.",
+          "To explain how eclipses were predicted in the ancient world."
         ]
       },
-      "inference": {
-        "answer": "An object can sit unexamined for years before the tools needed to understand it exist.",
-        "wrong": [
-          "Most museum collections contain undiscovered scientific instruments.",
-          "Roman ships routinely carried astronomical equipment.",
-          "Greek engineers were more advanced than modern engineers in some respects."
-        ]
-      },
+      "vocab": [
+        {
+          "word": "intricacy",
+          "meaning": "complexity of detail",
+          "distractors": [
+            "age",
+            "monetary value",
+            "fragility"
+          ]
+        },
+        {
+          "word": "corroded",
+          "meaning": "eaten away by rust",
+          "distractors": [
+            "polished smooth",
+            "newly made",
+            "deeply buried"
+          ]
+        },
+        {
+          "word": "overturn",
+          "meaning": "completely change",
+          "distractors": [
+            "confirm",
+            "postpone",
+            "exaggerate"
+          ]
+        }
+      ],
+      "details": [
+        {
+          "question": "According to the passage, what finally revealed the structure of the mechanism?",
+          "answer": "Imaging that could see inside the corroded metal",
+          "wrong": [
+            "Careful cleaning of the bronze by museum staff",
+            "The discovery of a second, better-preserved device",
+            "Written descriptions found aboard the same wreck"
+          ]
+        },
+        {
+          "question": "According to the passage, what did the gears model?",
+          "answer": "The movements of the sun and moon",
+          "wrong": [
+            "The positions of every planet known to Rome",
+            "The tides around the Greek islands",
+            "The route the ship had sailed"
+          ]
+        },
+        {
+          "question": "According to the passage, what happened to the object between 1901 and the 1970s?",
+          "answer": "It sat in a museum drawer, too damaged to interpret",
+          "wrong": [
+            "It was slowly cleaned by conservators",
+            "It was displayed as a Roman ornament",
+            "It was lost and later rediscovered"
+          ]
+        }
+      ],
+      "inferences": [
+        {
+          "answer": "An object can sit unexamined for years before the tools needed to understand it exist.",
+          "wrong": [
+            "Most museum collections contain undiscovered scientific instruments.",
+            "Roman ships routinely carried astronomical equipment.",
+            "Greek engineers were more advanced than modern engineers in some respects."
+          ]
+        },
+        {
+          "answer": "The value of an object may not be apparent at the moment it is found.",
+          "wrong": [
+            "Sponge divers should be trained as archaeologists.",
+            "Roman ships routinely carried Greek instruments as cargo.",
+            "Historians have underestimated every ancient civilization."
+          ]
+        }
+      ],
       "tone": {
         "answer": "Appreciative",
         "wrong": [
@@ -1265,32 +1323,90 @@
         "Shrimp farming is the greatest threat facing tropical coastlines today.",
         "Mangroves are the most unusual trees in the world because of their aerial roots."
       ],
-      "vocab": {
-        "word": "dissipates",
-        "meaning": "scatters and weakens",
-        "distractors": [
-          "reflects entirely",
-          "measures",
-          "stores up"
-        ]
-      },
-      "detail": {
-        "question": "According to the passage, why do mangroves grow aerial roots?",
-        "answer": "Because waterlogged mud does not supply the air the tree needs",
+      "purpose": {
+        "answer": "To explain why a habitat long treated as wasteland is now being replanted.",
         "wrong": [
-          "Because they filter salt more efficiently than buried roots",
-          "Because they anchor the tree against tsunami waves",
-          "Because they allow the tree to spread into deeper water"
+          "To warn that tropical coastlines will be destroyed by the next tsunami.",
+          "To describe how trees tolerate salt water.",
+          "To criticize the shrimp farming industry."
         ]
       },
-      "inference": {
-        "answer": "Clearing a mangrove belt transfers a risk to the people living behind it.",
-        "wrong": [
-          "Shrimp ponds will eventually be banned throughout the tropics.",
-          "Replanting mangroves restores a coastline's protection within a few years.",
-          "Coastal development is incompatible with any form of storm protection."
-        ]
-      },
+      "vocab": [
+        {
+          "word": "dissipates",
+          "meaning": "scatters and weakens",
+          "distractors": [
+            "reflects entirely",
+            "measures",
+            "stores up"
+          ]
+        },
+        {
+          "word": "intact",
+          "meaning": "whole and undamaged",
+          "distractors": [
+            "replanted",
+            "narrow",
+            "protected by law"
+          ]
+        },
+        {
+          "word": "waterlogged",
+          "meaning": "soaked through with water",
+          "distractors": [
+            "salty",
+            "barren",
+            "frozen"
+          ]
+        }
+      ],
+      "details": [
+        {
+          "question": "According to the passage, why do mangroves grow aerial roots?",
+          "answer": "Because waterlogged mud does not supply the air the tree needs",
+          "wrong": [
+            "Because they filter salt more efficiently than buried roots",
+            "Because they anchor the tree against tsunami waves",
+            "Because they allow the tree to spread into deeper water"
+          ]
+        },
+        {
+          "question": "According to the passage, how do some mangrove species deal with salt?",
+          "answer": "They filter it at the root or push it out through their leaves",
+          "wrong": [
+            "They store it in their aerial roots",
+            "They shed leaves before it builds up",
+            "They grow only where rivers dilute the sea"
+          ]
+        },
+        {
+          "question": "According to the passage, what were cleared mangrove belts used for?",
+          "answer": "Shrimp ponds",
+          "wrong": [
+            "Rice fields",
+            "Harbors",
+            "Housing for coastal villages"
+          ]
+        }
+      ],
+      "inferences": [
+        {
+          "answer": "Clearing a mangrove belt transfers a risk to the people living behind it.",
+          "wrong": [
+            "Shrimp ponds will eventually be banned throughout the tropics.",
+            "Replanting mangroves restores a coastline's protection within a few years.",
+            "Coastal development is incompatible with any form of storm protection."
+          ]
+        },
+        {
+          "answer": "Protection that took decades to grow cannot be restored on the schedule of a policy.",
+          "wrong": [
+            "Mangroves will eventually be replanted along every tropical coast.",
+            "Shrimp farming damages coasts more than any other industry.",
+            "The 2004 tsunami was the first event to test a mangrove belt."
+          ]
+        }
+      ],
       "tone": {
         "answer": "Measured",
         "wrong": [
@@ -1308,32 +1424,90 @@
         "Governments are usually too slow to regulate new technologies.",
         "Setting clocks by the sun is a less accurate method than using standard zones."
       ],
-      "vocab": {
-        "word": "ratified",
-        "meaning": "formally approved",
-        "distractors": [
-          "rejected",
-          "drafted",
-          "reversed"
-        ]
-      },
-      "detail": {
-        "question": "According to the passage, what made local time a safety problem rather than merely an inconvenience?",
-        "answer": "Trains working from different local times could be scheduled onto the same track",
+      "purpose": {
+        "answer": "To account for how standard time came to be adopted.",
         "wrong": [
-          "Railway junctions could not afford to maintain six clocks",
-          "Passengers frequently missed connections between lines",
-          "Sunlight was an unreliable way to set a clock in winter"
+          "To criticize governments for reacting slowly to new technology.",
+          "To describe the dangers of nineteenth-century rail travel.",
+          "To explain how towns set their clocks before railways existed."
         ]
       },
-      "inference": {
-        "answer": "Private companies sometimes set standards that governments later formalize.",
-        "wrong": [
-          "Railway companies in the 1880s were more powerful than national governments.",
-          "Standard time was resisted by most travellers when it was introduced.",
-          "No useful standard has ever originated inside a government."
-        ]
-      },
+      "vocab": [
+        {
+          "word": "ratified",
+          "meaning": "formally approved",
+          "distractors": [
+            "rejected",
+            "drafted",
+            "reversed"
+          ]
+        },
+        {
+          "word": "imposed",
+          "meaning": "put in place by authority",
+          "distractors": [
+            "suggested",
+            "delayed",
+            "abandoned"
+          ]
+        },
+        {
+          "word": "hazard",
+          "meaning": "a source of danger",
+          "distractors": [
+            "a nuisance",
+            "an expense",
+            "a mystery"
+          ]
+        }
+      ],
+      "details": [
+        {
+          "question": "According to the passage, what made local time a safety problem rather than merely an inconvenience?",
+          "answer": "Trains working from different local times could be scheduled onto the same track",
+          "wrong": [
+            "Railway junctions could not afford to maintain six clocks",
+            "Passengers frequently missed connections between lines",
+            "Sunlight was an unreliable way to set a clock in winter"
+          ]
+        },
+        {
+          "question": "According to the passage, how was noon set in a town before the 1880s?",
+          "answer": "By when the sun stood highest over that town",
+          "wrong": [
+            "By the clock at the nearest railway junction",
+            "By agreement among neighboring towns",
+            "By the time kept in the capital"
+          ]
+        },
+        {
+          "question": "According to the passage, how were standard zones adopted?",
+          "answer": "The railways adopted them on a single day in 1883",
+          "wrong": [
+            "Gradually, over about a decade",
+            "As each government approved them in turn",
+            "Only after a series of collisions"
+          ]
+        }
+      ],
+      "inferences": [
+        {
+          "answer": "Private companies sometimes set standards that governments later formalize.",
+          "wrong": [
+            "Railway companies in the 1880s were more powerful than national governments.",
+            "Standard time was resisted by most travellers when it was introduced.",
+            "No useful standard has ever originated inside a government."
+          ]
+        },
+        {
+          "answer": "A practice can be perfectly sensible until a new technology makes it dangerous.",
+          "wrong": [
+            "Railway companies were indifferent to passenger safety.",
+            "Local time was abandoned because travellers complained.",
+            "Standard time was the railways' most profitable decision."
+          ]
+        }
+      ],
       "tone": {
         "answer": "Wry",
         "wrong": [
@@ -1351,32 +1525,90 @@
         "Laboratory experiments are the only reliable way to measure animal intelligence.",
         "Octopuses and humans share an ancestor that was more intelligent than biologists assumed."
       ],
-      "vocab": {
-        "word": "distributed",
-        "meaning": "spread out",
-        "distractors": [
-          "donated",
-          "duplicated",
-          "concentrated"
-        ]
-      },
-      "detail": {
-        "question": "According to the passage, what can an octopus arm do without instruction from the central brain?",
-        "answer": "Taste what it touches and reject the wrong shells",
+      "purpose": {
+        "answer": "To explain why octopus intelligence is of particular interest to biologists.",
         "wrong": [
-          "Open a screw-top jar",
-          "Recognize an individual keeper",
-          "Regrow itself after an injury"
+          "To compare the mental abilities of octopuses and dogs.",
+          "To catalogue the tasks octopuses have been set in laboratories.",
+          "To argue that intelligence evolved earlier than was once believed."
         ]
       },
-      "inference": {
-        "answer": "Intelligence can take more than one form, depending on how a nervous system is arranged.",
-        "wrong": [
-          "Animals with more neurons outside the brain are more intelligent than animals without them.",
-          "Octopuses would outperform dogs on most laboratory tasks.",
-          "Biologists have largely stopped studying the intelligence of mammals."
-        ]
-      },
+      "vocab": [
+        {
+          "word": "distributed",
+          "meaning": "spread out",
+          "distractors": [
+            "donated",
+            "duplicated",
+            "concentrated"
+          ]
+        },
+        {
+          "word": "enclosures",
+          "meaning": "the tanks they were kept in",
+          "distractors": [
+            "feeding schedules",
+            "sealed jars",
+            "breeding groups"
+          ]
+        },
+        {
+          "word": "inherited",
+          "meaning": "received from an ancestor",
+          "distractors": [
+            "learned by imitation",
+            "gradually lost",
+            "taught by keepers"
+          ]
+        }
+      ],
+      "details": [
+        {
+          "question": "According to the passage, what can an octopus arm do without instruction from the central brain?",
+          "answer": "Taste what it touches and reject the wrong shells",
+          "wrong": [
+            "Open a screw-top jar",
+            "Recognize an individual keeper",
+            "Regrow itself after an injury"
+          ]
+        },
+        {
+          "question": "According to the passage, how many of an octopus's neurons are in its brain?",
+          "answer": "About a third of them",
+          "wrong": [
+            "Almost all of them",
+            "About half of them",
+            "Fewer than a tenth of them"
+          ]
+        },
+        {
+          "question": "According to the passage, what was the last common ancestor of an octopus and a human probably like?",
+          "answer": "A flattened wormlike creature with almost no brain",
+          "wrong": [
+            "An early shelled mollusk",
+            "A small fish with a simple brain",
+            "An octopus with fewer arms"
+          ]
+        }
+      ],
+      "inferences": [
+        {
+          "answer": "Intelligence can take more than one form, depending on how a nervous system is arranged.",
+          "wrong": [
+            "Animals with more neurons outside the brain are more intelligent than animals without them.",
+            "Octopuses would outperform dogs on most laboratory tasks.",
+            "Biologists have largely stopped studying the intelligence of mammals."
+          ]
+        },
+        {
+          "answer": "Two lineages can arrive at similar abilities without either inheriting them from the other.",
+          "wrong": [
+            "Octopuses outperform dogs on most tasks.",
+            "Laboratory tanks make octopuses behave unnaturally.",
+            "Human intelligence evolved later than octopus intelligence."
+          ]
+        }
+      ],
       "tone": {
         "answer": "Fascinated",
         "wrong": [
@@ -1394,32 +1626,90 @@
         "Planting shelterbelts is the most effective way to prevent soil erosion.",
         "Federal farm programs of the 1930s were poorly designed and largely wasteful."
       ],
-      "vocab": {
-        "word": "anchor",
-        "meaning": "hold firmly in place",
-        "distractors": [
-          "moisten",
-          "fertilize",
-          "shade"
-        ]
-      },
-      "detail": {
-        "question": "According to the passage, what had previously held the plains soil through dry periods?",
-        "answer": "Native grasses with deep roots",
+      "purpose": {
+        "answer": "To correct the usual account of what caused a disaster.",
         "wrong": [
-          "Shelterbelts of planted trees",
-          "Regular rainfall in most decades",
-          "Cover crops planted between wheat harvests"
+          "To praise the federal response to the Dust Bowl.",
+          "To describe what farmers endured during the 1930s.",
+          "To explain how shelterbelts hold soil in place."
         ]
       },
-      "inference": {
-        "answer": "A disaster with a natural trigger can still have a human cause.",
-        "wrong": [
-          "Wheat should never have been grown on the southern plains.",
-          "The soil conservation program was a failure.",
-          "Droughts of the 1930s were worse than droughts today."
-        ]
-      },
+      "vocab": [
+        {
+          "word": "anchor",
+          "meaning": "hold firmly in place",
+          "distractors": [
+            "moisten",
+            "fertilize",
+            "shade"
+          ]
+        },
+        {
+          "word": "shelterbelt",
+          "meaning": "a long line of planted trees",
+          "distractors": [
+            "a fenced pasture",
+            "a government payment",
+            "a dry riverbed"
+          ]
+        },
+        {
+          "word": "ploughed",
+          "meaning": "broken up for planting",
+          "distractors": [
+            "irrigated",
+            "fenced off",
+            "left unplanted"
+          ]
+        }
+      ],
+      "details": [
+        {
+          "question": "According to the passage, what had previously held the plains soil through dry periods?",
+          "answer": "Native grasses with deep roots",
+          "wrong": [
+            "Shelterbelts of planted trees",
+            "Regular rainfall in most decades",
+            "Cover crops planted between wheat harvests"
+          ]
+        },
+        {
+          "question": "According to the passage, why were the southern plains ploughed for wheat?",
+          "answer": "Wheat prices were high during the First World War",
+          "wrong": [
+            "The native grasses had already died",
+            "The federal government required it",
+            "Rainfall had been unusually reliable"
+          ]
+        },
+        {
+          "question": "According to the passage, what has happened to much of the shelterbelt?",
+          "answer": "It has been cut down",
+          "wrong": [
+            "It failed to survive the drought",
+            "It was extended into Canada",
+            "It is still maintained by conservation districts"
+          ]
+        }
+      ],
+      "inferences": [
+        {
+          "answer": "A disaster with a natural trigger can still have a human cause.",
+          "wrong": [
+            "Wheat should never have been grown on the southern plains.",
+            "The soil conservation program was a failure.",
+            "Droughts of the 1930s were worse than droughts today."
+          ]
+        },
+        {
+          "answer": "A remedy can be abandoned without ever having been shown to work or to fail.",
+          "wrong": [
+            "Cover crops were the most effective federal measure.",
+            "The plains should be returned to native grassland.",
+            "The 1930s drought was unprecedented in the region."
+          ]
+        }
+      ],
       "tone": {
         "answer": "Analytical",
         "wrong": [
@@ -1437,32 +1727,90 @@
         "Honeybees navigate primarily by following scent left behind by other foragers.",
         "Robotic models are now the standard method for studying insect behavior."
       ],
-      "vocab": {
-        "word": "transposed",
-        "meaning": "shifted into a different frame of reference",
-        "distractors": [
-          "exaggerated",
-          "concealed",
-          "measured twice"
-        ]
-      },
-      "detail": {
-        "question": "According to the passage, what does the duration of the straight run encode?",
-        "answer": "How far away the flowers are",
+      "purpose": {
+        "answer": "To describe how a disputed claim about animal communication was settled.",
         "wrong": [
-          "The angle of the sun at that hour",
-          "How much nectar the patch holds",
-          "How many bees should be sent"
+          "To explain how honeybees navigate by the sun.",
+          "To question von Frisch's conclusions about the waggle dance.",
+          "To show why robotic models are useful throughout biology."
         ]
       },
-      "inference": {
-        "answer": "A claim about animal communication is strongest when the signal can be produced artificially.",
-        "wrong": [
-          "Bees rely on scent only when the dance is unclear.",
-          "Von Frisch's contemporaries were unwilling to consider evidence.",
-          "Honeybees can describe locations they have only been told about."
-        ]
-      },
+      "vocab": [
+        {
+          "word": "transposed",
+          "meaning": "shifted into a different frame of reference",
+          "distractors": [
+            "exaggerated",
+            "concealed",
+            "measured twice"
+          ]
+        },
+        {
+          "word": "abstractly",
+          "meaning": "in symbols rather than by direct example",
+          "distractors": [
+            "inaccurately",
+            "by leading the way",
+            "only approximately"
+          ]
+        },
+        {
+          "word": "doubted",
+          "meaning": "questioned the truth of",
+          "distractors": [
+            "proved",
+            "repeated",
+            "welcomed"
+          ]
+        }
+      ],
+      "details": [
+        {
+          "question": "According to the passage, what does the duration of the straight run encode?",
+          "answer": "How far away the flowers are",
+          "wrong": [
+            "The angle of the sun at that hour",
+            "How much nectar the patch holds",
+            "How many bees should be sent"
+          ]
+        },
+        {
+          "question": "According to the passage, what is the angle of the straight run measured against?",
+          "answer": "The direction of the sun",
+          "wrong": [
+            "The vertical face of the comb",
+            "The direction of the wind",
+            "The angle danced by the previous forager"
+          ]
+        },
+        {
+          "question": "According to the passage, what did the robotic bee make possible?",
+          "answer": "Dancing a chosen angle and seeing where the hive sent foragers",
+          "wrong": [
+            "Measuring how much nectar a patch held",
+            "Replacing the signals given by the queen",
+            "Recording the scent a dancer carried back"
+          ]
+        }
+      ],
+      "inferences": [
+        {
+          "answer": "A claim about animal communication is strongest when the signal can be produced artificially.",
+          "wrong": [
+            "Bees rely on scent only when the dance is unclear.",
+            "Von Frisch's contemporaries were unwilling to consider evidence.",
+            "Honeybees can describe locations they have only been told about."
+          ]
+        },
+        {
+          "answer": "Following a scent and reading a signal can look alike from outside, and take an experiment to tell apart.",
+          "wrong": [
+            "Bees ignore scent once they have watched a dance.",
+            "Von Frisch's measurements were inaccurate.",
+            "Robotic models have replaced observation in the study of insects."
+          ]
+        }
+      ],
       "tone": {
         "answer": "Admiring",
         "wrong": [
@@ -1480,32 +1828,90 @@
         "Nineteenth-century doctors were unwilling to look at evidence that challenged their beliefs.",
         "Cholera spreads through water rather than through the air."
       ],
-      "vocab": {
-        "word": "anomalies",
-        "meaning": "cases that did not fit the pattern",
-        "distractors": [
-          "exceptions to a law",
-          "sudden increases",
-          "careless errors"
-        ]
-      },
-      "detail": {
-        "question": "According to the passage, why were the brewery workers largely unaffected?",
-        "answer": "They drank beer instead of the water",
+      "purpose": {
+        "answer": "To show how a new kind of evidence changed the way a question was argued.",
         "wrong": [
-          "They worked too far from Broad Street",
-          "They had already survived an earlier outbreak",
-          "They were given clean water by their employer"
+          "To explain how cholera spreads.",
+          "To criticize nineteenth-century doctors for ignoring evidence.",
+          "To give a detailed account of the 1854 outbreak."
         ]
       },
-      "inference": {
-        "answer": "Evidence can change how a question is investigated before it settles the question itself.",
-        "wrong": [
-          "Snow's contemporaries were less intelligent than he was.",
-          "Mapping is the most reliable method available to epidemiologists.",
-          "The widow's death was the decisive proof for the medical establishment."
-        ]
-      },
+      "vocab": [
+        {
+          "word": "anomalies",
+          "meaning": "cases that did not fit the pattern",
+          "distractors": [
+            "exceptions to a law",
+            "sudden increases",
+            "careless errors"
+          ]
+        },
+        {
+          "word": "subsiding",
+          "meaning": "dying down",
+          "distractors": [
+            "spreading",
+            "returning",
+            "worsening"
+          ]
+        },
+        {
+          "word": "clustered",
+          "meaning": "grouped closely together",
+          "distractors": [
+            "scattered evenly",
+            "disappeared",
+            "doubled"
+          ]
+        }
+      ],
+      "details": [
+        {
+          "question": "According to the passage, why were the brewery workers largely unaffected?",
+          "answer": "They drank beer instead of the water",
+          "wrong": [
+            "They worked too far from Broad Street",
+            "They had already survived an earlier outbreak",
+            "They were given clean water by their employer"
+          ]
+        },
+        {
+          "question": "According to the passage, what was the accepted explanation for cholera in 1854?",
+          "answer": "Bad air",
+          "wrong": [
+            "Contaminated water",
+            "Overcrowding in poor neighborhoods",
+            "Contact between the sick and the healthy"
+          ]
+        },
+        {
+          "question": "According to the passage, why did the widow go on drinking Broad Street water?",
+          "answer": "She preferred the taste",
+          "wrong": [
+            "It was the only supply she could reach",
+            "Her doctor had recommended it",
+            "She did not know she had moved away from it"
+          ]
+        }
+      ],
+      "inferences": [
+        {
+          "answer": "Evidence can change how a question is investigated before it settles the question itself.",
+          "wrong": [
+            "Snow's contemporaries were less intelligent than he was.",
+            "Mapping is the most reliable method available to epidemiologists.",
+            "The widow's death was the decisive proof for the medical establishment."
+          ]
+        },
+        {
+          "answer": "A story can outgrow the evidence for it even when its conclusion is right.",
+          "wrong": [
+            "Removing the pump handle had no effect at all.",
+            "Snow should have waited for the outbreak to end.",
+            "Maps are the clearest way to present medical data."
+          ]
+        }
+      ],
       "tone": {
         "answer": "Measured",
         "wrong": [
@@ -1523,32 +1929,90 @@
         "Fresnel's greatest contribution was to the design of modern solar concentrators.",
         "Mirrors are an inferior way to direct light in every application."
       ],
-      "vocab": {
-        "word": "concentric",
-        "meaning": "sharing the same center",
-        "distractors": [
-          "transparent",
-          "tightly sealed",
-          "evenly spaced"
-        ]
-      },
-      "detail": {
-        "question": "According to the passage, what problem would a solid lens of the same power have had?",
-        "answer": "It would have been too heavy and too dark to use",
+      "purpose": {
+        "answer": "To explain how a design problem was solved by taking material away.",
         "wrong": [
-          "It would have shattered in cold weather",
-          "It would have cost more than a lighthouse could afford",
-          "It would have needed a brighter flame"
+          "To trace the history of lighthouse construction.",
+          "To describe the modern uses of the Fresnel lens.",
+          "To compare mirrors and lenses as ways of directing light."
         ]
       },
-      "inference": {
-        "answer": "A design constraint can be met by removing material rather than by adding capability.",
-        "wrong": [
-          "Nineteenth-century engineering has not been improved upon.",
-          "Lighthouses are no longer useful now that ships carry satellite navigation.",
-          "Fresnel intended his lens to be used in cameras."
-        ]
-      },
+      "vocab": [
+        {
+          "word": "concentric",
+          "meaning": "sharing the same center",
+          "distractors": [
+            "transparent",
+            "tightly sealed",
+            "evenly spaced"
+          ]
+        },
+        {
+          "word": "discarded",
+          "meaning": "got rid of",
+          "distractors": [
+            "polished",
+            "doubled",
+            "measured"
+          ]
+        },
+        {
+          "word": "absorbed",
+          "meaning": "took in and lost",
+          "distractors": [
+            "gave off",
+            "bent",
+            "focused"
+          ]
+        }
+      ],
+      "details": [
+        {
+          "question": "According to the passage, what problem would a solid lens of the same power have had?",
+          "answer": "It would have been too heavy and too dark to use",
+          "wrong": [
+            "It would have shattered in cold weather",
+            "It would have cost more than a lighthouse could afford",
+            "It would have needed a brighter flame"
+          ]
+        },
+        {
+          "question": "According to the passage, what did lighthouse keepers use before Fresnel's lens?",
+          "answer": "Polished mirrors placed behind the flame",
+          "wrong": [
+            "Lenses ground from a single block of glass",
+            "Colored glass to make the beam visible",
+            "Several flames burning at once"
+          ]
+        },
+        {
+          "question": "According to the passage, how far out could the new beam be seen?",
+          "answer": "About twenty miles",
+          "wrong": [
+            "About five miles",
+            "About a hundred miles",
+            "As far as the curve of the earth allowed"
+          ]
+        }
+      ],
+      "inferences": [
+        {
+          "answer": "A design constraint can be met by removing material rather than by adding capability.",
+          "wrong": [
+            "Nineteenth-century engineering has not been improved upon.",
+            "Lighthouses are no longer useful now that ships carry satellite navigation.",
+            "Fresnel intended his lens to be used in cameras."
+          ]
+        },
+        {
+          "answer": "Part of a design can be unnecessary even when removing it seems to remove the thing itself.",
+          "wrong": [
+            "Fresnel's lens made earlier lighthouses obsolete overnight.",
+            "Glass was the most expensive part of a lighthouse.",
+            "Mirrors have no use in modern optics."
+          ]
+        }
+      ],
       "tone": {
         "answer": "Appreciative",
         "wrong": [
@@ -1566,32 +2030,90 @@
         "Radiocarbon dating is unreliable and should be replaced.",
         "A tree's rings record the rainfall of every year of its life."
       ],
-      "vocab": {
-        "word": "chronologies",
-        "meaning": "dated sequences of years",
-        "distractors": [
-          "climate forecasts",
-          "tree species",
-          "measuring instruments"
-        ]
-      },
-      "detail": {
-        "question": "According to the passage, why can sequences from different pieces of wood be overlapped?",
-        "answer": "Trees in the same region shared the same weather, so their patterns match",
+      "purpose": {
+        "answer": "To explain how tree rings became useful well beyond the study of climate.",
         "wrong": [
-          "All trees of a species grow at the same rate",
-          "The rings are counted from the same starting year",
-          "Preserved wood decays at a predictable rate"
+          "To describe how a tree grows from one year to the next.",
+          "To argue that radiocarbon dating is unreliable.",
+          "To explain why some wood survives for thousands of years."
         ]
       },
-      "inference": {
-        "answer": "A technique built for one question can end up correcting the answers of another.",
-        "wrong": [
-          "Radiocarbon dating was invented before tree-ring dating.",
-          "Wood preserved in bogs is more informative than wood from buildings.",
-          "Studying past climate is the most valuable use of tree rings."
-        ]
-      },
+      "vocab": [
+        {
+          "word": "chronologies",
+          "meaning": "dated sequences of years",
+          "distractors": [
+            "climate forecasts",
+            "tree species",
+            "measuring instruments"
+          ]
+        },
+        {
+          "word": "yardstick",
+          "meaning": "a standard other things are measured against",
+          "distractors": [
+            "a wooden ruler",
+            "a rival theory",
+            "a long delay"
+          ]
+        },
+        {
+          "word": "drifts",
+          "meaning": "moves gradually away from the truth",
+          "distractors": [
+            "stops working",
+            "speeds up",
+            "repeats itself"
+          ]
+        }
+      ],
+      "details": [
+        {
+          "question": "According to the passage, why can sequences from different pieces of wood be overlapped?",
+          "answer": "Trees in the same region shared the same weather, so their patterns match",
+          "wrong": [
+            "All trees of a species grow at the same rate",
+            "The rings are counted from the same starting year",
+            "Preserved wood decays at a predictable rate"
+          ]
+        },
+        {
+          "question": "According to the passage, what does the width of a ring record?",
+          "answer": "Whether that growing season was wet or dry",
+          "wrong": [
+            "The age of the tree",
+            "The species of the tree",
+            "The direction the tree faced"
+          ]
+        },
+        {
+          "question": "According to the passage, how far back do some chronologies now reach?",
+          "answer": "More than eleven thousand years",
+          "wrong": [
+            "About a thousand years",
+            "As far back as the oldest living tree",
+            "Exactly to the last ice age"
+          ]
+        }
+      ],
+      "inferences": [
+        {
+          "answer": "A technique built for one question can end up correcting the answers of another.",
+          "wrong": [
+            "Radiocarbon dating was invented before tree-ring dating.",
+            "Wood preserved in bogs is more informative than wood from buildings.",
+            "Studying past climate is the most valuable use of tree rings."
+          ]
+        },
+        {
+          "answer": "A single measurement can be worthless until it is placed beside others like it.",
+          "wrong": [
+            "Radiocarbon dating should no longer be used.",
+            "Trees in different regions grow at the same rate.",
+            "The oldest wood gives the most reliable dates."
+          ]
+        }
+      ],
       "tone": {
         "answer": "Analytical",
         "wrong": [
@@ -1609,32 +2131,90 @@
         "Climate change has put the Svalbard Global Seed Vault at serious risk.",
         "War in Syria destroyed an irreplaceable collection of seeds."
       ],
-      "vocab": {
-        "word": "duplicate",
-        "meaning": "copies of something kept elsewhere",
-        "distractors": [
-          "rare",
-          "frozen",
-          "donated"
-        ]
-      },
-      "detail": {
-        "question": "According to the passage, who is permitted to withdraw seeds from the vault?",
-        "answer": "Only the gene bank that deposited them",
+      "purpose": {
+        "answer": "To explain what the vault is for, and what it is not.",
         "wrong": [
-          "Any researcher with an approved project",
-          "The Norwegian government",
-          "Any country facing a crop failure"
+          "To warn that climate change threatens the world's seed collections.",
+          "To describe the effect of the Syrian war on agricultural research.",
+          "To argue that more countries should deposit seeds at Svalbard."
         ]
       },
-      "inference": {
-        "answer": "A backup is judged by whether it works on the day it is needed, not by how often it is used.",
-        "wrong": [
-          "The vault should hold original collections rather than duplicates.",
-          "The 2017 meltwater showed the vault was badly sited.",
-          "Most gene banks will eventually need to draw on Svalbard."
-        ]
-      },
+      "vocab": [
+        {
+          "word": "duplicate",
+          "meaning": "copies of something kept elsewhere",
+          "distractors": [
+            "rare",
+            "frozen",
+            "donated"
+          ]
+        },
+        {
+          "word": "depositor",
+          "meaning": "whoever put the seeds there",
+          "distractors": [
+            "the vault's manager",
+            "the Norwegian government",
+            "the original plant breeder"
+          ]
+        },
+        {
+          "word": "withdraw",
+          "meaning": "take back out",
+          "distractors": [
+            "donate",
+            "replace",
+            "inspect"
+          ]
+        }
+      ],
+      "details": [
+        {
+          "question": "According to the passage, who is permitted to withdraw seeds from the vault?",
+          "answer": "Only the gene bank that deposited them",
+          "wrong": [
+            "Any researcher with an approved project",
+            "The Norwegian government",
+            "Any country facing a crop failure"
+          ]
+        },
+        {
+          "question": "According to the passage, why did researchers ask for their samples back?",
+          "answer": "War had made their gene bank near Aleppo unusable",
+          "wrong": [
+            "Their seeds had begun to lose viability",
+            "Their funding had been withdrawn",
+            "The vault asked them to renew the samples"
+          ]
+        },
+        {
+          "question": "According to the passage, what did those researchers do after growing the seeds out?",
+          "answer": "They returned fresh seed to the vault",
+          "wrong": [
+            "They moved their gene bank to Norway",
+            "They shared the harvest with other gene banks",
+            "They kept the new seed in Lebanon and Morocco"
+          ]
+        }
+      ],
+      "inferences": [
+        {
+          "answer": "A backup is judged by whether it works on the day it is needed, not by how often it is used.",
+          "wrong": [
+            "The vault should hold original collections rather than duplicates.",
+            "The 2017 meltwater showed the vault was badly sited.",
+            "Most gene banks will eventually need to draw on Svalbard."
+          ]
+        },
+        {
+          "answer": "Reporting can turn a contained problem into a disaster it never was.",
+          "wrong": [
+            "The vault's design has proved inadequate.",
+            "Meltwater will eventually reach the seed chamber.",
+            "Gene banks should not rely on a single backup."
+          ]
+        }
+      ],
       "tone": {
         "answer": "Measured",
         "wrong": [

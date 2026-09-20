@@ -61,15 +61,21 @@ const iseePassage = z
     text: nonEmpty,
     mainIdea: nonEmpty,
     wrong: distractors,
-    vocab: vocabTarget,
-    detail: answerAndWrong.and(z.object({ question: nonEmpty })),
-    inference: answerAndWrong,
+    purpose: answerAndWrong,
+    // Several of each, so the number of questions a passage supports is not
+    // the number of passages.
+    vocab: z.array(vocabTarget).min(2),
+    details: z.array(answerAndWrong.and(z.object({ question: nonEmpty }))).min(2),
+    inferences: z.array(answerAndWrong).min(2),
     tone: answerAndWrong,
   })
   .refine((p) => allDistinct([p.mainIdea, ...p.wrong]), { message: "main idea must differ from wrong options" })
-  .refine((p) => p.text.toLowerCase().includes(p.vocab.word.toLowerCase()), {
-    message: "vocab.word must appear in text",
+  .refine((p) => p.vocab.every((v) => p.text.toLowerCase().includes(v.word.toLowerCase())), {
+    message: "every vocab word must appear in text",
   })
+  .refine((p) => allDistinct(p.vocab.map((v) => v.word)), { message: "vocab words must differ" })
+  .refine((p) => allDistinct(p.details.map((d) => d.question)), { message: "detail questions must differ" })
+  .refine((p) => allDistinct(p.inferences.map((i) => i.answer)), { message: "inferences must differ" })
   // A vocabulary-in-context item is only in context if the passage is long
   // enough to supply one.
   .refine((p) => p.text.split(/\s+/).length >= 80, { message: "text must run to at least 80 words" });

@@ -221,39 +221,53 @@ function varName(pair: { given?: string }): string {
 /** Which question the Reading Comprehension skill asks of its passage. */
 type Ask = "main-idea" | "detail" | "vocabulary" | "inference" | "tone";
 
+const INFERENCE_LEADS = [
+  "It can be inferred from the passage that:",
+  "The passage suggests that:",
+  "The author would most likely agree that:",
+];
+
 const reading: GeneratorFn = (rng, level, params) => {
   const ask = str(params, "ask", "main-idea") as Ask;
   const p = rng.pick(pool(ISEE_BANKS.passages, level));
   const passage = `${p.text}\n\n`;
 
   if (ask === "detail") {
+    const item = rng.pick(p.details);
     return choice(rng, {
       instructions: "Answer the question using the passage.",
-      stem: `${passage}${p.detail.question}`,
-      answer: p.detail.answer,
-      distractors: [...p.detail.wrong],
+      stem: `${passage}${item.question}`,
+      answer: item.answer,
+      distractors: [...item.wrong],
       explanation: `The passage states this directly. The other options change a detail the passage gives, or add one it never gives.`,
       hint: "Find the sentence the question is about and read it again before you choose.",
     });
   }
 
   if (ask === "vocabulary") {
+    const word = rng.pick(p.vocab);
     return choice(rng, {
       instructions: "Use the passage to determine the meaning.",
-      stem: `${passage}As it is used in the passage, **${p.vocab.word}** most nearly means:`,
-      answer: p.vocab.meaning,
-      distractors: [...p.vocab.distractors],
-      explanation: `In this passage **${p.vocab.word}** means "${p.vocab.meaning}". The other options are meanings the word can carry elsewhere, or meanings of words it resembles.`,
+      stem: `${passage}As it is used in the passage, **${word.word}** most nearly means:`,
+      answer: word.meaning,
+      distractors: [...word.distractors],
+      explanation: `In this passage **${word.word}** means "${word.meaning}". The other options are meanings the word can carry elsewhere, or meanings of words it resembles.`,
       hint: "Read the sentence with each option in place of the word. Only one keeps the passage's meaning intact.",
     });
   }
 
   if (ask === "inference") {
+    // The lead-in is tied to the item rather than drawn at random, so a
+    // passage's two inferences read as two questions -- which they are -- and
+    // the same one is not dressed up differently on a second showing. The
+    // wordings are the section's own.
+    const index = rng.int(0, p.inferences.length - 1);
+    const item = p.inferences[index];
     return choice(rng, {
       instructions: "Draw a conclusion from the passage.",
-      stem: `${passage}It can be inferred from the passage that:`,
-      answer: p.inference.answer,
-      distractors: [...p.inference.wrong],
+      stem: `${passage}${INFERENCE_LEADS[index % INFERENCE_LEADS.length]}`,
+      answer: item.answer,
+      distractors: [...item.wrong],
       explanation: `The passage does not say this outright, but it follows from what it does say. The other options go further than the passage supports.`,
       hint: "An inference is one step beyond the text — never two.",
     });
@@ -267,6 +281,19 @@ const reading: GeneratorFn = (rng, level, params) => {
       distractors: [...p.tone.wrong],
       explanation: `The author's word choices point to a ${p.tone.answer.toLowerCase()} attitude. Tone options that are stronger than the passage — hostile, awed, dismissive — are usually wrong on this test.`,
       hint: "Look at the adjectives the author chose. Tone lives in word choice, not in the facts.",
+    });
+  }
+
+  // What the passage says and why it was written are two questions, and the
+  // section asks both.
+  if (rng.bool()) {
+    return choice(rng, {
+      instructions: "Identify the author's purpose.",
+      stem: `${passage}The author's primary purpose is:`,
+      answer: p.purpose.answer,
+      distractors: [...p.purpose.wrong],
+      explanation: `The passage works toward one point, and that is why it was written. The other options name something the passage touches on but does not set out to do.`,
+      hint: "Ask what the whole passage is trying to get you to understand, not what it mentions along the way.",
     });
   }
 

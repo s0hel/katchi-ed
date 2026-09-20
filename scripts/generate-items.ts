@@ -113,9 +113,10 @@ const WIRE: Record<AnyBankName, z.ZodTypeAny> = {
     text: z.string(),
     mainIdea: z.string(),
     wrong: three,
-    vocab,
-    detail: z.object({ question: z.string(), ...answerWrong }),
-    inference: z.object(answerWrong),
+    purpose: z.object(answerWrong),
+    vocab: z.array(vocab).length(3),
+    details: z.array(z.object({ question: z.string(), ...answerWrong })).length(3),
+    inferences: z.array(z.object(answerWrong)).length(2),
     tone: z.object(answerWrong),
   }),
 };
@@ -163,7 +164,7 @@ const BRIEF: Record<AnyBankName, string> = {
   "isee.sentenceCompletion":
     "ISEE Middle Level sentence completion. `s` holds one `___` in a sentence whose OWN WORDS decide the answer: a contrast signal (although, rather than, but), a definition after a colon or semicolon, or a cause introduced by because. A sixth grader should be able to predict the blank before reading the options. `why` names the signal, it does not restate the answer.",
   "isee.passages":
-    "ISEE Middle Level reading passages. `text` is 110-160 words of original expository prose -- never adapted from a published source -- at the reading level of a good sixth-grade nonfiction book, on history, science, or the arts. Then: `mainIdea` plus three wrong ones that are too narrow, too broad, or unsupported; `vocab`, a hard word that appears verbatim in `text`, with its in-context meaning and three wrong meanings; `detail`, a question answerable only from the passage; `inference`, one step beyond the text and no further; and `tone`, the author's attitude as a single adjective (Measured, Admiring, Wry, Analytical) with three attitudes the passage does not support. Tone options should not all be extreme.",
+    "ISEE Middle Level reading passages. `text` is 110-160 words of original expository prose -- never adapted from a published source -- at the reading level of a good sixth-grade nonfiction book, on history, science, or the arts. The real section asks four to six questions about every passage, so write a set of each kind, all answerable from this passage alone: `mainIdea` plus three wrong ones that are too narrow, too broad, or unsupported; `purpose`, why the author wrote it (to explain, to correct a common account, to show how something came about) with three purposes the passage does not have; three `vocab` entries, each a DIFFERENT hard word appearing verbatim in `text`, with its in-context meaning and three wrong meanings; three `details`, each a question answerable only from the passage and each about a different part of it; two `inferences`, each one step beyond the text and no further; and `tone`, the author's attitude as a single adjective (Measured, Admiring, Wry, Analytical) with three attitudes the passage does not support. Tone options should not all be extreme. Main idea and tone are single because a passage has one of each; a second would be a worse question rather than another one.",
 };
 
 const SYSTEM = `You write practice items for Katchi, a K-8 math and language-arts practice app.

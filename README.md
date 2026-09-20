@@ -229,6 +229,16 @@ are the SSAT's), Quantitative Reasoning, Reading Comprehension, and Mathematics
 Achievement. The essay is sent to schools unscored, so there is nothing here to
 grade against and no skill for it.
 
+Reading Comprehension asks several questions of every passage — three details,
+three vocabulary words, two inferences, plus the main idea, the author's
+purpose and the tone — because the real section does, and because one question
+per passage made the passage bank the ceiling on the skill: ten passages meant
+ten possible detail questions, and a student met the same one every second
+session. Main idea is paired with purpose (what a passage says and why it was
+written are different questions); tone stays single, since an author has one
+attitude and a second tone question would be a worse question rather than
+another one.
+
 Mathematics Achievement is not reimplemented. It tests the arithmetic,
 pre-algebra and geometry the math catalog already generates, so those skills are
 catalog entries pointing at existing math generators — which is also why an ISEE

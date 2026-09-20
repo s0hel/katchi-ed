@@ -75,15 +75,26 @@ export interface CogatBanks {
  * `Passage` shape without reusing it: ISEE keys tone and attitude, which the
  * ELA banks never ask about, and does not ask for the "which phrase is the
  * clue" item that the ELA context-clues skill is built on.
+ *
+ * Details, inferences and vocabulary come in sets, because the real section
+ * asks four to six questions about every passage and because one question per
+ * passage made the passage bank the ceiling on the skill: ten passages meant
+ * ten possible questions, and a student met the same one every second
+ * session. Main idea is paired with `purpose`, which the section asks as its
+ * own question -- what a passage says and why it was written are different
+ * questions about it. Tone stays single: an author has one attitude, and a
+ * second tone question would be a worse question rather than another one.
  */
 export interface IseePassage {
   text: string;
   mainIdea: string;
   wrong: string[];
-  /** a hard word, used in context, that appears verbatim in `text` */
-  vocab: VocabTarget;
-  detail: { question: string; answer: string; wrong: string[] };
-  inference: { answer: string; wrong: string[] };
+  /** why the author wrote it, which the section asks separately from what it says */
+  purpose: { answer: string; wrong: string[] };
+  /** hard words, used in context, each appearing verbatim in `text` */
+  vocab: VocabTarget[];
+  details: { question: string; answer: string; wrong: string[] }[];
+  inferences: { answer: string; wrong: string[] }[];
   /** the author's attitude toward the subject */
   tone: { answer: string; wrong: string[] };
 }
