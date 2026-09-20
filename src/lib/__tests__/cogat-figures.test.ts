@@ -98,8 +98,9 @@ describe("figure geometry", () => {
       figLook({ ...base, ghost: true }),
       figLook({ ...base, extruded: true }),
       figLook({ ...base, split: true }),
-      figLook({ ...base, inner: { shape: "circle", count: 2, at: "inside" } }),
-      figLook({ ...base, inner: { shape: "circle", count: 1, at: "above" } }),
+      figLook({ ...base, inner: { shapes: ["circle", "circle"], at: "inside" } }),
+      figLook({ ...base, inner: { shapes: ["circle", "heart"], at: "inside" } }),
+      figLook({ ...base, inner: { shapes: ["circle"], at: "above" } }),
       figLook({ ...base, pair: "big-small" }),
       figLook({ ...base, pair: "small-big" }),
       figLook({ ...base, shape: "oval" }),
@@ -190,5 +191,28 @@ describe("figure classification", () => {
     const kinds = (level: number) =>
       new Set(SEEDS.map((seed) => kinshipOf(generateQuestion(CLASSIFICATION, level, seed).explanation)));
     expect(kinds(4).size).toBeGreaterThan(kinds(1).size);
+  });
+});
+
+describe("figures that can be read", () => {
+  /**
+   * A shape drawn in the fill colour of the shape behind it is on the page and
+   * not on the paper. `figLook` compares what is drawn rather than what shows,
+   * so it lets two options through as different when one of them is a filled
+   * pentagon and the other is a filled pentagon with filled pentagons inside.
+   */
+  it("never hides a figure's contents inside a filled shape", () => {
+    const hidden: string[] = [];
+    for (const skill of [ANALOGIES, CLASSIFICATION]) {
+      for (const seed of SEEDS) {
+        const q = generateQuestion(skill, 4, seed);
+        if (q.format.kind !== "choice") continue;
+        for (const svg of q.format.figures ?? []) {
+          const label = /aria-label="([^"]*)"/.exec(svg)?.[1] ?? "";
+          if (/solid [\w-]+s?,? with .*inside/.test(label)) hidden.push(label);
+        }
+      }
+    }
+    expect(hidden.slice(0, 3)).toEqual([]);
   });
 });

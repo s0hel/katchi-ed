@@ -20,7 +20,8 @@
  */
 
 export type ShapeName =
-  | "circle" | "oval" | "square" | "triangle" | "diamond" | "hexagon" | "star" | "arrow" | "ell";
+  | "circle" | "oval" | "square" | "triangle" | "diamond" | "hexagon" | "star" | "arrow" | "ell"
+  | "parallelogram" | "heart" | "pentagon" | "trapezoid";
 export type Shading = "open" | "shaded" | "solid";
 
 /**
@@ -37,11 +38,17 @@ export interface OddOne {
   smaller?: boolean;
 }
 
-/** A smaller shape carried by a figure, either within it or sitting on it. */
+/**
+ * Smaller shapes carried by a figure, either within it or sitting on it.
+ *
+ * A list rather than a shape and a count, because the two inside need not
+ * match: a parallelogram holding a heart and a star is a pattern in its own
+ * right, and one the old shape-and-count pair could not write down.
+ */
 export interface Inner {
-  shape: ShapeName;
-  count: 1 | 2;
-  at: "inside" | "above";
+  /** One shape, or two side by side, alike or not. */
+  shapes: ShapeName[];
+  at: "inside" | "above" | "below";
 }
 
 export interface Fig {
@@ -66,14 +73,48 @@ export interface Fig {
   pair?: "big-small" | "small-big";
   /** How the middle of three differs from the two beside it. */
   odd?: OddOne | null;
+  /**
+   * Small filled dots inside the outline.
+   *
+   * The count rule the real test leans on hardest is not how many shapes are
+   * in the box but how many dots are in the shape, which leaves the figure
+   * itself one large outline -- the whole reason its figures read at a glance
+   * and a row of three small ones does not.
+   */
+  dots?: 1 | 2 | 3 | 4;
 }
 
 export const SHAPES: ShapeName[] = [
   "circle", "oval", "square", "triangle", "diamond", "hexagon", "star", "arrow", "ell",
+  "parallelogram", "heart", "pentagon", "trapezoid",
 ];
+
+/**
+ * How many straight sides a shape has, or zero for the ones with none.
+ *
+ * "They all have four sides" is a rule the real test asks, and it is the one
+ * rule here that a child reads off the drawing rather than off an attribute.
+ */
+export const SIDES: Record<ShapeName, number> = {
+  circle: 0, oval: 0, heart: 0,
+  triangle: 3, square: 4, diamond: 4, parallelogram: 4, trapezoid: 4,
+  pentagon: 5, hexagon: 6, ell: 6, arrow: 7, star: 10,
+};
 
 /** Shapes with no corners. */
 export const ROUND: ShapeName[] = ["circle", "oval"];
+
+/**
+ * Shapes wide enough at the middle to hold something.
+ *
+ * A triangle and a star are widest nowhere near their centre, so a shape
+ * placed inside one has to shrink until nobody can say what it is -- which
+ * is fatal to a rule about *which* shape is in there. These are the ones with
+ * room, and they are the only ones given anything to carry.
+ */
+export const ROOMY: ShapeName[] = [
+  "circle", "oval", "square", "diamond", "hexagon", "parallelogram", "pentagon", "trapezoid",
+];
 export const SHADINGS: Shading[] = ["open", "shaded", "solid"];
 
 /** The attributes a classification rule can turn on. */
@@ -84,8 +125,9 @@ export function figKey(f: Fig): string {
   return [
     f.count, f.size, f.shading, f.shape, f.turn ?? 0, f.flip ? "m" : "-",
     f.split ? "s" : "-", f.ghost ? "g" : "-", f.extruded ? "3" : "-", f.pair ?? "-",
-    f.inner ? `${f.inner.count}${f.inner.shape}@${f.inner.at}` : "-",
+    f.inner ? `${f.inner.shapes.join("+")}@${f.inner.at}` : "-",
     f.odd ? `odd${f.odd.shape ?? ""}${f.odd.turn ?? ""}${f.odd.smaller ? "-" : ""}` : "-",
+    f.dots ? `dots${f.dots}` : "-",
   ].join("|");
 }
 
@@ -96,10 +138,12 @@ export function sameFig(a: Fig, b: Fig): boolean {
 const SIZE_WORD = { 1: "small", 2: "large" } as const;
 const COUNT_WORD = { 1: "one", 2: "two", 3: "three" } as const;
 const TURN_WORD = { 1: "on its side", 2: "upside down", 3: "on its other side" } as const;
+const TURN_WORD_MANY = { 1: "on their sides", 2: "upside down", 3: "on their other sides" } as const;
 
 export const SHAPE_WORDS: Record<ShapeName, string> = {
   circle: "circle", oval: "oval", square: "square", triangle: "triangle", diamond: "diamond",
   hexagon: "hexagon", star: "star", arrow: "arrow", ell: "L-shape",
+  parallelogram: "parallelogram", heart: "heart", pentagon: "pentagon", trapezoid: "trapezoid",
 };
 
 /**
@@ -110,8 +154,15 @@ export const SHAPE_WORDS: Record<ShapeName, string> = {
  * explanation reading "the shape turns: a large open arrow becomes a large
  * open arrow" teaches nothing.
  */
-/** "a triangle", but "an oval" and "an arrow". */
-export const article = (word: string) => (/^[aeiou]/i.test(word) ? "an" : "a");
+/**
+ * "a triangle", but "an oval" and "an arrow".
+ *
+ * Spelling decides it except where the letter is read out: an L-shape starts
+ * with a consonant and is said "ell".
+ */
+const SPOKEN_VOWEL = new Set(["L-shape"]);
+export const article = (word: string) =>
+  /^[aeiou]/i.test(word) || SPOKEN_VOWEL.has(word) ? "an" : "a";
 
 export function describe(f: Fig): string {
   const parts: string[] = [];
@@ -122,15 +173,25 @@ export function describe(f: Fig): string {
     const plural = f.count > 1 ? "s" : "";
     parts.push(`${COUNT_WORD[f.count]} ${SIZE_WORD[f.size]} ${f.shading} ${SHAPE_WORDS[f.shape]}${plural}`);
   }
-  if (f.turn) parts.push(TURN_WORD[f.turn]);
+  const many = !!f.pair || f.count > 1;
+  if (f.turn) parts.push((many ? TURN_WORD_MANY : TURN_WORD)[f.turn]);
   if (f.flip) parts.push("mirrored");
   if (f.split) parts.push("with its far half filled the other way");
   if (f.ghost) parts.push("with an empty copy behind it");
   if (f.extruded) parts.push("drawn as a solid block");
   if (f.inner) {
-    const word = SHAPE_WORDS[f.inner.shape];
-    const what = f.inner.count === 1 ? `${article(word)} smaller ${word}` : `two smaller ${word}s`;
+    const [one, two] = f.inner.shapes.map((sh) => SHAPE_WORDS[sh]);
+    // "a smaller oval", never "an smaller oval": the article agrees with the
+    // word that follows it, which is "smaller".
+    const what = !two
+      ? `a smaller ${one}`
+      : one === two
+        ? `two smaller ${one}s`
+        : `a smaller ${one} and ${article(two)} ${two}`;
     parts.push(f.inner.at === "inside" ? `with ${what} inside` : `with ${what} above it`);
+  }
+  if (f.dots) {
+    parts.push(`with ${COUNT_WORD[f.dots as 1 | 2 | 3] ?? "four"} dot${f.dots === 1 ? "" : "s"} inside`);
   }
   if (f.odd) {
     const how: string[] = [];
@@ -199,6 +260,32 @@ const ARROW_PTS = [
   [-1, -0.34], [0.14, -0.34], [0.14, -0.78], [1, 0], [0.14, 0.78], [0.14, 0.34], [-1, 0.34],
 ] as const;
 const ELL_PTS = [[-0.7, -1], [0.02, -1], [0.02, 0.28], [0.92, 0.28], [0.92, 1], [-0.7, 1]] as const;
+/** Wider at the foot than at the head, and its own mirror image. */
+const TRAPEZOID_PTS = [[-0.62, -0.66], [0.62, -0.66], [1.0, 0.66], [-1.0, 0.66]] as const;
+
+/** Slanted, so it is its own upside down but not its own mirror image. */
+const PARALLELOGRAM_PTS = [
+  [-0.52, -0.62], [1.08, -0.62], [0.52, 0.62], [-1.08, 0.62],
+] as const;
+
+/**
+ * The usual heart curve, sampled into an outline.
+ *
+ * Everything here is points, so a curve has to become one too. Thirty-two
+ * samples is enough that the dimple and the point both read at the size these
+ * are drawn, and it turns, mirrors and splits through the same code as a
+ * square does.
+ */
+function heartPts(c: Pt, r: number): Pt[] {
+  const pts: Pt[] = [];
+  for (let i = 0; i < 32; i++) {
+    const t = (Math.PI * 2 * i) / 32;
+    const x = 16 * Math.sin(t) ** 3;
+    const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+    pts.push({ x: c.x + (x / 16) * r, y: c.y - ((y + 2.5) / 14.5) * r });
+  }
+  return pts;
+}
 
 const scaled = (c: Pt, r: number, pts: readonly (readonly [number, number])[]): Pt[] =>
   pts.map(([x, y]) => ({ x: c.x + x * r, y: c.y + y * r }));
@@ -211,7 +298,7 @@ function shapeGeom(shape: ShapeName, c: Pt, r: number): Geom {
     // it turns, mirrors and can be cut in half through the same code as every
     // other shape here.
     case "oval":
-      return { kind: "poly", pts: polygonPts(c, r, 28).map((p) => ({ x: c.x + (p.x - c.x) * 1.3, y: c.y + (p.y - c.y) * 0.72 })) };
+      return { kind: "poly", pts: polygonPts(c, r, 28).map((p) => ({ x: c.x + (p.x - c.x) * 1.05, y: c.y + (p.y - c.y) * 0.68 })) };
     case "square": {
       const s = r * 0.86;
       return { kind: "poly", pts: [
@@ -226,11 +313,19 @@ function shapeGeom(shape: ShapeName, c: Pt, r: number): Geom {
     case "hexagon":
       return { kind: "poly", pts: polygonPts(c, r, 6) };
     case "star":
-      return { kind: "poly", pts: starPts(c, r * 1.15) };
+      return { kind: "poly", pts: starPts(c, r * 1.08) };
     case "arrow":
       return { kind: "poly", pts: scaled(c, r, ARROW_PTS) };
     case "ell":
       return { kind: "poly", pts: scaled(c, r * 0.95, ELL_PTS) };
+    case "pentagon":
+      return { kind: "poly", pts: polygonPts(c, r, 5) };
+    case "trapezoid":
+      return { kind: "poly", pts: scaled(c, r, TRAPEZOID_PTS) };
+    case "parallelogram":
+      return { kind: "poly", pts: scaled(c, r, PARALLELOGRAM_PTS) };
+    case "heart":
+      return { kind: "poly", pts: heartPts(c, r) };
   }
 }
 
@@ -329,16 +424,44 @@ function unitMarks(f: Fig, c: Pt, r: number, spin = 0): Mark[] {
     const half = clipRight(geom.pts, c.x);
     if (half.length > 2) out.push({ geom: { kind: "poly", pts: half }, shading: opposite(f.shading) });
   }
+  if (f.dots) {
+    // Laid out the way a die is: two across, three in a triangle, four in a
+    // square, so the number reads without being counted one at a time.
+    const spread = r * 0.34;
+    const at: [number, number][] = f.dots === 1
+      ? [[0, 0]]
+      : f.dots === 2
+        ? [[-1, 0], [1, 0]]
+        : f.dots === 3
+          ? [[-1, -0.6], [1, -0.6], [0, 0.9]]
+          : [[-1, -0.9], [1, -0.9], [-1, 0.9], [1, 0.9]];
+    for (const [dx, dy] of at) {
+      out.push({
+        geom: { kind: "circle", c: { x: c.x + dx * spread, y: c.y + dy * spread }, r: r * 0.15 },
+        shading: "solid",
+      });
+    }
+  }
   if (f.inner) {
-    const ir = r * 0.36;
-    if (f.inner.at === "inside") {
-      const gap = ir * 2.3;
-      const start = c.x - ((f.inner.count - 1) * gap) / 2;
-      for (let i = 0; i < f.inner.count; i++) {
-        out.push({ geom: shapeGeom(f.inner.shape, { x: start + i * gap, y: c.y }, ir), shading: "solid" });
-      }
+    const { shapes, at } = f.inner;
+    // Two have to fit side by side inside the narrowest shape allowed to hold
+    // them, measured not at the widest point but at the height they sit at: a
+    // parallelogram has plenty of room across its middle and much less once
+    // you are a third of the way up it.
+    const ir = r * (shapes.length > 1 ? 0.28 : 0.42);
+    if (at === "inside") {
+      const gap = ir * 2.5;
+      const start = c.x - ((shapes.length - 1) * gap) / 2;
+      shapes.forEach((sh, i) => {
+        out.push({ geom: shapeGeom(sh, { x: start + i * gap, y: c.y }, ir), shading: "solid" });
+      });
     } else {
-      out.push({ geom: shapeGeom(f.inner.shape, { x: c.x, y: c.y - r - ir * 1.3 }, ir), shading: "solid" });
+      const gap = ir * 2.5;
+      const start = c.x - ((shapes.length - 1) * gap) / 2;
+      const y = at === "above" ? c.y - r - ir * 1.3 : c.y + r + ir * 1.3;
+      shapes.forEach((sh, i) => {
+        out.push({ geom: shapeGeom(sh, { x: start + i * gap, y }, ir), shading: "solid" });
+      });
     }
   }
   if (!spin) return out;
@@ -363,7 +486,9 @@ function figUnits(f: Fig, cx: number, cy: number, unit: number): Mark[][] {
     }
   } else {
     const r = unit * (f.size === 2 ? 1 : 0.6);
-    const gap = unit * 2.3;
+    // Wide enough for the widest shape: an oval or a star laid out on the old
+    // spacing ran into the one beside it.
+    const gap = unit * 2.5;
     const start = cx - ((f.count - 1) * gap) / 2;
     for (let i = 0; i < f.count; i++) {
       // The odd one out is the middle of three, and nothing else.
@@ -469,6 +594,43 @@ export function figLook(f: Fig): string {
 
 export const sameLook = (a: Fig, b: Fig): boolean => figLook(a) === figLook(b);
 
+/** How far a figure reaches from its centre, drawn at a unit of one. */
+export function figExtent(f: Fig): number {
+  let far = 0;
+  const reach = (x: number, y: number) => {
+    far = Math.max(far, Math.abs(x), Math.abs(y));
+  };
+  for (const marks of figUnits(f, 0, 0, 1)) {
+    for (const m of marks) {
+      if (m.geom.kind === "circle") {
+        reach(Math.abs(m.geom.c.x) + m.geom.r, Math.abs(m.geom.c.y) + m.geom.r);
+      } else if (m.geom.kind === "line") {
+        reach(m.geom.a.x, m.geom.a.y);
+        reach(m.geom.b.x, m.geom.b.y);
+      } else {
+        for (const p of m.geom.pts) reach(p.x, p.y);
+      }
+    }
+  }
+  return far || 1;
+}
+
+/**
+ * The unit that makes the largest of these figures fill the room it is given.
+ *
+ * Figures used to be drawn at one fixed unit against a box wide enough for the
+ * worst case -- three large shapes in a row -- so a single shape, which is
+ * what nearly every figure here now is, sat in the middle of its frame at a
+ * quarter of the width. The real test draws one large figure that nearly fills
+ * its box, and a six-year-old has to be able to see what it is.
+ *
+ * Fitted per question rather than per figure: every figure in one set shares
+ * the unit, so "the large one" is still visibly larger than "the small one".
+ */
+export function fitUnit(figs: Fig[], room: number): number {
+  return room / Math.max(...figs.map(figExtent));
+}
+
 /* ------------------------------------------------------------ standalone */
 
 /**
@@ -477,31 +639,47 @@ export const sameLook = (a: Fig, b: Fig): boolean => figLook(a) === figLook(b);
  * was, and a box that only fitted the row would clip the column.
  */
 const BOX = 116;
-const UNIT = 15;
 
-/** One figure on its own, sized so every figure in a question matches. */
-export function figSvg(f: Fig): string {
+/** The room a figure has inside its box, as a half-width. */
+export const BOX_ROOM = BOX / 2 - 5;
+
+/**
+ * One figure on its own, at the unit its whole question was fitted to.
+ *
+ * The unit is passed in rather than fixed here because it has to be the same
+ * for every option in a question -- fit each one to its own box and the answer
+ * to "which is the large one" would be "all of them".
+ */
+export function figSvg(f: Fig, unit: number): string {
   return `<svg viewBox="0 0 ${BOX} ${BOX}" role="img" aria-label="${describe(f)}">
-    ${figElements(f, BOX / 2, BOX / 2, UNIT)}
+    ${figElements(f, BOX / 2, BOX / 2, unit)}
   </svg>`;
 }
 
+const ROW_CELL = 88;
+/** The room a figure has inside one cell of a row. */
+export const ROW_ROOM = ROW_CELL / 2 - 8;
+
 /** Several figures side by side in their own boxes, e.g. "which one belongs?" */
-export function figRowSvg(figs: Fig[]): string {
-  const cell = 88;
+export function figRowSvg(figs: Fig[], unit: number): string {
+  const cell = ROW_CELL;
   const W = cell * figs.length;
   const cells = figs
     .map((f, i) => {
       const x = i * cell;
       return `<rect x="${x + 3}" y="3" width="${cell - 6}" height="${cell - 6}" rx="6"
         fill="none" stroke="var(--kx-fig-stroke)" stroke-width="1.5" opacity="0.5"/>
-      ${figElements(f, x + cell / 2, cell / 2, 12)}`;
+      ${figElements(f, x + cell / 2, cell / 2, unit)}`;
     })
     .join("");
   return `<svg viewBox="0 0 ${W} ${cell}" role="img" aria-label="${figs.map(describe).join("; then ")}">
     ${cells}
   </svg>`;
 }
+
+const GRID_CELL = 76;
+/** The room a figure has inside one box of the analogy grid. */
+export const GRID_ROOM = GRID_CELL / 2 - 7;
 
 /**
  * A figure analogy: `a` becomes `b`, so `c` becomes what?
@@ -516,8 +694,8 @@ export function figRowSvg(figs: Fig[]): string {
  * loud which way the rule runs, and a child who cannot yet read has nothing
  * else to tell them.
  */
-export function analogyGridSvg(a: Fig, b: Fig, c: Fig): string {
-  const cell = 76;
+export function analogyGridSvg(a: Fig, b: Fig, c: Fig, unit: number): string {
+  const cell = GRID_CELL;
   const span = 26;
   const pad = 9;
   const rowGap = 10;
@@ -528,7 +706,7 @@ export function analogyGridSvg(a: Fig, b: Fig, c: Fig): string {
   const box = (x: number, y: number, inner: string) =>
     `<rect x="${x}" y="${y}" width="${cell}" height="${cell}" rx="6"
       fill="none" stroke="var(--kx-fig-stroke)" stroke-width="1.5" opacity="0.5"/>${inner}`;
-  const at = (f: Fig, x: number, y: number) => figElements(f, x + cell / 2, y + cell / 2, 10);
+  const at = (f: Fig, x: number, y: number) => figElements(f, x + cell / 2, y + cell / 2, unit);
   const arrowAt = (x: number, y: number) =>
     `<path d="M ${x + 4} ${y} h ${span - 12} m -6 -5 l 6 5 l -6 5"
       fill="none" stroke="var(--kx-fig-stroke)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;

@@ -1,8 +1,9 @@
 import { choice, figureChoice, nearMisses, type GeneratorFn } from "./helpers";
 import { COGAT_BANKS, pool } from "./exam-banks";
 import {
-  ROUND, SHADINGS, SHAPES, SHAPE_WORDS, analogyGridSvg, article, describe, figLook, figRowSvg, figSvg,
-  foldedSlots, foldedSvg, holesKey, opposite, sameLook, unfoldHoles, unfoldedSvg,
+  BOX_ROOM, GRID_ROOM, ROOMY, ROUND, ROW_ROOM, SHADINGS, SHAPES, SHAPE_WORDS, SIDES,
+  analogyGridSvg, article, describe, figLook, figRowSvg, figSvg, fitUnit, foldedSlots, foldedSvg,
+  holesKey, opposite, sameLook, unfoldHoles, unfoldedSvg,
   type Fig, type Fold, type Hole, type Shading, type ShapeName,
 } from "./shapes";
 import { abacusSvg, trainsSvg } from "./counters";
@@ -364,9 +365,13 @@ const anyShape = (rng: Rng) => rng.pick(SHAPES);
  * catches a rule that shows nothing either way, but starting from here means
  * the driver rarely has to throw an item away.
  */
-const TURNABLE: ShapeName[] = ["arrow", "ell", "triangle", "star", "hexagon"];
-/** Shapes a half turn moves. A hexagon is its own upside down; the rest are not. */
-const HALF_TURNABLE: ShapeName[] = ["arrow", "ell", "triangle", "star"];
+const TURNABLE: ShapeName[] = ["arrow", "ell", "triangle", "star", "hexagon", "parallelogram", "heart"];
+/**
+ * Shapes a half turn moves. A hexagon is its own upside down, and so is a
+ * parallelogram -- slanted, it is nobody's mirror image, but turn it all the
+ * way over and it lands back on itself.
+ */
+const HALF_TURNABLE: ShapeName[] = ["arrow", "ell", "triangle", "star", "heart"];
 
 /**
  * A figure a quarter turn is bound to move.
@@ -381,7 +386,7 @@ const turnable = (rng: Rng): Fig =>
     ? plain(rng, anyShape(rng), { size: 1, count: rng.pick([2, 3] as const) })
     : plain(rng, rng.pick(TURNABLE), { size: 2 });
 /** Shapes that are not their own mirror image. */
-const FLIPPABLE: ShapeName[] = ["arrow", "ell"];
+const FLIPPABLE: ShapeName[] = ["arrow", "ell", "parallelogram"];
 /** A half can only be cut off a straight-edged shape. */
 const SPLITTABLE: ShapeName[] = SHAPES.filter((s) => s !== "circle");
 
@@ -505,12 +510,26 @@ const RULE_MAKERS: RuleMaker[] = [
     id: "add-inner",
     tier: 2,
     make: (rng) => {
-      const inner = rng.pick(SHAPES);
+      const first = anyShape(rng);
+      // Two of a kind, or one of each: "a heart and a star appear inside" is a
+      // rule in its own right, and a different one to notice.
+      const second = rng.bool(0.5) ? first : rng.pick(unlike(first));
+      const [a, b] = [SHAPE_WORDS[first], SHAPE_WORDS[second]];
       return {
-        words: `two smaller ${plural(inner)} appear inside the shape`,
-        // A solid parent would swallow them, so the parent stays light.
-        start: (r) => plain(r, anyShape(r), { size: 2, shading: r.pick(["open", "shaded"] as Shading[]), inner: null }),
-        to: (f) => (f.inner ? f : { ...f, inner: { shape: inner, count: 2, at: "inside" } }),
+        words: first === second
+          ? `two smaller ${plural(first)} appear inside the shape`
+          : `a smaller ${a} and ${article(b)} ${b} appear inside the shape`,
+        // A filled parent would swallow them, so the parent is an outline.
+        start: (r) => plain(r, r.pick(ROOMY), { size: 2, shading: "open", inner: null }),
+        // The driver runs every rule over other rules' figures to build
+        // distractors, so this has to refuse the ones it cannot act on. A
+        // filled pentagon given two filled pentagons inside is still a filled
+        // pentagon on the page -- and `figLook` compares what is drawn, not
+        // what shows, so it would let that through as a separate option.
+        to: (f) =>
+          f.inner || f.shading === "solid" || !ROOMY.includes(f.shape)
+            ? f
+            : { ...f, inner: { shapes: [first, second], at: "inside" } },
       };
     },
   },
@@ -569,10 +588,10 @@ const RULE_MAKERS: RuleMaker[] = [
       const inner = rng.pick(SHAPES);
       return {
         words: "the inner shape moves out and sits above the larger one",
-        start: (r) => plain(r, anyShape(r), {
+        start: (r) => plain(r, r.pick(ROOMY), {
           size: 2,
-          shading: r.pick(["open", "shaded"] as Shading[]),
-          inner: { shape: inner, count: 1, at: "inside" },
+          shading: "open",
+          inner: { shapes: [inner], at: "inside" },
         }),
         to: (f) => (f.inner?.at === "inside" ? { ...f, inner: { ...f.inner, at: "above" } } : f),
       };
@@ -704,12 +723,12 @@ const figureAnalogies: GeneratorFn = (rng, level) => {
   }
 
   const seen = new Set([figLook(answer)]);
-  const distractors: string[] = [];
+  const wrong: Fig[] = [];
   const offer = (f: Fig) => {
     const k = figLook(f);
-    if (distractors.length >= 4 || seen.has(k)) return;
+    if (wrong.length >= 4 || seen.has(k)) return;
     seen.add(k);
-    distractors.push(figSvg(f));
+    wrong.push(f);
   };
 
   offer(c); // the rule was never applied
@@ -725,13 +744,19 @@ const figureAnalogies: GeneratorFn = (rng, level) => {
   offer({ ...answer, size: answer.size === 1 ? 2 : 1 });
   offer(turnBy(answer, 1));
 
+  // One unit for the question and one for the answers: the two are rendered
+  // into panels of different widths, so they cannot share a scale anyway, and
+  // within each set every figure is drawn to the same one.
+  const askUnit = fitUnit([a, b, c], GRID_ROOM);
+  const sayUnit = fitUnit([answer, ...wrong], BOX_ROOM);
+
   return figureChoice(rng, {
     instructions: "Work out what changed in the first pair, then do the same to the next one.",
     stem: "Which picture belongs where the **?** is?",
-    figure: analogyGridSvg(a, b, c),
+    figure: analogyGridSvg(a, b, c, askUnit),
     options: OPTIONS,
-    answerFigure: figSvg(answer),
-    distractorFigures: distractors,
+    answerFigure: figSvg(answer, sayUnit),
+    distractorFigures: wrong.map((f) => figSvg(f, sayUnit)),
     explanation: `In the first pair, ${rule.words}: ${describe(a)} becomes ${describe(b)}. Doing the same to ${describe(c)} gives ${describe(answer)}.`,
     hint: "Ask what changed from the first picture to the second — and what stayed the same.",
   });
@@ -776,6 +801,7 @@ const SHADING_WORD: Record<Shading, string> = {
   open: "empty", shaded: "half shaded", solid: "filled in",
 };
 const HOW_MANY = { 1: "one", 2: "two", 3: "three" } as const;
+const HOW_MANY4 = { 1: "one", 2: "two", 3: "three", 4: "four" } as const;
 
 /** A figure with everything not pinned down left to chance. */
 function anyFig(rng: Rng, over: Partial<Fig> = {}): Fig {
@@ -792,8 +818,24 @@ function anyFig(rng: Rng, over: Partial<Fig> = {}): Fig {
 const lone = (rng: Rng, over: Partial<Fig> = {}): Fig =>
   anyFig(rng, { size: 2, count: 1, ...over });
 
-/** A parent light enough that what is inside it can be seen. */
-const lightly = (rng: Rng) => rng.pick(["open", "shaded"] as Shading[]);
+
+/**
+ * A figure big enough, and wide enough at the middle, to carry something.
+ *
+ * Always an empty outline. A half-shaded parent is the same colour as what it
+ * holds at a different strength, and two filled shapes inside one of those
+ * stop being two shapes at the size these print -- which is fatal to a rule
+ * about what, or how many, is in there.
+ */
+const holder = (rng: Rng, over: Partial<Fig> = {}): Fig =>
+  lone(rng, { shape: rng.pick(ROOMY), shading: "open", ...over });
+
+/** One shape to sit inside a figure, or two of them -- alike or not. */
+function someShapes(rng: Rng, from: ShapeName[] = SHAPES): ShapeName[] {
+  const first = rng.pick(from);
+  if (rng.bool(0.45)) return [first];
+  return [first, rng.bool(0.5) ? first : rng.pick(from.filter((sh) => !TWINS[first]?.includes(sh)))];
+}
 
 const KINSHIPS: KinshipMaker[] = [
   {
@@ -861,6 +903,33 @@ holds: (f) => !f.pair && f.count === count,
     }),
   },
   {
+    id: "dots",
+    tier: 1,
+    make: (rng) => {
+      const dots = rng.pick([1, 2, 3, 4] as const);
+      return {
+        words: `every one has ${HOW_MANY4[dots]} dot${dots === 1 ? "" : "s"} inside it`,
+        holds: (f) => f.dots === dots,
+        member: (r) => holder(r, { dots }),
+        // Every wrong option has dots too, just not that many. An option with
+        // none would be ruled out without counting anything.
+        outsider: (r) => holder(r, { dots: r.pick(([1, 2, 3, 4] as const).filter((n) => n !== dots)) }),
+      };
+    },
+  },
+  {
+    id: "sides",
+    tier: 2,
+    make: () => ({
+      // Four is the only side count with enough shapes behind it to make a
+      // group: three others share it, where five and six have one each.
+      words: "they all have four straight sides",
+      holds: (f) => SIDES[f.shape] === 4,
+      member: (r) => anyFig(r, { shape: r.pick(SHAPES.filter((sh) => SIDES[sh] === 4)) }),
+      outsider: (r) => anyFig(r, { shape: r.pick(SHAPES.filter((sh) => SIDES[sh] !== 4)) }),
+    }),
+  },
+  {
     id: "round",
     tier: 2,
     make: () => ({
@@ -876,11 +945,8 @@ holds: (f) => !f.pair && f.count === count,
     make: () => ({
       words: "each one has a smaller shape inside it",
       holds: (f) => !!f.inner,
-      member: (r) => lone(r, {
-        shading: lightly(r),
-        inner: { shape: anyShape(r), count: r.pick([1, 2] as const), at: "inside" },
-      }),
-      outsider: (r) => lone(r, { shading: lightly(r) }),
+      member: (r) => holder(r, { inner: { shapes: someShapes(r), at: "inside" } }),
+      outsider: (r) => holder(r),
     }),
   },
   {
@@ -910,35 +976,50 @@ holds: (f) => !f.pair && f.count === count,
       const inner = anyShape(rng);
       return {
         words: `each one has ${article(SHAPE_WORDS[inner])} ${SHAPE_WORDS[inner]} inside it`,
-        holds: (f) => f.inner?.shape === inner,
-        member: (r) => lone(r, {
-          shading: lightly(r),
-          inner: { shape: inner, count: r.pick([1, 2] as const), at: "inside" },
+        // Whatever else is in there, the named shape is: "each one has a heart
+        // inside" is true of a parallelogram holding a heart and a star.
+        holds: (f) => !!f.inner?.shapes.includes(inner),
+        member: (r) => holder(r, {
+          inner: {
+            shapes: r.bool(0.5) ? [inner] : r.shuffle([inner, r.pick(unlike(inner))]),
+            at: "inside",
+          },
         }),
-        outsider: (r) => lone(r, {
-          shading: lightly(r),
-          inner: { shape: r.pick(unlike(inner)), count: r.pick([1, 2] as const), at: "inside" },
-        }),
+        outsider: (r) => holder(r, { inner: { shapes: someShapes(r, unlike(inner)), at: "inside" } }),
       };
     },
+  },
+  {
+    id: "inner-pair",
+    tier: 3,
+    make: () => ({
+      words: "each one has two different shapes inside it",
+      holds: (f) => !!f.inner && new Set(f.inner.shapes).size === 2,
+      member: (r) => {
+        const first = anyShape(r);
+        return holder(r, { inner: { shapes: [first, r.pick(unlike(first))], at: "inside" } });
+      },
+      // Two the same, so the contrast is the pair itself and not the fact of
+      // there being something in there at all.
+      outsider: (r) => {
+        const first = anyShape(r);
+        return holder(r, { inner: { shapes: [first, first], at: "inside" } });
+      },
+    }),
   },
   {
     id: "inner-matches",
     tier: 3,
     make: () => ({
       words: "each one has a smaller copy of itself inside",
-      holds: (f) => f.inner?.shape === f.shape,
+      holds: (f) => f.inner?.shapes.every((sh) => sh === f.shape) ?? false,
       member: (r) => {
-        const shape = anyShape(r);
-        return lone(r, { shape, shading: lightly(r), inner: { shape, count: 1, at: "inside" } });
+        const shape = r.pick(ROOMY);
+        return holder(r, { shape, inner: { shapes: [shape], at: "inside" } });
       },
       outsider: (r) => {
-        const shape = anyShape(r);
-        return lone(r, {
-          shape,
-          shading: lightly(r),
-          inner: { shape: r.pick(unlike(shape)), count: 1, at: "inside" },
-        });
+        const shape = r.pick(ROOMY);
+        return holder(r, { shape, inner: { shapes: [r.pick(unlike(shape))], at: "inside" } });
       },
     }),
   },
@@ -951,7 +1032,7 @@ holds: (f) => !f.pair && f.count === count,
       const shape = rng.pick(FLIPPABLE);
       const turn = rng.pick([0, 1, 2, 3] as const);
       return {
-        words: `the ${plural(shape)} all point the same way`,
+        words: `the ${plural(shape)} are all the same way round`,
         holds: (f) => f.shape === shape && (f.turn ?? 0) === turn,
         member: (r) => anyFig(r, { shape, size: 2, count: r.pick([1, 2] as const), turn }),
         outsider: (r) => anyFig(r, {
@@ -973,6 +1054,57 @@ holds: (f) => !f.pair && f.count === count,
         holds: (f) => f.pair === pair,
         member: (r) => anyFig(r, { pair }),
         outsider: (r) => anyFig(r, { pair: pair === "big-small" ? "small-big" : "big-small" }),
+      };
+    },
+  },
+  {
+    id: "position",
+    tier: 3,
+    make: (rng) => {
+      const at = rng.pick(["above", "below"] as const);
+      return {
+        words: `the small shape always sits ${at} the big one`,
+        holds: (f) => f.inner?.at === at,
+        member: (r) => holder(r, { inner: { shapes: [anyShape(r)], at } }),
+        // It is still carrying something, just not there: the rule is where it
+        // sits, so the wrong options have to get everything else right.
+        outsider: (r) => holder(r, {
+          inner: { shapes: [anyShape(r)], at: at === "above" ? r.pick(["below", "inside"] as const) : r.pick(["above", "inside"] as const) },
+        }),
+      };
+    },
+  },
+  {
+    id: "shape-and-shading",
+    tier: 4,
+    make: (rng) => {
+      const shape = anyShape(rng);
+      const shading = rng.pick(SHADINGS);
+      return {
+        words: `they are all ${plural(shape)}, and they are all ${SHADING_WORD[shading]}`,
+        holds: (f) => f.shape === shape && f.shading === shading,
+        member: (r) => anyFig(r, { shape, shading }),
+        // Each wrong option keeps half the rule and breaks the other half, so
+        // there is no way through on one attribute alone.
+        outsider: (r) => r.bool(0.5)
+          ? anyFig(r, { shape, shading: r.pick(SHADINGS.filter((sh) => sh !== shading)) })
+          : anyFig(r, { shape: r.pick(unlike(shape)), shading }),
+      };
+    },
+  },
+  {
+    id: "dots-and-size",
+    tier: 4,
+    make: (rng) => {
+      const dots = rng.pick([2, 3] as const);
+      const size = rng.pick([1, 2] as const);
+      return {
+        words: `every one has ${HOW_MANY4[dots]} dots inside, and they are all the ${size === 1 ? "small" : "large"} size`,
+        holds: (f) => f.dots === dots && !f.pair && f.size === size,
+        member: (r) => holder(r, { dots, size }),
+        outsider: (r) => r.bool(0.5)
+          ? holder(r, { dots: r.pick(([1, 2, 3, 4] as const).filter((n) => n !== dots)), size })
+          : holder(r, { dots, size: size === 1 ? 2 : 1 }),
       };
     },
   },
@@ -1000,7 +1132,7 @@ holds: (f) => !f.pair && f.count === count,
     make: (rng) => {
       const shape = rng.pick(FLIPPABLE);
       return {
-        words: `in each one the middle ${SHAPE_WORDS[shape]} faces the other way`,
+        words: `in each one the middle ${SHAPE_WORDS[shape]} is the other way round`,
         holds: (f) => f.count === 3 && !!f.odd?.turn,
         // Shape and count are pinned by the rule, so what is left to tell one
         // member from another is shading and size -- and four figures have to
@@ -1036,14 +1168,18 @@ const PROPS: ((f: Fig) => string | null)[] = [
   (f) => (f.pair ? null : `count:${f.count}`),
   (f) => `round:${ROUND.includes(f.shape)}`,
   (f) => `inner:${f.inner ? "yes" : "no"}`,
-  (f) => (f.inner ? `innerShape:${f.inner.shape}` : null),
-  (f) => (f.inner ? `innerCopy:${f.inner.shape === f.shape}` : null),
+  (f) => (f.inner ? `innerShapes:${[...f.inner.shapes].sort().join("+")}` : null),
+  (f) => (f.inner ? `innerCopy:${f.inner.shapes.every((sh) => sh === f.shape)}` : null),
+  (f) => (f.inner ? `innerMixed:${new Set(f.inner.shapes).size > 1}` : null),
   (f) => `split:${!!f.split}`,
   (f) => `ghost:${!!f.ghost}`,
   (f) => `block:${!!f.extruded}`,
   (f) => (f.pair ? `pair:${f.pair}` : null),
   (f) => `facing:${f.turn ?? 0}${f.flip ? "m" : ""}`,
   (f) => `odd:${f.odd ? "yes" : "no"}`,
+  (f) => `dots:${f.dots ?? 0}`,
+  (f) => `sides:${SIDES[f.shape]}`,
+  (f) => (f.inner ? `innerAt:${f.inner.at}` : null),
   (f) => `halves:${sameLook(f, { ...f, flip: !f.flip })}`,
 ];
 
@@ -1140,13 +1276,16 @@ const figureClassification: GeneratorFn = (rng, level) => {
     }
   }
 
+  const askUnit = fitUnit(group, ROW_ROOM);
+  const sayUnit = fitUnit([answer, ...wrong], BOX_ROOM);
+
   return figureChoice(rng, {
     instructions: "Find what the three pictures have in common.",
     stem: "Which picture belongs with these three?",
-    figure: figRowSvg(group),
+    figure: figRowSvg(group, askUnit),
     options: OPTIONS,
-    answerFigure: figSvg(answer),
-    distractorFigures: wrong.map(figSvg),
+    answerFigure: figSvg(answer, sayUnit),
+    distractorFigures: wrong.map((f) => figSvg(f, sayUnit)),
     explanation: `The three pictures are alike in one way: ${words}. Only ${describe(answer)} is like them in that way.`,
     hint: "Check one thing at a time: the shape, how many, how dark, how big — and what is inside.",
   });
