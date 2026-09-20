@@ -20,8 +20,22 @@
  */
 
 export type ShapeName =
-  | "circle" | "square" | "triangle" | "diamond" | "hexagon" | "star" | "arrow" | "ell";
+  | "circle" | "oval" | "square" | "triangle" | "diamond" | "hexagon" | "star" | "arrow" | "ell";
 export type Shading = "open" | "shaded" | "solid";
+
+/**
+ * How the middle shape of a three differs from the two either side of it.
+ *
+ * Only the middle one, and only in a figure of three: "the odd one in the
+ * middle" is a pattern a child can name, where an odd one anywhere is a
+ * spot-the-difference.
+ */
+export interface OddOne {
+  shape?: ShapeName;
+  /** Quarter turns clockwise, on the middle shape alone. */
+  turn?: 1 | 2 | 3;
+  smaller?: boolean;
+}
 
 /** A smaller shape carried by a figure, either within it or sitting on it. */
 export interface Inner {
@@ -50,11 +64,16 @@ export interface Fig {
   extruded?: boolean;
   /** Two shapes of unequal size, in this order. Overrides `size` and `count`. */
   pair?: "big-small" | "small-big";
+  /** How the middle of three differs from the two beside it. */
+  odd?: OddOne | null;
 }
 
 export const SHAPES: ShapeName[] = [
-  "circle", "square", "triangle", "diamond", "hexagon", "star", "arrow", "ell",
+  "circle", "oval", "square", "triangle", "diamond", "hexagon", "star", "arrow", "ell",
 ];
+
+/** Shapes with no corners. */
+export const ROUND: ShapeName[] = ["circle", "oval"];
 export const SHADINGS: Shading[] = ["open", "shaded", "solid"];
 
 /** The attributes a classification rule can turn on. */
@@ -66,6 +85,7 @@ export function figKey(f: Fig): string {
     f.count, f.size, f.shading, f.shape, f.turn ?? 0, f.flip ? "m" : "-",
     f.split ? "s" : "-", f.ghost ? "g" : "-", f.extruded ? "3" : "-", f.pair ?? "-",
     f.inner ? `${f.inner.count}${f.inner.shape}@${f.inner.at}` : "-",
+    f.odd ? `odd${f.odd.shape ?? ""}${f.odd.turn ?? ""}${f.odd.smaller ? "-" : ""}` : "-",
   ].join("|");
 }
 
@@ -77,8 +97,8 @@ const SIZE_WORD = { 1: "small", 2: "large" } as const;
 const COUNT_WORD = { 1: "one", 2: "two", 3: "three" } as const;
 const TURN_WORD = { 1: "on its side", 2: "upside down", 3: "on its other side" } as const;
 
-const SHAPE_WORD: Record<ShapeName, string> = {
-  circle: "circle", square: "square", triangle: "triangle", diamond: "diamond",
+export const SHAPE_WORDS: Record<ShapeName, string> = {
+  circle: "circle", oval: "oval", square: "square", triangle: "triangle", diamond: "diamond",
   hexagon: "hexagon", star: "star", arrow: "arrow", ell: "L-shape",
 };
 
@@ -90,14 +110,17 @@ const SHAPE_WORD: Record<ShapeName, string> = {
  * explanation reading "the shape turns: a large open arrow becomes a large
  * open arrow" teaches nothing.
  */
+/** "a triangle", but "an oval" and "an arrow". */
+export const article = (word: string) => (/^[aeiou]/i.test(word) ? "an" : "a");
+
 export function describe(f: Fig): string {
   const parts: string[] = [];
   if (f.pair) {
     const [first, second] = f.pair === "big-small" ? ["large", "small"] : ["small", "large"];
-    parts.push(`a ${first} and a ${second} ${f.shading} ${SHAPE_WORD[f.shape]}, the ${first} one first`);
+    parts.push(`a ${first} and a ${second} ${f.shading} ${SHAPE_WORDS[f.shape]}, the ${first} one first`);
   } else {
     const plural = f.count > 1 ? "s" : "";
-    parts.push(`${COUNT_WORD[f.count]} ${SIZE_WORD[f.size]} ${f.shading} ${SHAPE_WORD[f.shape]}${plural}`);
+    parts.push(`${COUNT_WORD[f.count]} ${SIZE_WORD[f.size]} ${f.shading} ${SHAPE_WORDS[f.shape]}${plural}`);
   }
   if (f.turn) parts.push(TURN_WORD[f.turn]);
   if (f.flip) parts.push("mirrored");
@@ -105,10 +128,16 @@ export function describe(f: Fig): string {
   if (f.ghost) parts.push("with an empty copy behind it");
   if (f.extruded) parts.push("drawn as a solid block");
   if (f.inner) {
-    const what = f.inner.count === 1
-      ? `a smaller ${SHAPE_WORD[f.inner.shape]}`
-      : `two smaller ${SHAPE_WORD[f.inner.shape]}s`;
+    const word = SHAPE_WORDS[f.inner.shape];
+    const what = f.inner.count === 1 ? `${article(word)} smaller ${word}` : `two smaller ${word}s`;
     parts.push(f.inner.at === "inside" ? `with ${what} inside` : `with ${what} above it`);
+  }
+  if (f.odd) {
+    const how: string[] = [];
+    if (f.odd.shape) how.push(`${article(SHAPE_WORDS[f.odd.shape])} ${SHAPE_WORDS[f.odd.shape]}`);
+    if (f.odd.smaller) how.push("smaller");
+    if (f.odd.turn) how.push(TURN_WORD[f.odd.turn]);
+    parts.push(`with the middle one ${how.join(" and ")}`);
   }
   return parts.join(", ");
 }
@@ -178,6 +207,11 @@ function shapeGeom(shape: ShapeName, c: Pt, r: number): Geom {
   switch (shape) {
     case "circle":
       return { kind: "circle", c, r };
+    // An oval is drawn as a many-sided outline rather than an ellipse, so that
+    // it turns, mirrors and can be cut in half through the same code as every
+    // other shape here.
+    case "oval":
+      return { kind: "poly", pts: polygonPts(c, r, 28).map((p) => ({ x: c.x + (p.x - c.x) * 1.3, y: c.y + (p.y - c.y) * 0.72 })) };
     case "square": {
       const s = r * 0.86;
       return { kind: "poly", pts: [
@@ -270,8 +304,14 @@ export const opposite = (s: Shading): Shading => (s === "solid" ? "open" : "soli
 
 /* --------------------------------------------------------------- assembly */
 
-/** Everything one shape of a figure draws, upright. */
-function unitMarks(f: Fig, c: Pt, r: number): Mark[] {
+/**
+ * Everything one shape of a figure draws.
+ *
+ * `spin` turns this shape alone, about its own centre, before the figure's own
+ * turn is applied to all of them together -- which is what lets one arrow in a
+ * row of three face the other way.
+ */
+function unitMarks(f: Fig, c: Pt, r: number, spin = 0): Mark[] {
   const out: Mark[] = [];
   const geom = shapeGeom(f.shape, c, r);
   const off = r * 0.4;
@@ -301,7 +341,8 @@ function unitMarks(f: Fig, c: Pt, r: number): Mark[] {
       out.push({ geom: shapeGeom(f.inner.shape, { x: c.x, y: c.y - r - ir * 1.3 }, ir), shading: "solid" });
     }
   }
-  return out;
+  if (!spin) return out;
+  return out.map((m) => ({ geom: mapGeom(m.geom, (p) => turnPt(p, c, spin)), shading: m.shading }));
 }
 
 /**
@@ -312,32 +353,42 @@ function unitMarks(f: Fig, c: Pt, r: number): Mark[] {
  * something above it carries that round too. Anything else would be a
  * different rule for every figure the rule met.
  */
-function figMarks(f: Fig, cx: number, cy: number, unit: number): Mark[] {
-  const out: Mark[] = [];
+function figUnits(f: Fig, cx: number, cy: number, unit: number): Mark[][] {
+  const out: Mark[][] = [];
   if (f.pair) {
     const gap = unit * 2.7;
     const radii = f.pair === "big-small" ? [unit, unit * 0.55] : [unit * 0.55, unit];
     for (let i = 0; i < 2; i++) {
-      out.push(...unitMarks(f, { x: cx + (i - 0.5) * gap, y: cy }, radii[i]));
+      out.push(unitMarks(f, { x: cx + (i - 0.5) * gap, y: cy }, radii[i]));
     }
   } else {
     const r = unit * (f.size === 2 ? 1 : 0.6);
     const gap = unit * 2.3;
     const start = cx - ((f.count - 1) * gap) / 2;
     for (let i = 0; i < f.count; i++) {
-      out.push(...unitMarks(f, { x: start + i * gap, y: cy }, r));
+      // The odd one out is the middle of three, and nothing else.
+      const odd = f.odd && f.count === 3 && i === 1 ? f.odd : null;
+      const self = odd?.shape ? { ...f, shape: odd.shape } : f;
+      out.push(unitMarks(
+        self,
+        { x: start + i * gap, y: cy },
+        odd?.smaller ? r * 0.55 : r,
+        odd?.turn ?? 0,
+      ));
     }
   }
 
   const about = { x: cx, y: cy };
   const turn = f.turn ?? 0;
   if (!turn && !f.flip) return out;
-  return out.map((m) => {
-    let g = m.geom;
-    if (turn) g = mapGeom(g, (p) => turnPt(p, about, turn));
-    if (f.flip) g = mapGeom(g, (p) => flipPt(p, cx));
-    return { geom: g, shading: m.shading };
-  });
+  return out.map((marks) =>
+    marks.map((m) => {
+      let g = m.geom;
+      if (turn) g = mapGeom(g, (p) => turnPt(p, about, turn));
+      if (f.flip) g = mapGeom(g, (p) => flipPt(p, cx));
+      return { geom: g, shading: m.shading };
+    }),
+  );
 }
 
 /**
@@ -368,7 +419,7 @@ function draw(m: Mark): string {
 
 /** The figure's shapes, laid out centred on (cx, cy). */
 export function figElements(f: Fig, cx: number, cy: number, unit: number): string {
-  return figMarks(f, cx, cy, unit).map(draw).join("");
+  return figUnits(f, cx, cy, unit).flat().map(draw).join("");
 }
 
 /**
@@ -404,7 +455,16 @@ function markKey(m: Mark): string {
  * question, and two options that draw the same make one of them unmarkable.
  */
 export function figLook(f: Fig): string {
-  return figMarks(f, 0, 0, 20).map(markKey).join(";");
+  // Sorted between shapes, in order within one. A figure is a set of shapes on
+  // a page and the order they were drawn in is not something anyone can see --
+  // mirroring a row of two hands back the same two circles, listed the other
+  // way round, and comparing the lists in order would call that a change.
+  // Inside a single shape the order is the stacking: an empty copy behind a
+  // shape and one in front of it are different pictures.
+  return figUnits(f, 0, 0, 20)
+    .map((marks) => marks.map(markKey).join("|"))
+    .sort()
+    .join(";");
 }
 
 export const sameLook = (a: Fig, b: Fig): boolean => figLook(a) === figLook(b);

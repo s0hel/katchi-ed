@@ -6,12 +6,22 @@ import { figLook, sameLook, type Fig } from "../generators/shapes";
 const SEEDS = Array.from({ length: 240 }, (_, i) => i * 7919 + 13);
 
 const ANALOGIES = skillsFor("cogat", 1).find((s) => s.generator === "cogat-figure-analogies")!;
+const CLASSIFICATION = skillsFor("cogat", 1).find((s) => s.generator === "cogat-figure-classification")!;
 
 /** An option's drawing, with the words stripped off. */
 const drawing = (svg: string) => svg.replace(/aria-label="[^"]*"/, "").replace(/\s+/g, " ");
 
 /** The rule an item was built on: the clause the explanation opens with. */
 const ruleOf = (explanation: string) => explanation.split(":")[0];
+
+/** What a classification group had in common: the clause after the colon. */
+const kinshipOf = (explanation: string) => explanation.split(": ")[1].split(". Only")[0];
+
+/** Every option's drawing, for the skill named. */
+function options(skill: typeof ANALOGIES, level: number, seed: number): string[] {
+  const q = generateQuestion(skill, level, seed);
+  return q.format.kind === "choice" ? (q.format.figures ?? []).map(drawing) : [];
+}
 
 const fig = (over: Partial<Fig>): Fig => ({ shape: "arrow", shading: "open", size: 2, count: 1, ...over });
 
@@ -50,6 +60,27 @@ describe("figure geometry", () => {
     expect(sameLook(fig({ shape: "ell", flip: true }), fig({ shape: "ell", turn: 2 }))).toBe(false);
   });
 
+  it("does not mind which order a row was drawn in", () => {
+    // Mirroring a row of two hands back the same two circles the other way
+    // round. Comparing the drawing in order would call that a change, and
+    // "each one has two matching halves" would then be true of almost nothing.
+    const row = fig({ shape: "circle", count: 2, size: 1 });
+    expect(sameLook(row, { ...row, flip: true })).toBe(true);
+    // Within one shape the order is the stacking, and that does show.
+    const one = fig({ shape: "square" });
+    expect(sameLook({ ...one, ghost: true }, { ...one, extruded: true })).toBe(false);
+  });
+
+  it("turns the middle shape on its own", () => {
+    // "Two arrows up, one down" is one figure, not three, so the middle one
+    // has to turn about its own centre while the other two stay put.
+    const three = fig({ shape: "arrow", count: 3, size: 1 });
+    expect(sameLook(three, { ...three, odd: { turn: 2 } })).toBe(false);
+    // ...and only ever the middle of three.
+    const two = fig({ shape: "arrow", count: 2, size: 1 });
+    expect(sameLook(two, { ...two, odd: { turn: 2 } })).toBe(true);
+  });
+
   it("turns the whole figure, not each shape in it", () => {
     // Three in a row, turned, is a column -- which is a change a child can see
     // even though every circle in it is unmoved.
@@ -61,6 +92,9 @@ describe("figure geometry", () => {
     const base = fig({ shape: "square" });
     const looks = [
       figLook(base),
+      figLook({ ...base, count: 3, odd: { shape: "circle" } }),
+      figLook({ ...base, count: 3, odd: { smaller: true } }),
+      figLook({ ...base, count: 3 }),
       figLook({ ...base, ghost: true }),
       figLook({ ...base, extruded: true }),
       figLook({ ...base, split: true }),
@@ -68,6 +102,7 @@ describe("figure geometry", () => {
       figLook({ ...base, inner: { shape: "circle", count: 1, at: "above" } }),
       figLook({ ...base, pair: "big-small" }),
       figLook({ ...base, pair: "small-big" }),
+      figLook({ ...base, shape: "oval" }),
     ];
     expect(new Set(looks).size).toBe(looks.length);
   });
@@ -115,5 +150,45 @@ describe("figure analogies", () => {
     // rules, it does not trade them.
     expect([...bottom].filter((r) => !top.has(r))).toEqual([]);
     expect(top.size).toBeGreaterThan(bottom.size);
+  });
+});
+
+describe("figure classification", () => {
+  it("never draws two options the same", () => {
+    const clashes: number[] = [];
+    for (const seed of SEEDS) {
+      const drawn = options(CLASSIFICATION, 4, seed);
+      if (drawn.length && new Set(drawn).size !== drawn.length) clashes.push(seed);
+    }
+    expect(clashes.slice(0, 5)).toEqual([]);
+  });
+
+  /**
+   * The same complaint as the analogies, and it was worse here: below level 4
+   * the shared thing was not chosen at all. Level 1 was always the shape,
+   * level 2 always how many, level 3 always how dark.
+   */
+  it("finds many things for three pictures to have in common", () => {
+    const floors: Record<number, number> = { 1: 12, 2: 16, 3: 24, 4: 30 };
+    for (const level of [1, 2, 3, 4]) {
+      const used = new Map<string, number>();
+      for (const seed of SEEDS) {
+        const kin = kinshipOf(generateQuestion(CLASSIFICATION, level, seed).explanation);
+        used.set(kin, (used.get(kin) ?? 0) + 1);
+      }
+      const commonest = Math.max(...used.values()) / SEEDS.length;
+      expect({ level, kinships: used.size, commonest: commonest < 0.3 }).toEqual({
+        level,
+        kinships: used.size,
+        commonest: true,
+      });
+      expect(used.size).toBeGreaterThanOrEqual(floors[level]);
+    }
+  });
+
+  it("keeps the bottom tier's rules and adds to them", () => {
+    const kinds = (level: number) =>
+      new Set(SEEDS.map((seed) => kinshipOf(generateQuestion(CLASSIFICATION, level, seed).explanation)));
+    expect(kinds(4).size).toBeGreaterThan(kinds(1).size);
   });
 });

@@ -1,9 +1,9 @@
 import { choice, figureChoice, nearMisses, type GeneratorFn } from "./helpers";
 import { COGAT_BANKS, pool } from "./exam-banks";
 import {
-  SHADINGS, SHAPES, analogyGridSvg, describe, figKey, figLook, figRowSvg, figSvg, foldedSlots,
-  foldedSvg, holesKey, opposite, sameLook, unfoldHoles, unfoldedSvg,
-  type Attribute, type Fig, type Fold, type Hole, type Shading, type ShapeName,
+  ROUND, SHADINGS, SHAPES, SHAPE_WORDS, analogyGridSvg, article, describe, figLook, figRowSvg, figSvg,
+  foldedSlots, foldedSvg, holesKey, opposite, sameLook, unfoldHoles, unfoldedSvg,
+  type Fig, type Fold, type Hole, type Shading, type ShapeName,
 } from "./shapes";
 import { abacusSvg, trainsSvg } from "./counters";
 import {
@@ -385,6 +385,22 @@ const FLIPPABLE: ShapeName[] = ["arrow", "ell"];
 /** A half can only be cut off a straight-edged shape. */
 const SPLITTABLE: ShapeName[] = SHAPES.filter((s) => s !== "circle");
 
+/**
+ * Shapes too alike to hold apart at the size these are drawn.
+ *
+ * A circle and an oval are different shapes and a six-year-old cannot be
+ * asked to prove it across two small boxes. So wherever an item needs a shape
+ * that is *not* the one it started from -- an odd middle, a wrong option, the
+ * second pair of an analogy -- it needs one that reads as different, not one
+ * that merely is. The round kinship is the exception and asks for both on
+ * purpose, because there the point is that neither has corners.
+ */
+const TWINS: Partial<Record<ShapeName, ShapeName[]>> = { circle: ["oval"], oval: ["circle"] };
+
+/** Shapes a child would not mistake for `shape`. */
+const unlike = (shape: ShapeName): ShapeName[] =>
+  SHAPES.filter((s) => s !== shape && !(TWINS[shape] ?? []).includes(s));
+
 /** Shapes that trade places, so the rule reads as a swap rather than a rename. */
 const SWAPS: [ShapeName, ShapeName][] = [
   ["star", "circle"], ["square", "triangle"], ["diamond", "hexagon"], ["arrow", "ell"],
@@ -658,7 +674,7 @@ const figureAnalogies: GeneratorFn = (rng, level) => {
   let rule = FALLBACK;
   let a = rule.start(rng);
   let b = rule.to(a);
-  let c = { ...a, shape: rng.pick(SHAPES.filter((s) => s !== a.shape)) };
+  let c = { ...a, shape: rng.pick(unlike(a.shape)) };
   let answer = rule.to(c);
 
   // A rule is chosen once and then given several goes at producing an item.
@@ -705,7 +721,7 @@ const figureAnalogies: GeneratorFn = (rng, level) => {
   // Last resort, so the item always has four options to offer.
   offer({ ...answer, shading: DARKER[answer.shading] });
   offer({ ...answer, shading: LIGHTER[answer.shading] });
-  offer({ ...answer, shape: rng.pick(SHAPES.filter((s) => s !== answer.shape)) });
+  offer({ ...answer, shape: rng.pick(unlike(answer.shape)) });
   offer({ ...answer, size: answer.size === 1 ? 2 : 1 });
   offer(turnBy(answer, 1));
 
@@ -722,64 +738,407 @@ const figureAnalogies: GeneratorFn = (rng, level) => {
 };
 
 /**
- * Figure classification. Three figures share exactly one attribute; the others
- * are deliberately varied, because a second thing held constant by accident
- * makes more than one answer defensible.
+ * What three figures can have in common.
+ *
+ * This used to be one of four attributes -- shape, how many, how dark, how big
+ * -- and below level 4 it was not even chosen: level 1 was always shape, level
+ * 2 always how many, level 3 always how dark. Three tiers, three ideas, which
+ * is why a session felt like the same question over and over.
+ *
+ * A kinship owns the figures on both sides of its rule: one that has the thing
+ * in common and one that does not. Everything a member does not need is left
+ * random, so the three in the group agree on the kinship and drift apart
+ * everywhere else.
+ */
+interface Kinship {
+  /** How the shared thing reads: "they are all triangles". */
+  words: string;
+  member: (rng: Rng) => Fig;
+  outsider: (rng: Rng) => Fig;
+  /**
+   * Whether a figure has the shared thing.
+   *
+   * `member` and `outsider` are meant to build figures that do and do not, and
+   * this is what checks that they did. Without it the item rests on those two
+   * agreeing, and where they disagree the failure is the worst kind: a second
+   * option that belongs as well as the answer does, on the item's own rule.
+   */
+  holds: (f: Fig) => boolean;
+}
+
+interface KinshipMaker {
+  id: string;
+  tier: 1 | 2 | 3 | 4;
+  make: (rng: Rng) => Kinship;
+}
+
+const SHADING_WORD: Record<Shading, string> = {
+  open: "empty", shaded: "half shaded", solid: "filled in",
+};
+const HOW_MANY = { 1: "one", 2: "two", 3: "three" } as const;
+
+/** A figure with everything not pinned down left to chance. */
+function anyFig(rng: Rng, over: Partial<Fig> = {}): Fig {
+  return {
+    shape: anyShape(rng),
+    shading: rng.pick(SHADINGS),
+    size: rng.pick([1, 2] as const),
+    count: rng.pick([1, 2, 3] as const),
+    ...over,
+  };
+}
+
+/** One shape, big enough to carry something: what the decorated rules build on. */
+const lone = (rng: Rng, over: Partial<Fig> = {}): Fig =>
+  anyFig(rng, { size: 2, count: 1, ...over });
+
+/** A parent light enough that what is inside it can be seen. */
+const lightly = (rng: Rng) => rng.pick(["open", "shaded"] as Shading[]);
+
+const KINSHIPS: KinshipMaker[] = [
+  {
+    id: "shape",
+    tier: 1,
+    make: (rng) => {
+      const shape = anyShape(rng);
+      return {
+        words: `they are all ${plural(shape)}`,
+        holds: (f) => f.shape === shape,
+        member: (r) => anyFig(r, { shape }),
+        outsider: (r) => anyFig(r, { shape: r.pick(unlike(shape)) }),
+      };
+    },
+  },
+  {
+    id: "count",
+    tier: 1,
+    make: (rng) => {
+      const count = rng.pick([1, 2, 3] as const);
+      return {
+        words: count === 1
+          ? "there is only ever one shape"
+          : `there are always ${HOW_MANY[count]} of them`,
+holds: (f) => !f.pair && f.count === count,
+        member: (r) => anyFig(r, { count, size: 1 }),
+        outsider: (r) => anyFig(r, { count: r.pick(([1, 2, 3] as const).filter((n) => n !== count)), size: 1 }),
+      };
+    },
+  },
+  {
+    id: "shading",
+    tier: 1,
+    make: (rng) => {
+      const shading = rng.pick(SHADINGS);
+      return {
+        words: `they are all ${SHADING_WORD[shading]}`,
+        holds: (f) => f.shading === shading,
+        member: (r) => anyFig(r, { shading }),
+        outsider: (r) => anyFig(r, { shading: r.pick(SHADINGS.filter((sh) => sh !== shading)) }),
+      };
+    },
+  },
+  {
+    id: "size",
+    tier: 1,
+    make: (rng) => {
+      const size = rng.pick([1, 2] as const);
+      return {
+        words: `they are all the ${size === 1 ? "small" : "large"} size`,
+        holds: (f) => !f.pair && f.size === size,
+        member: (r) => anyFig(r, { size, count: r.pick([1, 2] as const) }),
+        outsider: (r) => anyFig(r, { size: size === 1 ? 2 : 1, count: r.pick([1, 2] as const) }),
+      };
+    },
+  },
+  {
+    id: "split",
+    tier: 1,
+    make: () => ({
+      words: "each one is divided in half",
+      holds: (f) => !!f.split,
+      member: (r) => lone(r, { shape: r.pick(SPLITTABLE), shading: r.pick(["open", "solid"] as Shading[]), split: true }),
+      outsider: (r) => lone(r, { shape: r.pick(SPLITTABLE), shading: r.pick(["open", "solid"] as Shading[]) }),
+    }),
+  },
+  {
+    id: "round",
+    tier: 2,
+    make: () => ({
+      words: "none of them have corners",
+      holds: (f) => ROUND.includes(f.shape),
+      member: (r) => anyFig(r, { shape: r.pick(ROUND) }),
+      outsider: (r) => anyFig(r, { shape: r.pick(SHAPES.filter((s) => !ROUND.includes(s))) }),
+    }),
+  },
+  {
+    id: "has-inner",
+    tier: 2,
+    make: () => ({
+      words: "each one has a smaller shape inside it",
+      holds: (f) => !!f.inner,
+      member: (r) => lone(r, {
+        shading: lightly(r),
+        inner: { shape: anyShape(r), count: r.pick([1, 2] as const), at: "inside" },
+      }),
+      outsider: (r) => lone(r, { shading: lightly(r) }),
+    }),
+  },
+  {
+    id: "ghost",
+    tier: 2,
+    make: () => ({
+      words: "each one has an empty copy behind it",
+      holds: (f) => !!f.ghost,
+      member: (r) => lone(r, { ghost: true }),
+      outsider: (r) => lone(r),
+    }),
+  },
+  {
+    id: "extruded",
+    tier: 2,
+    make: () => ({
+      words: "they are all drawn as solid blocks",
+      holds: (f) => !!f.extruded,
+      member: (r) => lone(r, { extruded: true }),
+      outsider: (r) => lone(r),
+    }),
+  },
+  {
+    id: "inner-shape",
+    tier: 3,
+    make: (rng) => {
+      const inner = anyShape(rng);
+      return {
+        words: `each one has ${article(SHAPE_WORDS[inner])} ${SHAPE_WORDS[inner]} inside it`,
+        holds: (f) => f.inner?.shape === inner,
+        member: (r) => lone(r, {
+          shading: lightly(r),
+          inner: { shape: inner, count: r.pick([1, 2] as const), at: "inside" },
+        }),
+        outsider: (r) => lone(r, {
+          shading: lightly(r),
+          inner: { shape: r.pick(unlike(inner)), count: r.pick([1, 2] as const), at: "inside" },
+        }),
+      };
+    },
+  },
+  {
+    id: "inner-matches",
+    tier: 3,
+    make: () => ({
+      words: "each one has a smaller copy of itself inside",
+      holds: (f) => f.inner?.shape === f.shape,
+      member: (r) => {
+        const shape = anyShape(r);
+        return lone(r, { shape, shading: lightly(r), inner: { shape, count: 1, at: "inside" } });
+      },
+      outsider: (r) => {
+        const shape = anyShape(r);
+        return lone(r, {
+          shape,
+          shading: lightly(r),
+          inner: { shape: r.pick(unlike(shape)), count: 1, at: "inside" },
+        });
+      },
+    }),
+  },
+  {
+    id: "facing",
+    tier: 3,
+    make: (rng) => {
+      // One shape family throughout, because "the same way round" only means
+      // anything between two figures that start life pointing the same way.
+      const shape = rng.pick(FLIPPABLE);
+      const turn = rng.pick([0, 1, 2, 3] as const);
+      return {
+        words: `the ${plural(shape)} all point the same way`,
+        holds: (f) => f.shape === shape && (f.turn ?? 0) === turn,
+        member: (r) => anyFig(r, { shape, size: 2, count: r.pick([1, 2] as const), turn }),
+        outsider: (r) => anyFig(r, {
+          shape,
+          size: 2,
+          count: r.pick([1, 2] as const),
+          turn: r.pick(([0, 1, 2, 3] as const).filter((t) => t !== turn)),
+        }),
+      };
+    },
+  },
+  {
+    id: "pair-order",
+    tier: 3,
+    make: (rng) => {
+      const pair = rng.pick(["big-small", "small-big"] as const);
+      return {
+        words: `each one is a ${pair === "big-small" ? "large shape then a small one" : "small shape then a large one"}`,
+        holds: (f) => f.pair === pair,
+        member: (r) => anyFig(r, { pair }),
+        outsider: (r) => anyFig(r, { pair: pair === "big-small" ? "small-big" : "big-small" }),
+      };
+    },
+  },
+  {
+    id: "odd-shape",
+    tier: 4,
+    make: () => ({
+      words: "in each one the middle shape is not like the two beside it",
+      holds: (f) => f.count === 3 && !!f.odd?.shape,
+      member: (r) => {
+        const shape = anyShape(r);
+        return anyFig(r, {
+          shape,
+          count: 3,
+          size: 1,
+          odd: { shape: r.pick(unlike(shape)) },
+        });
+      },
+      outsider: (r) => anyFig(r, { count: 3, size: 1 }),
+    }),
+  },
+  {
+    id: "odd-facing",
+    tier: 4,
+    make: (rng) => {
+      const shape = rng.pick(FLIPPABLE);
+      return {
+        words: `in each one the middle ${SHAPE_WORDS[shape]} faces the other way`,
+        holds: (f) => f.count === 3 && !!f.odd?.turn,
+        // Shape and count are pinned by the rule, so what is left to tell one
+        // member from another is shading and size -- and four figures have to
+        // come out of it, the three in the group and the one that joins them.
+        member: (r) => anyFig(r, { shape, count: 3, size: r.pick([1, 2] as const), odd: { turn: 2 } }),
+        outsider: (r) => anyFig(r, { shape, count: 3, size: r.pick([1, 2] as const) }),
+      };
+    },
+  },
+  {
+    id: "matching-halves",
+    tier: 4,
+    make: () => ({
+      words: "each one has two matching halves",
+      holds: (f) => sameLook(f, { ...f, flip: !f.flip }),
+      member: (r) => anyFig(r, { shape: r.pick(SHAPES.filter((s) => !FLIPPABLE.includes(s))) }),
+      outsider: (r) => anyFig(r, { shape: r.pick(FLIPPABLE), size: 2 }),
+    }),
+  },
+];
+
+/**
+ * The things a child might notice about a figure.
+ *
+ * Not the same list as the kinships: this is for checking the item, and what
+ * matters there is everything a child could reasonably pick out, whether or
+ * not this generator can build a group around it.
+ */
+const PROPS: ((f: Fig) => string | null)[] = [
+  (f) => `shape:${f.shape}`,
+  (f) => `shading:${f.shading}`,
+  (f) => (f.pair ? null : `size:${f.size}`),
+  (f) => (f.pair ? null : `count:${f.count}`),
+  (f) => `round:${ROUND.includes(f.shape)}`,
+  (f) => `inner:${f.inner ? "yes" : "no"}`,
+  (f) => (f.inner ? `innerShape:${f.inner.shape}` : null),
+  (f) => (f.inner ? `innerCopy:${f.inner.shape === f.shape}` : null),
+  (f) => `split:${!!f.split}`,
+  (f) => `ghost:${!!f.ghost}`,
+  (f) => `block:${!!f.extruded}`,
+  (f) => (f.pair ? `pair:${f.pair}` : null),
+  (f) => `facing:${f.turn ?? 0}${f.flip ? "m" : ""}`,
+  (f) => `odd:${f.odd ? "yes" : "no"}`,
+  (f) => `halves:${sameLook(f, { ...f, flip: !f.flip })}`,
+];
+
+/**
+ * Whether every way of reading the group points at the same picture.
+ *
+ * The group agrees on the kinship it was built around, and on whatever else
+ * fell out the same way by chance. Each of those is a rule a child might
+ * settle on, and the item only holds up if none of them singles out a wrong
+ * answer: a group of three solid triangles keyed on "triangle", sitting beside
+ * one solid square, gives a child who reads it as "they are all filled in" a
+ * defensible answer that is marked wrong.
+ */
+function soundGroup(group: Fig[], options: Fig[], answer: Fig): boolean {
+  for (const prop of PROPS) {
+    const shared = prop(group[0]);
+    if (shared === null || group.some((g) => prop(g) !== shared)) continue;
+    const fits = options.filter((o) => prop(o) === shared);
+    if (fits.length === 1 && fits[0] !== answer) return false;
+  }
+  return true;
+}
+
+/**
+ * An item that cannot fail, for when every draw above has.
+ *
+ * Built rather than canned, so the rare seed that falls through here still
+ * gets its own question. It is sound by construction: the group is one shape
+ * in three different shadings, three sizes and three counts, so shape is the
+ * only thing the three agree on, and each wrong option repeats one member's
+ * shading and count under a different shape.
+ */
+function plainGroup(rng: Rng): { words: string; group: Fig[]; answer: Fig; wrong: Fig[] } {
+  const shape = anyShape(rng);
+  const others = rng.shuffle(unlike(shape));
+  const shadings = rng.shuffle([...SHADINGS]);
+  const counts = rng.shuffle([1, 2, 3] as (1 | 2 | 3)[]);
+  const at = (i: number, s: ShapeName): Fig => ({
+    shape: s,
+    shading: shadings[i % 3],
+    size: (i % 2 === 0 ? 1 : 2) as 1 | 2,
+    count: counts[i % 3],
+  });
+  return {
+    words: `they are all ${plural(shape)}`,
+    group: [at(0, shape), at(1, shape), at(2, shape)],
+    answer: { ...at(0, shape), size: 2, count: counts[1] },
+    wrong: [at(0, others[0]), at(1, others[1]), at(2, others[2])],
+  };
+}
+
+/**
+ * Figure classification: three that belong together, and a fourth that joins
+ * them.
  */
 const figureClassification: GeneratorFn = (rng, level) => {
-  const key: Attribute = level <= 1 ? "shape" : level === 2 ? "count" : level === 3 ? "shading" : rng.pick(["shading", "size", "shape"] as Attribute[]);
+  const makers = KINSHIPS.filter((k) => k.tier <= level);
 
-  const sharedShape = rng.pick(SHAPES);
-  const sharedShading = rng.pick(SHADINGS);
-  const sharedSize = rng.pick([1, 2] as const);
-  const sharedCount = rng.pick([1, 2, 3] as const);
+  let { words, group, answer, wrong } = plainGroup(rng);
 
-  const shapeCycle = rng.shuffle([...SHAPES]);
-  const shadingCycle = rng.shuffle([...SHADINGS]);
-  const countCycle = rng.shuffle([1, 2, 3] as (1 | 2 | 3)[]);
+  // As in the analogies: one kinship, then several goes at it, so that the
+  // rules with the fussiest figures do not end up the rarest.
+  outer: for (let pick = 0; pick < 14; pick++) {
+    const maker = rng.pick(makers);
+    for (let draw = 0; draw < 8; draw++) {
+      const kin = maker.make(rng);
+      const seen = new Set<string>();
+      /** `n` figures from `build`, no two of which draw the same picture. */
+      const take = (build: () => Fig, n: number): Fig[] => {
+        const out: Fig[] = [];
+        for (let i = 0; i < 40 && out.length < n; i++) {
+          const f = build();
+          const look = figLook(f);
+          if (seen.has(look)) continue;
+          seen.add(look);
+          out.push(f);
+        }
+        return out;
+      };
 
-  /** A figure that shares the key attribute, varying everything else. */
-  const member = (i: number): Fig => ({
-    shape: key === "shape" ? sharedShape : shapeCycle[i % shapeCycle.length],
-    shading: key === "shading" ? sharedShading : shadingCycle[i % shadingCycle.length],
-    size: key === "size" ? sharedSize : ((i % 2 === 0 ? 1 : 2) as 1 | 2),
-    count: key === "count" ? sharedCount : countCycle[i % countCycle.length],
-  });
+      const three = take(() => kin.member(rng), 3);
+      const [right] = take(() => kin.member(rng), 1);
+      const others = take(() => kin.outsider(rng), 3);
+      if (three.length < 3 || !right || others.length < 3) continue;
+      // The rule the item states has to pick out exactly one of the four.
+      if (!three.every(kin.holds) || !kin.holds(right) || others.some(kin.holds)) continue;
+      if (!soundGroup(three, [right, ...others], right)) continue;
 
-  const group = [member(0), member(1), member(2)];
-  let answer = member(3);
-  for (let i = 4; group.some((g) => figKey(g) === figKey(answer)) && i < 12; i++) answer = member(i);
-
-  /** A figure that breaks the rule, so it cannot belong. */
-  const outsider = (i: number): Fig => {
-    const f = member(i);
-    switch (key) {
-      case "shape":
-        return { ...f, shape: rng.pick(SHAPES.filter((s) => s !== sharedShape)) };
-      case "shading":
-        return { ...f, shading: rng.pick(SHADINGS.filter((s) => s !== sharedShading)) };
-      case "size":
-        return { ...f, size: (sharedSize === 1 ? 2 : 1) as 1 | 2 };
-      case "count":
-        return { ...f, count: rng.pick(([1, 2, 3] as const).filter((n) => n !== sharedCount)) };
+      words = kin.words;
+      group = three;
+      answer = right;
+      wrong = others;
+      break outer;
     }
-  };
-
-  const seen = new Set([figKey(answer)]);
-  const distractors: string[] = [];
-  for (let i = 0; i < 10 && distractors.length < 3; i++) {
-    const f = outsider(i);
-    if (seen.has(figKey(f))) continue;
-    seen.add(figKey(f));
-    distractors.push(figSvg(f));
   }
-
-  const rule: Record<Attribute, string> = {
-    shape: `they are all ${sharedShape}s`,
-    shading: `they are all ${sharedShading}`,
-    size: `they are all the ${sharedSize === 1 ? "small" : "large"} size`,
-    count: `there are always ${sharedCount} of them`,
-  };
 
   return figureChoice(rng, {
     instructions: "Find what the three pictures have in common.",
@@ -787,9 +1146,9 @@ const figureClassification: GeneratorFn = (rng, level) => {
     figure: figRowSvg(group),
     options: OPTIONS,
     answerFigure: figSvg(answer),
-    distractorFigures: distractors,
-    explanation: `The three pictures are alike in one way: ${rule[key]}. Only ${describe(answer)} is like them in that way.`,
-    hint: "Check one thing at a time: the shape, how many, how dark, how big.",
+    distractorFigures: wrong.map(figSvg),
+    explanation: `The three pictures are alike in one way: ${words}. Only ${describe(answer)} is like them in that way.`,
+    hint: "Check one thing at a time: the shape, how many, how dark, how big — and what is inside.",
   });
 };
 
