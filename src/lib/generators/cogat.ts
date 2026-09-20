@@ -1,9 +1,9 @@
 import { choice, figureChoice, nearMisses, type GeneratorFn } from "./helpers";
 import { COGAT_BANKS, pool } from "./exam-banks";
 import {
-  SHADINGS, SHAPES, analogyRowSvg, describe, figKey, figRowSvg, figSvg, foldedSlots, foldedSvg,
-  holesKey, unfoldHoles, unfoldedSvg,
-  type Attribute, type Fig, type Fold, type Hole, type Shading,
+  SHADINGS, SHAPES, analogyGridSvg, describe, figKey, figLook, figRowSvg, figSvg, foldedSlots,
+  foldedSvg, holesKey, opposite, sameLook, unfoldHoles, unfoldedSvg,
+  type Attribute, type Fig, type Fold, type Hole, type Shading, type ShapeName,
 } from "./shapes";
 import { abacusSvg, trainsSvg } from "./counters";
 import {
@@ -41,7 +41,7 @@ const pictureAnalogies: GeneratorFn = (rng, level) => {
     figure: pictureAnalogySvg(item.a, item.b, item.c),
     answerFigure: pictureCardSvg(item.answer),
     distractorFigures: item.wrong.map(pictureCardSvg),
-    options: optionsFor(level),
+    options: OPTIONS,
     explanation: item.why,
     hint: `Say it out loud: "${say(item.a)} goes with ${say(item.b)} because..." Then try the same sentence for ${say(item.c)}.`,
   });
@@ -55,7 +55,7 @@ const pictureGroups: GeneratorFn = (rng, level) => {
     figure: pictureRowSvg(item.group),
     answerFigure: pictureCardSvg(item.answer),
     distractorFigures: item.wrong.map(pictureCardSvg),
-    options: optionsFor(level),
+    options: OPTIONS,
     explanation: item.why,
     hint: "Ask what is the same about all three.",
   });
@@ -68,28 +68,47 @@ const sentenceCompletion: GeneratorFn = (rng, level) => {
     stem: item.s.replace("___", "**___**"),
     answerFigure: pictureCardSvg(item.answer),
     distractorFigures: item.wrong.map(pictureCardSvg),
-    options: optionsFor(level),
+    options: OPTIONS,
     explanation: item.why,
     hint: "Say the whole sentence out loud with each picture in the blank. Only one of them makes sense.",
   });
 };
 
 /**
- * How many options a picture item offers. Three at the bottom tiers and four
- * higher up: on an item with nothing to read, the number of pictures to hold
- * in mind *is* most of the difficulty, and CogAT itself offers fewer options
- * at the lower levels for the same reason.
+ * How many options a CogAT item offers: four, everywhere, at every level.
+ *
+ * The lower tiers used to offer three, on the reasoning that an item with
+ * nothing to read is mostly about how many pictures a child can hold in mind
+ * at once. That is true, and it is exactly why three is the wrong number to
+ * practise on: holding four in mind is part of what the real form asks, and a
+ * child who has only ever chosen from three meets a wider board on the day.
+ * The ramp has to come from the items themselves -- the bank slice each level
+ * draws from, and the rules each level allows -- not from hiding an option.
+ *
+ * Every generator below is expected to supply three distinct distractors at
+ * every level; `cogat-options.test.ts` fails if one cannot.
  */
-const optionsFor = (level: number) => (level <= 2 ? 3 : 4);
+const OPTIONS = 4;
 
 /* ----------------------------------------------------------- quantitative */
 
 /**
  * Wrong options near a right answer. A first grader has not met negative
  * numbers, so an option below zero is not a distractor -- it is a giveaway.
+ *
+ * `nearMisses` draws at random inside the spread, so on a narrow spread it can
+ * come back with the same miss twice or with nothing but negatives. Whatever
+ * it leaves short is topped up from the answer's own neighbours, because three
+ * options is one short of what the test offers.
  */
 function nearby(rng: Rng, answer: number, spread: number): string[] {
-  return nearMisses(rng, answer, spread, 5).filter((v) => Number(v) >= 0).slice(0, 3);
+  const out = nearMisses(rng, answer, spread, 5).map(Number).filter((v) => v >= 0);
+  for (let d = 1; out.length < 3; d++) {
+    for (const v of [answer + d, answer - d]) {
+      if (v >= 0 && v !== answer && !out.includes(v) && out.length < 3) out.push(v);
+    }
+  }
+  return out.slice(0, 3).map(String);
 }
 
 /**
@@ -125,10 +144,18 @@ const numberAnalogies: GeneratorFn = (rng, level) => {
   const candidates = [bottomFrom, bottomFrom - delta, answer + 1, answer - 1, answer + 2];
   const seen = new Set([answer]);
   const distractors: string[] = [];
-  for (const n of candidates) {
-    if (n < 1 || n > MAX_SET || seen.has(n)) continue;
+  const offer = (n: number) => {
+    if (n < 1 || n > MAX_SET || seen.has(n)) return;
     seen.add(n);
     distractors.push(countCardSvg(bottomPicture, n));
+  };
+  for (const n of candidates) offer(n);
+  // Those five collapse into two when the rule is small -- with a step of one,
+  // "the rule run backwards" and "one fewer than the answer" are the same
+  // count -- so top up from the rest of the range, nearest first.
+  for (let d = 1; distractors.length < 3 && d <= MAX_SET; d++) {
+    offer(answer + d);
+    offer(answer - d);
   }
 
   const move = delta > 0 ? `${delta} more` : `${-delta} fewer`;
@@ -141,7 +168,7 @@ const numberAnalogies: GeneratorFn = (rng, level) => {
     ),
     answerFigure: countCardSvg(bottomPicture, answer),
     distractorFigures: distractors,
-    options: optionsFor(level),
+    options: OPTIONS,
     explanation: `The top row goes from ${topFrom} to ${topFrom + delta} — ${move}. Doing the same to ${bottomFrom} gives ${answer}.`,
     hint: "Count the first box, then the second. How many were added or taken away?",
   });
@@ -236,7 +263,6 @@ const numberSeries: GeneratorFn = (rng, level) => {
       distractors: [b, a + 1, Math.max(1, a - 1), b + 1],
       explanation: `The rods keep repeating ${a} and ${b}. After ${a}, ${b}, ${a}, ${b} the next rod goes back to ${a}.`,
       hint: "Look for two rods that keep taking turns.",
-      level,
     });
   }
 
@@ -261,23 +287,32 @@ const numberSeries: GeneratorFn = (rng, level) => {
     distractors: [answer + 1, answer - 1, answer + step, rods[2]],
     explanation: `Each rod has ${step > 0 ? `${step} more` : `${-step} fewer`} bead${Math.abs(step) === 1 ? "" : "s"} than the one before: ${rods.join(", ")}. So the next rod has ${answer}.`,
     hint: "Count the first rod, then the second. How many were added?",
-    level,
   });
 };
 
 /** An abacus item: the prompt rods plus one rod per answer option. */
 function abacusChoice(
   rng: Rng,
-  q: { rods: number[]; answer: number; distractors: number[]; explanation: string; hint: string; level: number },
+  q: { rods: number[]; answer: number; distractors: number[]; explanation: string; hint: string },
 ): ReturnType<GeneratorFn> {
-  const options = q.distractors.filter((n) => n >= 1 && n <= 10 && n !== q.answer);
+  const options: number[] = [];
+  const offer = (n: number) => {
+    if (n >= 1 && n <= 10 && n !== q.answer && !options.includes(n)) options.push(n);
+  };
+  for (const n of q.distractors) offer(n);
+  // A step of one makes "one more than the answer" and "the rule applied
+  // again" the same rod, so top up from the answer's neighbours.
+  for (let d = 1; options.length < 3 && d <= 10; d++) {
+    offer(q.answer + d);
+    offer(q.answer - d);
+  }
   return figureChoice(rng, {
     instructions: "Find the rod that comes next.",
     stem: "Which rod belongs where the **?** is?",
     figure: abacusSvg([...q.rods, null]),
     answerFigure: abacusSvg([q.answer]),
     distractorFigures: options.map((n) => abacusSvg([n])),
-    options: optionsFor(q.level),
+    options: OPTIONS,
     explanation: q.explanation,
     hint: q.hint,
   });
@@ -285,122 +320,400 @@ function abacusChoice(
 
 /* -------------------------------------------------------------- nonverbal */
 
-function randomFig(rng: Rng): Fig {
-  return {
-    shape: rng.pick(SHAPES),
-    shading: rng.pick(SHADINGS),
-    size: rng.pick([1, 2] as const),
-    count: rng.pick([1, 2, 3] as const),
-  };
+/**
+ * The rules a figure analogy can be built on.
+ *
+ * The old set had four -- darker, bigger, one more, becomes-a-square -- and at
+ * the bottom tier only the first two, so a session came back to the same two
+ * ideas over and over. These are the transformations the practice books
+ * actually use, and they are the point of the item: an analogy is only as good
+ * as the number of rules a child cannot predict.
+ *
+ * A rule owns both halves of its item. It builds a figure it can act on --
+ * "the inner shape moves out" needs a figure with an inner shape to move --
+ * and it transforms one. Every `to` is total: a rule that meets a figure it
+ * cannot act on returns it unchanged, because the driver also runs rules over
+ * *other* rules' figures to build distractors.
+ */
+interface Rule {
+  /** How the change reads in the explanation. */
+  words: string;
+  /** A figure this rule can act on. */
+  start: (rng: Rng) => Fig;
+  to: (f: Fig) => Fig;
 }
 
-/** One step along an attribute, used as a matrix rule. */
-type Step = { attr: Attribute; from: Fig; to: (f: Fig) => Fig; words: string };
+interface RuleMaker {
+  id: string;
+  /** The lowest level this rule appears at. */
+  tier: 1 | 2 | 3 | 4;
+  make: (rng: Rng) => Rule;
+}
 
-function stepFor(rng: Rng, attr: Attribute, base: Fig): Step | null {
-  switch (attr) {
-    case "shading": {
-      const order: Shading[] = ["open", "shaded", "solid"];
-      const i = order.indexOf(base.shading);
-      if (i === order.length - 1) return null;
+/** A figure with nothing added: the starting point most rules build on. */
+function plain(rng: Rng, shape: ShapeName, over: Partial<Fig> = {}): Fig {
+  return { shape, shading: rng.pick(SHADINGS), size: rng.pick([1, 2] as const), count: 1, ...over };
+}
+
+const anyShape = (rng: Rng) => rng.pick(SHAPES);
+
+/**
+ * Shapes whose quarter turn is visible.
+ *
+ * A circle, a square and a diamond all survive one unchanged. `sameLook`
+ * catches a rule that shows nothing either way, but starting from here means
+ * the driver rarely has to throw an item away.
+ */
+const TURNABLE: ShapeName[] = ["arrow", "ell", "triangle", "star", "hexagon"];
+/** Shapes a half turn moves. A hexagon is its own upside down; the rest are not. */
+const HALF_TURNABLE: ShapeName[] = ["arrow", "ell", "triangle", "star"];
+
+/**
+ * A figure a quarter turn is bound to move.
+ *
+ * Either one shape with an orientation to lose, or a row of them -- a row
+ * turned a quarter is a column, which is a change even when every circle in
+ * it is exactly where it was. The row is worth having: it is the one way a
+ * turn rule gets to use the shapes that have no orientation of their own.
+ */
+const turnable = (rng: Rng): Fig =>
+  rng.bool(0.45)
+    ? plain(rng, anyShape(rng), { size: 1, count: rng.pick([2, 3] as const) })
+    : plain(rng, rng.pick(TURNABLE), { size: 2 });
+/** Shapes that are not their own mirror image. */
+const FLIPPABLE: ShapeName[] = ["arrow", "ell"];
+/** A half can only be cut off a straight-edged shape. */
+const SPLITTABLE: ShapeName[] = SHAPES.filter((s) => s !== "circle");
+
+/** Shapes that trade places, so the rule reads as a swap rather than a rename. */
+const SWAPS: [ShapeName, ShapeName][] = [
+  ["star", "circle"], ["square", "triangle"], ["diamond", "hexagon"], ["arrow", "ell"],
+];
+
+const DARKER: Record<Shading, Shading> = { open: "shaded", shaded: "solid", solid: "solid" };
+const LIGHTER: Record<Shading, Shading> = { solid: "shaded", shaded: "open", open: "open" };
+
+const turnBy = (f: Fig, quarters: number): Fig => ({
+  ...f,
+  turn: (((f.turn ?? 0) + quarters) % 4) as 0 | 1 | 2 | 3,
+});
+
+const plural = (s: ShapeName) => (s === "ell" ? "L-shapes" : `${s}s`);
+
+const RULE_MAKERS: RuleMaker[] = [
+  {
+    id: "grow",
+    tier: 1,
+    make: () => ({
+      words: "the shape gets bigger",
+      start: (rng) => plain(rng, anyShape(rng), { size: 1 }),
+      to: (f) => ({ ...f, size: 2 }),
+    }),
+  },
+  {
+    id: "shrink",
+    tier: 2,
+    make: () => ({
+      words: "the shape gets smaller",
+      start: (rng) => plain(rng, anyShape(rng), { size: 2 }),
+      to: (f) => ({ ...f, size: 1 }),
+    }),
+  },
+  {
+    id: "invert",
+    tier: 1,
+    make: () => ({
+      words: "the colours swap over -- empty turns filled, and filled turns empty",
+      start: (rng) => plain(rng, anyShape(rng), { shading: rng.pick(["open", "solid"] as Shading[]) }),
+      to: (f) => (f.shading === "shaded" ? f : { ...f, shading: opposite(f.shading) }),
+    }),
+  },
+  {
+    id: "darken",
+    tier: 1,
+    make: () => ({
+      words: "the shape gets darker",
+      start: (rng) => plain(rng, anyShape(rng), { shading: rng.pick(["open", "shaded"] as Shading[]) }),
+      to: (f) => ({ ...f, shading: DARKER[f.shading] }),
+    }),
+  },
+  {
+    id: "add-one",
+    tier: 1,
+    make: () => ({
+      words: "one more shape is added",
+      start: (rng) => plain(rng, anyShape(rng), { count: rng.pick([1, 2] as const), size: 1 }),
+      to: (f) => ({ ...f, count: Math.min(3, f.count + 1) as 1 | 2 | 3 }),
+    }),
+  },
+  {
+    id: "swap-shape",
+    tier: 1,
+    make: (rng) => {
+      const [x, y] = rng.pick(SWAPS);
       return {
-        attr,
-        from: base,
-        // Saturating, not wrapping: the rule is applied a second time to build
-        // a distractor, and a third shading step past "solid" has nowhere to
-        // go. Returning the figure unchanged makes that distractor a duplicate
-        // of the answer, which the caller drops.
-        to: (f) => ({ ...f, shading: order[Math.min(order.indexOf(f.shading) + 1, order.length - 1)] }),
-        words: "the shape gets darker",
+        words: `${plural(x)} become ${plural(y)}, and ${plural(y)} become ${plural(x)}`,
+        start: (r) => plain(r, r.pick([x, y])),
+        to: (f) => (f.shape === x ? { ...f, shape: y } : f.shape === y ? { ...f, shape: x } : f),
       };
-    }
-    case "size": {
-      if (base.size !== 1) return null;
-      return { attr, from: base, to: (f) => ({ ...f, size: 2 }), words: "the shape gets bigger" };
-    }
-    case "count": {
-      if (base.count > 2) return null;
+    },
+  },
+  {
+    id: "ghost",
+    tier: 1,
+    make: () => ({
+      words: "the shape doubles, with an empty copy behind it",
+      start: (rng) => plain(rng, anyShape(rng), { size: 2, ghost: false }),
+      to: (f) => ({ ...f, ghost: true }),
+    }),
+  },
+  {
+    id: "same",
+    tier: 2,
+    make: () => ({
+      words: "nothing changes at all",
+      start: (rng) => plain(rng, anyShape(rng), { count: rng.pick([1, 2] as const) }),
+      to: (f) => f,
+    }),
+  },
+  {
+    id: "turn-cw",
+    tier: 2,
+    make: () => ({
+      words: "the shape turns a quarter turn clockwise",
+      start: turnable,
+      to: (f) => turnBy(f, 1),
+    }),
+  },
+  {
+    id: "add-inner",
+    tier: 2,
+    make: (rng) => {
+      const inner = rng.pick(SHAPES);
       return {
-        attr,
-        from: base,
-        to: (f) => ({ ...f, count: Math.min(3, f.count + 1) as 1 | 2 | 3 }),
-        words: "one more shape is added",
+        words: `two smaller ${plural(inner)} appear inside the shape`,
+        // A solid parent would swallow them, so the parent stays light.
+        start: (r) => plain(r, anyShape(r), { size: 2, shading: r.pick(["open", "shaded"] as Shading[]), inner: null }),
+        to: (f) => (f.inner ? f : { ...f, inner: { shape: inner, count: 2, at: "inside" } }),
       };
-    }
-    case "shape": {
-      const target = rng.pick(SHAPES.filter((s) => s !== base.shape));
-      return { attr, from: base, to: (f) => ({ ...f, shape: target }), words: `the shape becomes a ${target}` };
+    },
+  },
+  {
+    id: "turn-ccw",
+    tier: 3,
+    make: () => ({
+      words: "the shape turns a quarter turn anticlockwise",
+      start: turnable,
+      to: (f) => turnBy(f, 3),
+    }),
+  },
+  {
+    id: "turn-half",
+    tier: 3,
+    make: () => ({
+      words: "the shape turns upside down",
+      // No rows here: a row of three turned upside down is the same row.
+      start: (rng) => plain(rng, rng.pick(HALF_TURNABLE), { size: 2 }),
+      to: (f) => turnBy(f, 2),
+    }),
+  },
+  {
+    id: "flip",
+    tier: 3,
+    make: () => ({
+      words: "the shape is mirrored, left for right",
+      start: (rng) => plain(rng, rng.pick(FLIPPABLE), { size: 2 }),
+      to: (f) => ({ ...f, flip: !f.flip }),
+    }),
+  },
+  {
+    id: "split",
+    tier: 3,
+    make: () => ({
+      words: "the far half of the shape turns the opposite colour",
+      start: (rng) => plain(rng, rng.pick(SPLITTABLE), {
+        size: 2, shading: rng.pick(["open", "solid"] as Shading[]), split: false,
+      }),
+      to: (f) => (f.shape === "circle" || f.shading === "shaded" ? f : { ...f, split: true }),
+    }),
+  },
+  {
+    id: "extrude",
+    tier: 3,
+    make: () => ({
+      words: "the flat shape becomes a solid block",
+      start: (rng) => plain(rng, anyShape(rng), { size: 2, extruded: false }),
+      to: (f) => ({ ...f, extruded: true }),
+    }),
+  },
+  {
+    id: "inner-out",
+    tier: 3,
+    make: (rng) => {
+      const inner = rng.pick(SHAPES);
+      return {
+        words: "the inner shape moves out and sits above the larger one",
+        start: (r) => plain(r, anyShape(r), {
+          size: 2,
+          shading: r.pick(["open", "shaded"] as Shading[]),
+          inner: { shape: inner, count: 1, at: "inside" },
+        }),
+        to: (f) => (f.inner?.at === "inside" ? { ...f, inner: { ...f.inner, at: "above" } } : f),
+      };
+    },
+  },
+  {
+    id: "swap-pair",
+    tier: 3,
+    make: () => ({
+      words: "the large shape and the small one swap places",
+      start: (rng) => plain(rng, anyShape(rng), { pair: rng.pick(["big-small", "small-big"] as const) }),
+      to: (f) => (f.pair ? { ...f, pair: f.pair === "big-small" ? "small-big" : "big-small" } : f),
+    }),
+  },
+  {
+    id: "turn-darken",
+    tier: 4,
+    make: () => ({
+      words: "the shape turns a quarter turn clockwise and gets darker",
+      start: (rng) => plain(rng, rng.pick(TURNABLE), { size: 2, shading: rng.pick(["open", "shaded"] as Shading[]) }),
+      to: (f) => ({ ...turnBy(f, 1), shading: DARKER[f.shading] }),
+    }),
+  },
+  {
+    id: "flip-invert",
+    tier: 4,
+    make: () => ({
+      words: "the shape is mirrored and its colours swap over",
+      start: (rng) => plain(rng, rng.pick(FLIPPABLE), { size: 2, shading: rng.pick(["open", "solid"] as Shading[]) }),
+      to: (f) => ({ ...f, flip: !f.flip, shading: f.shading === "shaded" ? f.shading : opposite(f.shading) }),
+    }),
+  },
+  {
+    id: "grow-lighten",
+    tier: 4,
+    make: () => ({
+      words: "the shape gets bigger and lighter",
+      start: (rng) => plain(rng, anyShape(rng), { size: 1, shading: rng.pick(["shaded", "solid"] as Shading[]) }),
+      to: (f) => ({ ...f, size: 2, shading: LIGHTER[f.shading] }),
+    }),
+  },
+  {
+    id: "shrink-darken",
+    tier: 4,
+    make: () => ({
+      words: "the shape gets smaller and darker",
+      start: (rng) => plain(rng, anyShape(rng), { size: 2, shading: rng.pick(["open", "shaded"] as Shading[]) }),
+      to: (f) => ({ ...f, size: 1, shading: DARKER[f.shading] }),
+    }),
+  },
+];
+
+/**
+ * Whether some other rule explains the first pair just as well and then
+ * disagrees about the second.
+ *
+ * A right-pointing arrow mirrored and a right-pointing arrow turned upside
+ * down are the same picture, so a first pair of arrows can be read either way.
+ * That costs nothing while both readings agree -- and a triangle is its own
+ * mirror image but not its own upside down, so the moment the second pair is
+ * a triangle the two readings give different answers and the item has two
+ * defensible ones. A child who reads it the way we did not gets marked wrong
+ * for reasoning correctly, which is worse than a question we never asked.
+ *
+ * Every rule is tried, not only the ones this tier uses: what a child can see
+ * in a pair of pictures is not bounded by which level they are sitting.
+ */
+function ambiguous(rng: Rng, rule: Rule, a: Fig, b: Fig, c: Fig, answer: Fig): boolean {
+  for (const maker of RULE_MAKERS) {
+    // Rules that pick something at random -- which shapes trade places, which
+    // shape appears inside -- are worth more than one look.
+    for (let i = 0; i < 3; i++) {
+      const alt = maker.make(rng);
+      if (alt.words === rule.words) break;
+      if (sameLook(alt.to(a), b) && !sameLook(alt.to(c), answer)) return true;
     }
   }
+  return false;
 }
+
+/** The item a failed draw falls back on, so a question always comes out. */
+const FALLBACK: Rule = {
+  words: "the shape gets bigger",
+  start: (rng) => plain(rng, anyShape(rng), { size: 1 }),
+  to: (f) => ({ ...f, size: 2 }),
+};
 
 /**
  * Figure analogies: the rule shown in the first pair, applied to the second.
- * The second pair has to start from a figure the rule can actually act on --
- * a "gets bigger" rule needs a small figure to grow.
+ *
+ * The two pairs are drawn and compared by what they *look* like, not by what
+ * their attributes say. A rule has to visibly change the first pair, visibly
+ * change the second, and the second pair has to land somewhere the first did
+ * not -- otherwise "copy the box above" answers the item without the rule.
  */
 const figureAnalogies: GeneratorFn = (rng, level) => {
-  const attrs: Attribute[] =
-    level <= 1 ? ["shading", "count"] : level === 2 ? ["shading", "count", "size"] : ["shading", "count", "size", "shape"];
+  const makers = RULE_MAKERS.filter((m) => m.tier <= level);
 
-  // A rule needs room to act: "gets darker" cannot apply to a solid figure and
-  // "gets bigger" cannot apply to a large one, so the base figure and the rule
-  // are drawn together until they fit.
-  let a = randomFig(rng);
-  let step: Step | null = null;
-  for (let tries = 0; tries < 12 && !step; tries++) {
-    a = randomFig(rng);
-    step = stepFor(rng, rng.pick(attrs), a);
+  let rule = FALLBACK;
+  let a = rule.start(rng);
+  let b = rule.to(a);
+  let c = { ...a, shape: rng.pick(SHAPES.filter((s) => s !== a.shape)) };
+  let answer = rule.to(c);
+
+  // A rule is chosen once and then given several goes at producing an item.
+  // Picking again on every failed draw would quietly bias the whole skill
+  // towards the rules with the loosest requirements: the ones that have to
+  // start from a particular kind of figure fail a draw more often, and would
+  // come up a fraction as often as the ones that will act on anything.
+  outer: for (let pick = 0; pick < 14; pick++) {
+    const maker = rng.pick(makers);
+    const still = maker.id === "same";
+    for (let draw = 0; draw < 6; draw++) {
+      const r = maker.make(rng);
+      const x = r.start(rng);
+      const y = r.to(x);
+      if (!still && sameLook(x, y)) continue;
+      const z = r.start(rng);
+      // The second pair has to be its own figure, and it has to go somewhere.
+      if (sameLook(z, x) || (!still && sameLook(z, r.to(z))) || sameLook(r.to(z), y)) continue;
+      if (ambiguous(rng, r, x, y, z, r.to(z))) continue;
+      rule = r;
+      a = x;
+      b = y;
+      c = z;
+      answer = r.to(z);
+      break outer;
+    }
   }
-  if (!step) {
-    a = { ...a, count: 1 };
-    step = stepFor(rng, "count", a)!;
-  }
-  const rule = step;
-  const b = rule.to(a);
 
-  // The second pair starts from a different figure the same rule can act on.
-  // When the rule names a target shape, that pair must not already be that
-  // shape, or the answer would be its own prompt.
-  const forbidden = new Set<string>([a.shape, ...(rule.attr === "shape" ? [b.shape] : [])]);
-  let c: Fig = { ...a, shape: rng.pick(SHAPES.filter((s) => !forbidden.has(s))) };
-  if (level >= 3) {
-    // Vary a second attribute too, but never the one the rule changes -- the
-    // second pair has to be a case of the same rule, not a second rule.
-    const spare = (["shading", "size", "count"] as Attribute[]).filter((x) => x !== rule.attr);
-    const vary = rng.pick(spare);
-    if (vary === "shading") c = { ...c, shading: rng.pick(SHADINGS.filter((sh) => sh !== a.shading)) };
-    if (vary === "size") c = { ...c, size: c.size === 1 ? 2 : 1 };
-    if (vary === "count") c = { ...c, count: rng.pick([1, 2, 3] as const) };
-  }
-  // "Gets bigger" and "one more" both have a ceiling; re-floor the second pair
-  // so the rule still has somewhere to go.
-  if (rule.attr === "size") c = { ...c, size: 1 };
-  if (rule.attr === "count") c = { ...c, count: Math.min(c.count, 2) as 1 | 2 };
-
-  const answer = rule.to(c);
-
-  const candidates: Fig[] = [
-    c, // the rule was never applied
-    rule.to(answer), // the rule was applied twice
-    { ...answer, shape: rng.pick(SHAPES.filter((sh) => sh !== answer.shape)) },
-    { ...answer, count: rng.pick(([1, 2, 3] as const).filter((n) => n !== answer.count)) },
-    { ...answer, shading: rng.pick(SHADINGS.filter((sh) => sh !== answer.shading)) },
-    { ...answer, size: answer.size === 1 ? 2 : 1 },
-  ];
-  const seen = new Set([figKey(answer)]);
+  const seen = new Set([figLook(answer)]);
   const distractors: string[] = [];
-  for (const f of candidates) {
-    if (seen.has(figKey(f))) continue;
-    seen.add(figKey(f));
+  const offer = (f: Fig) => {
+    const k = figLook(f);
+    if (distractors.length >= 4 || seen.has(k)) return;
+    seen.add(k);
     distractors.push(figSvg(f));
-  }
+  };
+
+  offer(c); // the rule was never applied
+  offer(b); // the answer was copied from the row above
+  offer(rule.to(answer)); // the rule was applied twice
+  // What the other rules would have made of the same figure: a wrong answer a
+  // child can talk themselves into beats one they can see is off.
+  for (const m of rng.shuffle([...makers])) offer(m.make(rng).to(c));
+  // Last resort, so the item always has four options to offer.
+  offer({ ...answer, shading: DARKER[answer.shading] });
+  offer({ ...answer, shading: LIGHTER[answer.shading] });
+  offer({ ...answer, shape: rng.pick(SHAPES.filter((s) => s !== answer.shape)) });
+  offer({ ...answer, size: answer.size === 1 ? 2 : 1 });
+  offer(turnBy(answer, 1));
 
   return figureChoice(rng, {
     instructions: "Work out what changed in the first pair, then do the same to the next one.",
     stem: "Which picture belongs where the **?** is?",
-    figure: analogyRowSvg(a, b, c),
-    options: optionsFor(level),
+    figure: analogyGridSvg(a, b, c),
+    options: OPTIONS,
     answerFigure: figSvg(answer),
     distractorFigures: distractors,
     explanation: `In the first pair, ${rule.words}: ${describe(a)} becomes ${describe(b)}. Doing the same to ${describe(c)} gives ${describe(answer)}.`,
@@ -472,7 +785,7 @@ const figureClassification: GeneratorFn = (rng, level) => {
     instructions: "Find what the three pictures have in common.",
     stem: "Which picture belongs with these three?",
     figure: figRowSvg(group),
-    options: optionsFor(level),
+    options: OPTIONS,
     answerFigure: figSvg(answer),
     distractorFigures: distractors,
     explanation: `The three pictures are alike in one way: ${rule[key]}. Only ${describe(answer)} is like them in that way.`,
@@ -499,18 +812,31 @@ const paperFolding: GeneratorFn = (rng, level) => {
 
   const seen = new Set([holesKey(answer)]);
   const distractors: string[] = [];
-  for (const c of candidates) {
+  const offer = (c: Hole[]) => {
     const k = holesKey(c);
-    if (!c.length || seen.has(k)) continue;
+    if (!c.length || seen.has(k) || distractors.length >= 3) return;
     seen.add(k);
     distractors.push(unfoldedSvg(c, fold));
+  };
+  for (const c of candidates) offer(c);
+
+  // Those four coincide whenever the punched holes already sit symmetrically
+  // about the fold, which leaves the item an option short. The top-up punches
+  // one of the holes somewhere else on the folded half and unfolds that: still
+  // a sheet the punch could have made, so it cannot be ruled out on sight the
+  // way a lopsided pattern could.
+  const elsewhere = slots.filter((s) => !holes.some((h) => h.col === s.col && h.row === s.row));
+  for (const h of holes) {
+    for (const s of elsewhere) {
+      offer(unfoldHoles([...holes.filter((o) => o !== h), s], fold));
+    }
   }
 
   return figureChoice(rng, {
     instructions: "The paper is folded, then holes are punched through it.",
     stem: `This sheet was folded ${fold === "vertical" ? "left over right" : "top over bottom"} and ${holeCount === 1 ? "a hole was" : "two holes were"} punched through it.\n\nWhat does the paper look like when it is opened up?`,
     figure: foldedSvg(fold, holes),
-    options: optionsFor(level),
+    options: OPTIONS,
     answerFigure: unfoldedSvg(answer, fold),
     distractorFigures: distractors,
     explanation: `The punch goes through both layers, so every hole appears twice: once where it was punched and once on the other side of the fold. ${holeCount === 1 ? "One hole" : "Two holes"} punched through two layers makes ${answer.length} holes in all.`,

@@ -25,11 +25,10 @@ import type { SentenceItem, VocabTarget, WordItem } from "./banks";
  * A picture item. Each field is an emoji followed by its word, e.g. "🧦 sock".
  *
  * The real CogAT Level 7 shows pictures alone, because a first grader cannot
- * be assumed to read; a proctor reads the instructions. We keep the word
- * beside the picture on purpose: at home there is no proctor, the word lets a
- * parent read the item aloud, and a screen reader has something to announce.
- * The reasoning the item trains -- the relationship between the pictures -- is
- * unchanged.
+ * be assumed to read; a proctor reads the instructions. So does ours -- the
+ * word is never drawn beside the picture. It is still carried in the bank
+ * because everything around the item needs it: the hint a parent reads aloud,
+ * the answer key, and what a screen reader announces.
  */
 export interface PictureAnalogy {
   a: string;

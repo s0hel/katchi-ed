@@ -4,9 +4,12 @@ import iconData from "../../data/picture-icons.json";
  * Picture items, drawn rather than typed.
  *
  * The banks write a picture as an emoji and its word ("🧦 sock") because that
- * is what a reviewer can read in a diff. What a six-year-old sees is this:
- * real artwork at the size of the question, with the word beneath it in small
- * type for whoever is reading the item aloud.
+ * is what a reviewer can read in a diff. What a six-year-old sees is the
+ * artwork alone, at the size of the question. The word is never drawn: CogAT
+ * pictures carry no labels, and a printed word under one is a reading task
+ * smuggled into an item that is meant to have none. The word still does its
+ * work off-screen -- it is the accessibility label, the hint, and the wording
+ * of the answer key.
  *
  * An emoji left as a text glyph would render at the font size -- far too small
  * to name at a glance -- and would render as whatever glyph the reader's
@@ -73,41 +76,21 @@ export function hasIcon(picture: string): boolean {
 
 /* ------------------------------------------------------------------ cells */
 
-const CELL_W = 52;
+const CELL_W = 56;
 const CELL_H = 56;
-const ICON = 32;
+// With no word underneath, the artwork gets the room the caption used to take.
+const ICON = 42;
 
-/**
- * The word under a picture, wrapped to two lines and shrunk for long words so
- * "sunglasses" and "cold weather" stay inside their cell.
- */
-function caption(word: string, cx: number, top: number): string {
-  const words = word.split(" ");
-  const lines = words.length > 1 && word.length > 9 ? [words[0], words.slice(1).join(" ")] : [word];
-  const longest = Math.max(...lines.map((l) => l.length));
-  const size = Math.min(8.5, (CELL_W - 4) / (longest * 0.56));
-  return lines
-    .map(
-      (line, i) =>
-        `<text x="${cx}" y="${(top + size + i * (size + 1.5)).toFixed(1)}" text-anchor="middle"
-          font-size="${size.toFixed(1)}" font-weight="600" fill="var(--kx-text)">${escapeText(line)}</text>`,
-    )
-    .join("");
-}
-
-function escapeText(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
-
-/** One picture: artwork above, word below. Missing artwork falls back to the glyph. */
+/** One picture, centred in its cell. Missing artwork falls back to the glyph. */
 function cell(picture: string, x: number, y: number): string {
-  const { emoji, word } = parsePicture(picture);
+  const { emoji } = parsePicture(picture);
   const art = ICONS[emoji];
   const ix = x + (CELL_W - ICON) / 2;
-  const drawn = art
-    ? `<svg x="${ix}" y="${y + 3}" width="${ICON}" height="${ICON}" viewBox="0 0 ${ART} ${ART}">${art}</svg>`
-    : `<text x="${x + CELL_W / 2}" y="${y + ICON}" text-anchor="middle" font-size="${ICON * 0.8}">${emoji}</text>`;
-  return drawn + caption(word, x + CELL_W / 2, y + ICON + 7);
+  const iy = y + (CELL_H - ICON) / 2;
+  return art
+    ? `<svg x="${ix}" y="${iy}" width="${ICON}" height="${ICON}" viewBox="0 0 ${ART} ${ART}">${art}</svg>`
+    : `<text x="${x + CELL_W / 2}" y="${iy + ICON * 0.8}" text-anchor="middle"
+        font-size="${ICON * 0.8}">${emoji}</text>`;
 }
 
 const box = (x: number, y: number) =>
@@ -129,28 +112,33 @@ const words = (p: string) => parsePicture(p).word;
 /**
  * A picture analogy: `a` goes with `b`, so `c` goes with what?
  *
- * Laid out exactly like the nonverbal figure analogy, arrows and all. The two
- * batteries ask the same question of different material, and a child who has
- * learned to read one layout should not have to learn a second.
+ * Two rows inside one frame, the way CogAT prints it -- the worked pair above,
+ * the pair to finish below -- rather than all four boxes strung across a
+ * single line. Stacked, the two pairs sit one under the other and the rule
+ * being carried down is something a child can see; strung out, the four boxes
+ * read as one sequence and the pairing has to be worked out before the item
+ * can even be started. It is also the layout `countAnalogySvg` already uses
+ * for number analogies, so the two batteries ask their question the same way.
  */
 export function pictureAnalogySvg(a: string, b: string, c: string): string {
-  const gap = 14;
-  const span = 16;
-  const xa = 0;
-  const xb = CELL_W + span;
-  const xc = xb + CELL_W + gap;
-  const xq = xc + CELL_W + span;
-  const W = xq + CELL_W;
-  const mid = CELL_H / 2;
+  const pad = 9;
+  const span = 20;
+  const rowGap = 10;
+  const W = pad * 2 + CELL_W * 2 + span;
+  const H = pad * 2 + CELL_H * 2 + rowGap;
+  const right = pad + CELL_W + span;
 
-  return `<svg viewBox="0 0 ${W} ${CELL_H}" role="img"
+  const row = (y: number, left: string, filled?: string) =>
+    `${box(pad, y)}${cell(left, pad, y)}
+     ${arrow(pad + CELL_W, y + CELL_H / 2, span)}
+     ${box(right, y)}${filled ? cell(filled, right, y) : question(right, y)}`;
+
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" class="kx-fig-block"
     aria-label="${words(a)} goes with ${words(b)}. What goes with ${words(c)} the same way?">
-    ${box(xa, 0)}${cell(a, xa, 0)}
-    ${arrow(CELL_W, mid, span)}
-    ${box(xb, 0)}${cell(b, xb, 0)}
-    ${box(xc, 0)}${cell(c, xc, 0)}
-    ${arrow(xc + CELL_W, mid, span)}
-    ${box(xq, 0)}${question(xq, 0)}
+    <rect x="0.75" y="0.75" width="${W - 1.5}" height="${H - 1.5}" rx="8"
+      fill="none" stroke="var(--kx-fig-stroke)" stroke-width="1.5" opacity="0.45"/>
+    ${row(pad, a, b)}
+    ${row(pad + CELL_H + rowGap, c)}
   </svg>`;
 }
 
@@ -170,15 +158,16 @@ export function pictureRowSvg(pictures: string[]): string {
 }
 
 /**
- * One picture as an answer option. Padded well wider than the cell: an option
- * is scaled to the width of its button, and drawn tight it would tower over
- * the pictures in the question it answers.
+ * One picture as an answer option, boxed like the cells in the question.
+ *
+ * Padded wider than the cell: an option is scaled to the width of its button,
+ * and drawn tight it would tower over the pictures in the question it answers.
  */
 export function pictureCardSvg(picture: string): string {
-  const W = 82;
-  const x = (W - CELL_W) / 2;
+  const pad = 8;
+  const W = CELL_W + pad * 2;
   return `<svg viewBox="0 0 ${W} ${CELL_H}" role="img" aria-label="${words(picture)}">
-    ${cell(picture, x, 0)}
+    ${box(pad, 0)}${cell(picture, pad, 0)}
   </svg>`;
 }
 

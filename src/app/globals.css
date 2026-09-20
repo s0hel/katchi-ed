@@ -158,6 +158,14 @@ body {
  */
 .kx-sheet .kx-figure svg { max-height: 7.5rem; }
 
+/*
+ * A figure that is as tall as it is wide gets more room than that. The cap
+ * above assumes width is the scarce dimension; on a picture analogy, which is
+ * two rows of two boxes, it is height, and 7.5rem prints the pictures being
+ * reasoned about smaller than the options answering them.
+ */
+.kx-sheet .kx-figure svg.kx-fig-block { max-height: 11rem; }
+
 /* --------------------------------------------------------------- printing */
 
 /*

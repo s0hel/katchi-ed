@@ -8,6 +8,7 @@ import {
 import { buildAssessment, scoreAssessment } from "../assessment";
 import { SKILLS } from "../curriculum";
 import { generateQuestion } from "../generators";
+import type { Skill } from "../types";
 
 describe("SmartScore", () => {
   it("starts at zero and stays inside 0..100", () => {
@@ -236,6 +237,37 @@ describe("difficulty ramps", () => {
    * level never produces, changes format or instructions, or grows the
    * numbers involved.
    */
+  /**
+   * Whether `level` reaches the question at all.
+   *
+   * The checks above all read the stem, and two skills here keep the same stem
+   * at every tier while the difficulty moves somewhere the stem never mentions.
+   * A figure analogy's tier decides which transformation rules are in play --
+   * seven at the bottom, twenty-one at the top -- and every one of them asks
+   * "Which picture belongs where the ? is". A banked picture item's tier
+   * decides how much of the bank it draws on, and the bank is pictures.
+   *
+   * So for those two this is the backstop, and it is deliberately a modest
+   * claim: it catches the bug this whole block exists for -- a generator that
+   * takes `level` and ignores it, which shows up as one seed giving the same
+   * question at every tier -- without pretending to judge which tier is
+   * harder. Nothing observable from out here can judge that for an item whose
+   * difficulty is a rule the question never states.
+   */
+  const WIDE_SEEDS = Array.from({ length: 300 }, (_, i) => i * 104729 + 7);
+
+  function usesLevel(skill: Skill): boolean {
+    const top = skill.levels ?? 4;
+    if (top < 2) return false;
+    let differ = 0;
+    for (const seed of WIDE_SEEDS) {
+      const lo = generateQuestion(skill, 1, seed);
+      const hi = generateQuestion(skill, top, seed);
+      if (lo.stem !== hi.stem || lo.figure !== hi.figure || lo.explanation !== hi.explanation) differ++;
+    }
+    return differ > WIDE_SEEDS.length / 2;
+  }
+
   it("makes every skill harder as the level rises", () => {
     const flat: string[] = [];
 
@@ -267,7 +299,9 @@ describe("difficulty ramps", () => {
       const newShapes = [...top].filter((s) => !bottom.has(s)).length;
       const grew = magByLevel[levels - 1] > magByLevel[0] * 1.15;
 
-      if (newShapes === 0 && variants.size <= 1 && !grew) flat.push(`${skill.id} (${skill.generator})`);
+      if (newShapes === 0 && variants.size <= 1 && !grew && !usesLevel(skill)) {
+        flat.push(`${skill.id} (${skill.generator})`);
+      }
     }
 
     expect(flat).toEqual([]);
