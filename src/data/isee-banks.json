@@ -1,158 +1,1218 @@
 {
   "synonyms": [
-    ["abundant", "plentiful", ["scarce", "fragile", "hidden"]],
-    ["conceal", "hide", ["reveal", "repair", "enlarge"]],
-    ["reluctant", "unwilling", ["eager", "careless", "honest"]],
-    ["frail", "weak", ["sturdy", "clever", "loud"]],
-    ["vacant", "empty", ["crowded", "noisy", "costly"]],
-    ["drowsy", "sleepy", ["alert", "angry", "hungry"]],
-    ["hasty", "hurried", ["careful", "gentle", "silent"]],
-    ["mimic", "imitate", ["insult", "ignore", "invent"]],
-    ["sturdy", "strong", ["flimsy", "polite", "curious"]],
-    ["peculiar", "strange", ["ordinary", "polite", "heavy"]],
-    ["vital", "essential", ["optional", "dull", "temporary"]],
-    ["dismal", "gloomy", ["cheerful", "spacious", "sudden"]],
-    ["persuade", "convince", ["forbid", "confuse", "postpone"]],
-    ["prohibit", "forbid", ["encourage", "describe", "borrow"]],
-    ["immense", "huge", ["tiny", "hollow", "brief"]],
-    ["abandon", "give up", ["defend", "gather", "repair"]],
-    ["remote", "far away", ["nearby", "crowded", "recent"]],
-    ["irate", "angry", ["calm", "curious", "generous"]],
-    ["ample", "sufficient", ["meager", "rigid", "hollow"]],
-    ["novice", "beginner", ["expert", "rival", "witness"]],
-    ["diminish", "shrink", ["expand", "repeat", "approve"]],
-    ["obstacle", "barrier", ["shortcut", "reward", "invitation"]],
-    ["tranquil", "peaceful", ["chaotic", "bitter", "steep"]],
-    ["hinder", "obstruct", ["assist", "announce", "borrow"]],
-    ["candid", "honest", ["secretive", "clumsy", "weary"]],
-    ["monotonous", "unvarying", ["lively", "urgent", "fragile"]],
-    ["lenient", "not strict", ["harsh", "hasty", "timid"]],
-    ["vigilant", "watchful", ["careless", "drowsy", "boastful"]],
-    ["futile", "useless", ["effective", "joyful", "distant"]],
-    ["elaborate", "detailed", ["simple", "sudden", "damp"]],
-    ["plausible", "believable", ["absurd", "fragile", "hidden"]],
-    ["deter", "discourage", ["invite", "enlarge", "measure"]],
-    ["benevolent", "kind", ["cruel", "wealthy", "talkative"]],
-    ["scrutinize", "examine closely", ["glance at", "ignore", "destroy"]],
-    ["obsolete", "out of date", ["modern", "costly", "fragile"]],
-    ["prudent", "sensible", ["reckless", "wealthy", "gloomy"]],
-    ["meticulous", "extremely careful", ["sloppy", "rapid", "generous"]],
-    ["gregarious", "sociable", ["shy", "stubborn", "wealthy"]],
-    ["resilient", "quick to recover", ["fragile", "hostile", "idle"]],
-    ["sever", "cut off", ["join", "polish", "predict"]]
+    [
+      "abundant",
+      "plentiful",
+      [
+        "scarce",
+        "fragile",
+        "hidden"
+      ]
+    ],
+    [
+      "conceal",
+      "hide",
+      [
+        "reveal",
+        "repair",
+        "enlarge"
+      ]
+    ],
+    [
+      "reluctant",
+      "unwilling",
+      [
+        "eager",
+        "careless",
+        "honest"
+      ]
+    ],
+    [
+      "frail",
+      "weak",
+      [
+        "sturdy",
+        "clever",
+        "loud"
+      ]
+    ],
+    [
+      "vacant",
+      "empty",
+      [
+        "crowded",
+        "noisy",
+        "costly"
+      ]
+    ],
+    [
+      "drowsy",
+      "sleepy",
+      [
+        "alert",
+        "angry",
+        "hungry"
+      ]
+    ],
+    [
+      "hasty",
+      "hurried",
+      [
+        "careful",
+        "gentle",
+        "silent"
+      ]
+    ],
+    [
+      "mimic",
+      "imitate",
+      [
+        "insult",
+        "ignore",
+        "invent"
+      ]
+    ],
+    [
+      "sturdy",
+      "strong",
+      [
+        "flimsy",
+        "polite",
+        "curious"
+      ]
+    ],
+    [
+      "peculiar",
+      "strange",
+      [
+        "ordinary",
+        "polite",
+        "heavy"
+      ]
+    ],
+    [
+      "vital",
+      "essential",
+      [
+        "optional",
+        "dull",
+        "temporary"
+      ]
+    ],
+    [
+      "dismal",
+      "gloomy",
+      [
+        "cheerful",
+        "spacious",
+        "sudden"
+      ]
+    ],
+    [
+      "persuade",
+      "convince",
+      [
+        "forbid",
+        "confuse",
+        "postpone"
+      ]
+    ],
+    [
+      "prohibit",
+      "forbid",
+      [
+        "encourage",
+        "describe",
+        "borrow"
+      ]
+    ],
+    [
+      "immense",
+      "huge",
+      [
+        "tiny",
+        "hollow",
+        "brief"
+      ]
+    ],
+    [
+      "abandon",
+      "give up",
+      [
+        "defend",
+        "gather",
+        "repair"
+      ]
+    ],
+    [
+      "remote",
+      "far away",
+      [
+        "nearby",
+        "crowded",
+        "recent"
+      ]
+    ],
+    [
+      "irate",
+      "angry",
+      [
+        "calm",
+        "curious",
+        "generous"
+      ]
+    ],
+    [
+      "ample",
+      "sufficient",
+      [
+        "meager",
+        "rigid",
+        "hollow"
+      ]
+    ],
+    [
+      "novice",
+      "beginner",
+      [
+        "expert",
+        "rival",
+        "witness"
+      ]
+    ],
+    [
+      "diminish",
+      "shrink",
+      [
+        "expand",
+        "repeat",
+        "approve"
+      ]
+    ],
+    [
+      "obstacle",
+      "barrier",
+      [
+        "shortcut",
+        "reward",
+        "invitation"
+      ]
+    ],
+    [
+      "tranquil",
+      "peaceful",
+      [
+        "chaotic",
+        "bitter",
+        "steep"
+      ]
+    ],
+    [
+      "hinder",
+      "obstruct",
+      [
+        "assist",
+        "announce",
+        "borrow"
+      ]
+    ],
+    [
+      "candid",
+      "honest",
+      [
+        "secretive",
+        "clumsy",
+        "weary"
+      ]
+    ],
+    [
+      "monotonous",
+      "unvarying",
+      [
+        "lively",
+        "urgent",
+        "fragile"
+      ]
+    ],
+    [
+      "lenient",
+      "not strict",
+      [
+        "harsh",
+        "hasty",
+        "timid"
+      ]
+    ],
+    [
+      "vigilant",
+      "watchful",
+      [
+        "careless",
+        "drowsy",
+        "boastful"
+      ]
+    ],
+    [
+      "futile",
+      "useless",
+      [
+        "effective",
+        "joyful",
+        "distant"
+      ]
+    ],
+    [
+      "elaborate",
+      "detailed",
+      [
+        "simple",
+        "sudden",
+        "damp"
+      ]
+    ],
+    [
+      "plausible",
+      "believable",
+      [
+        "absurd",
+        "fragile",
+        "hidden"
+      ]
+    ],
+    [
+      "deter",
+      "discourage",
+      [
+        "invite",
+        "enlarge",
+        "measure"
+      ]
+    ],
+    [
+      "benevolent",
+      "kind",
+      [
+        "cruel",
+        "wealthy",
+        "talkative"
+      ]
+    ],
+    [
+      "scrutinize",
+      "examine closely",
+      [
+        "glance at",
+        "ignore",
+        "destroy"
+      ]
+    ],
+    [
+      "obsolete",
+      "out of date",
+      [
+        "modern",
+        "costly",
+        "fragile"
+      ]
+    ],
+    [
+      "prudent",
+      "sensible",
+      [
+        "reckless",
+        "wealthy",
+        "gloomy"
+      ]
+    ],
+    [
+      "meticulous",
+      "extremely careful",
+      [
+        "sloppy",
+        "rapid",
+        "generous"
+      ]
+    ],
+    [
+      "gregarious",
+      "sociable",
+      [
+        "shy",
+        "stubborn",
+        "wealthy"
+      ]
+    ],
+    [
+      "resilient",
+      "quick to recover",
+      [
+        "fragile",
+        "hostile",
+        "idle"
+      ]
+    ],
+    [
+      "sever",
+      "cut off",
+      [
+        "join",
+        "polish",
+        "predict"
+      ]
+    ],
+    [
+      "sparse",
+      "thinly spread",
+      [
+        "dense",
+        "sturdy",
+        "joyful"
+      ]
+    ],
+    [
+      "weary",
+      "tired",
+      [
+        "alert",
+        "greedy",
+        "sudden"
+      ]
+    ],
+    [
+      "brisk",
+      "quick and lively",
+      [
+        "sluggish",
+        "gloomy",
+        "fragile"
+      ]
+    ],
+    [
+      "quaint",
+      "old-fashioned and charming",
+      [
+        "modern",
+        "hostile",
+        "enormous"
+      ]
+    ],
+    [
+      "somber",
+      "gravely serious",
+      [
+        "playful",
+        "wealthy",
+        "hollow"
+      ]
+    ],
+    [
+      "ponder",
+      "think over carefully",
+      [
+        "ignore",
+        "shout",
+        "purchase"
+      ]
+    ],
+    [
+      "mend",
+      "repair",
+      [
+        "damage",
+        "conceal",
+        "measure"
+      ]
+    ],
+    [
+      "fertile",
+      "able to grow plants well",
+      [
+        "barren",
+        "frozen",
+        "noisy"
+      ]
+    ],
+    [
+      "jubilant",
+      "overjoyed",
+      [
+        "miserable",
+        "cautious",
+        "ordinary"
+      ]
+    ],
+    [
+      "stern",
+      "strict",
+      [
+        "gentle",
+        "clumsy",
+        "curious"
+      ]
+    ],
+    [
+      "vast",
+      "enormous",
+      [
+        "cramped",
+        "recent",
+        "polite"
+      ]
+    ],
+    [
+      "fragile",
+      "easily broken",
+      [
+        "sturdy",
+        "hasty",
+        "generous"
+      ]
+    ],
+    [
+      "grim",
+      "harsh and forbidding",
+      [
+        "cheerful",
+        "ample",
+        "tidy"
+      ]
+    ],
+    [
+      "assemble",
+      "put together",
+      [
+        "scatter",
+        "describe",
+        "criticize"
+      ]
+    ],
+    [
+      "cautious",
+      "careful about danger",
+      [
+        "reckless",
+        "joyful",
+        "wealthy"
+      ]
+    ],
+    [
+      "dwell",
+      "live in a place",
+      [
+        "depart",
+        "forget",
+        "purchase"
+      ]
+    ],
+    [
+      "evident",
+      "plain to see",
+      [
+        "hidden",
+        "costly",
+        "rapid"
+      ]
+    ],
+    [
+      "nurture",
+      "care for as it grows",
+      [
+        "neglect",
+        "measure",
+        "announce"
+      ]
+    ],
+    [
+      "rigid",
+      "stiff and unbending",
+      [
+        "flexible",
+        "damp",
+        "cheerful"
+      ]
+    ],
+    [
+      "seldom",
+      "not often",
+      [
+        "frequently",
+        "loudly",
+        "carefully"
+      ]
+    ],
+    [
+      "ignite",
+      "set alight",
+      [
+        "extinguish",
+        "purchase",
+        "assemble"
+      ]
+    ],
+    [
+      "bewilder",
+      "confuse completely",
+      [
+        "clarify",
+        "delight",
+        "postpone"
+      ]
+    ],
+    [
+      "courteous",
+      "polite",
+      [
+        "rude",
+        "wealthy",
+        "anxious"
+      ]
+    ],
+    [
+      "dormant",
+      "inactive for now",
+      [
+        "erupting",
+        "fragrant",
+        "crowded"
+      ]
+    ],
+    [
+      "exaggerate",
+      "overstate",
+      [
+        "understate",
+        "measure",
+        "repair"
+      ]
+    ],
+    [
+      "frugal",
+      "careful with money",
+      [
+        "wasteful",
+        "talkative",
+        "fearless"
+      ]
+    ],
+    [
+      "hoist",
+      "raise up",
+      [
+        "lower",
+        "polish",
+        "forget"
+      ]
+    ],
+    [
+      "inhabit",
+      "occupy as a home",
+      [
+        "abandon",
+        "construct",
+        "inspect"
+      ]
+    ],
+    [
+      "jagged",
+      "rough and uneven",
+      [
+        "smooth",
+        "hollow",
+        "silent"
+      ]
+    ],
+    [
+      "keen",
+      "sharply eager",
+      [
+        "indifferent",
+        "clumsy",
+        "damp"
+      ]
+    ],
+    [
+      "linger",
+      "stay longer than needed",
+      [
+        "hurry",
+        "shout",
+        "collapse"
+      ]
+    ],
+    [
+      "mundane",
+      "everyday and dull",
+      [
+        "extraordinary",
+        "hostile",
+        "fragile"
+      ]
+    ],
+    [
+      "nimble",
+      "quick and light on the feet",
+      [
+        "clumsy",
+        "gloomy",
+        "wealthy"
+      ]
+    ],
+    [
+      "obscure",
+      "hard to make out",
+      [
+        "distinct",
+        "costly",
+        "recent"
+      ]
+    ],
+    [
+      "placid",
+      "calm and still",
+      [
+        "turbulent",
+        "bitter",
+        "steep"
+      ]
+    ],
+    [
+      "quench",
+      "satisfy a thirst",
+      [
+        "parch",
+        "ignite",
+        "postpone"
+      ]
+    ],
+    [
+      "ravenous",
+      "extremely hungry",
+      [
+        "full",
+        "furious",
+        "sleepy"
+      ]
+    ],
+    [
+      "sluggish",
+      "moving slowly",
+      [
+        "energetic",
+        "honest",
+        "narrow"
+      ]
+    ],
+    [
+      "timid",
+      "easily frightened",
+      [
+        "bold",
+        "generous",
+        "untidy"
+      ]
+    ],
+    [
+      "unruly",
+      "hard to control",
+      [
+        "obedient",
+        "elderly",
+        "fragile"
+      ]
+    ],
+    [
+      "valiant",
+      "brave",
+      [
+        "cowardly",
+        "wealthy",
+        "talkative"
+      ]
+    ],
+    [
+      "wary",
+      "cautious of trouble",
+      [
+        "trusting",
+        "hasty",
+        "joyful"
+      ]
+    ],
+    [
+      "yield",
+      "give way",
+      [
+        "resist",
+        "measure",
+        "announce"
+      ]
+    ],
+    [
+      "zeal",
+      "eager enthusiasm",
+      [
+        "boredom",
+        "sorrow",
+        "caution"
+      ]
+    ],
+    [
+      "accumulate",
+      "build up over time",
+      [
+        "disperse",
+        "forget",
+        "repair"
+      ]
+    ],
+    [
+      "brittle",
+      "likely to snap",
+      [
+        "pliable",
+        "damp",
+        "vivid"
+      ]
+    ],
+    [
+      "compel",
+      "force to act",
+      [
+        "permit",
+        "describe",
+        "delay"
+      ]
+    ],
+    [
+      "dispute",
+      "argue against",
+      [
+        "accept",
+        "measure",
+        "gather"
+      ]
+    ],
+    [
+      "eloquent",
+      "well-spoken",
+      [
+        "tongue-tied",
+        "wealthy",
+        "anxious"
+      ]
+    ],
+    [
+      "feasible",
+      "able to be done",
+      [
+        "impossible",
+        "costly",
+        "ancient"
+      ]
+    ]
   ],
-
   "sentenceCompletion": [
     {
       "s": "Volunteers spent the weekend working to ___ the damage the flood had left behind.",
       "answer": "repair",
-      "wrong": ["worsen", "ignore", "predict"],
+      "wrong": [
+        "worsen",
+        "ignore",
+        "predict"
+      ],
       "why": "Volunteers who give up a weekend after a flood are there to put things right."
     },
     {
       "s": "Although the hikers were exhausted, they ___ up the final slope without complaining.",
       "answer": "trudged",
-      "wrong": ["sprinted", "tumbled", "hesitated"],
+      "wrong": [
+        "sprinted",
+        "tumbled",
+        "hesitated"
+      ],
       "why": "\"Although ... exhausted\" signals slow, heavy effort; sprinting would contradict it."
     },
     {
       "s": "The museum's collection is ___, spanning four continents and six centuries.",
       "answer": "extensive",
-      "wrong": ["meager", "fragile", "recent"],
+      "wrong": [
+        "meager",
+        "fragile",
+        "recent"
+      ],
       "why": "The detail after the comma defines the blank: four continents and six centuries is a large range."
     },
     {
       "s": "The critic's review was unusually ___; she found nothing whatever to praise.",
       "answer": "harsh",
-      "wrong": ["generous", "brief", "uncertain"],
+      "wrong": [
+        "generous",
+        "brief",
+        "uncertain"
+      ],
       "why": "The semicolon introduces an explanation, and finding nothing to praise explains harshness."
     },
     {
       "s": "Because the instructions were ___, several students assembled the model incorrectly.",
       "answer": "ambiguous",
-      "wrong": ["precise", "lengthy", "colorful"],
+      "wrong": [
+        "precise",
+        "lengthy",
+        "colorful"
+      ],
       "why": "\"Because\" makes the blank the cause of the mistakes; only unclear instructions cause them."
     },
     {
       "s": "The senator spoke in ___ terms, avoiding any detail that might commit her to a position.",
       "answer": "vague",
-      "wrong": ["specific", "hostile", "cheerful"],
+      "wrong": [
+        "specific",
+        "hostile",
+        "cheerful"
+      ],
       "why": "Avoiding detail is the definition of speaking vaguely."
     },
     {
       "s": "The novel's plot is entirely ___: most readers guess the ending by the third chapter.",
       "answer": "predictable",
-      "wrong": ["intricate", "obscure", "controversial"],
+      "wrong": [
+        "intricate",
+        "obscure",
+        "controversial"
+      ],
       "why": "A colon introduces evidence, and guessing the ending early is evidence of predictability."
     },
     {
       "s": "Scientists remain ___ about the claim, insisting on far more evidence before they accept it.",
       "answer": "skeptical",
-      "wrong": ["enthusiastic", "indifferent", "frantic"],
+      "wrong": [
+        "enthusiastic",
+        "indifferent",
+        "frantic"
+      ],
       "why": "Demanding more evidence is doubt, not indifference — an indifferent scientist would not insist."
     },
     {
       "s": "Rather than accept the first offer, she ___ for several days until the terms improved.",
       "answer": "negotiated",
-      "wrong": ["surrendered", "apologized", "departed"],
+      "wrong": [
+        "surrendered",
+        "apologized",
+        "departed"
+      ],
       "why": "\"Rather than accept\" sets up the opposite of accepting: bargaining for something better."
     },
     {
       "s": "The treaty was intended to ___ tensions between the two countries, but it inflamed them instead.",
       "answer": "ease",
-      "wrong": ["heighten", "record", "declare"],
+      "wrong": [
+        "heighten",
+        "record",
+        "declare"
+      ],
       "why": "\"But\" reverses direction, so the blank must be the opposite of inflaming."
     },
     {
       "s": "His account of the accident was ___ with the security footage, so investigators accepted it.",
       "answer": "consistent",
-      "wrong": ["inconsistent", "impatient", "unfamiliar"],
+      "wrong": [
+        "inconsistent",
+        "impatient",
+        "unfamiliar"
+      ],
       "why": "Investigators accepted the account, which they would only do if it matched the footage."
     },
     {
       "s": "A ___ reader, he finished three long novels during a single week of vacation.",
       "answer": "voracious",
-      "wrong": ["reluctant", "careless", "inexperienced"],
+      "wrong": [
+        "reluctant",
+        "careless",
+        "inexperienced"
+      ],
       "why": "Three novels in a week describes an enormous appetite for reading."
     },
     {
       "s": "The once-bustling mill now stands ___, its windows broken and its gates chained shut.",
       "answer": "derelict",
-      "wrong": ["renovated", "crowded", "fragrant"],
+      "wrong": [
+        "renovated",
+        "crowded",
+        "fragrant"
+      ],
       "why": "Broken windows and chained gates describe a building left to fall apart."
     },
     {
       "s": "Because the evidence was ___, the jury deliberated for six days without reaching a verdict.",
       "answer": "inconclusive",
-      "wrong": ["overwhelming", "inadmissible", "recent"],
+      "wrong": [
+        "overwhelming",
+        "inadmissible",
+        "recent"
+      ],
       "why": "Evidence that settles nothing is what leaves a jury unable to decide."
     },
     {
       "s": "Her ___ nature made her the obvious choice to welcome new students on their first day.",
       "answer": "gregarious",
-      "wrong": ["solitary", "impatient", "secretive"],
+      "wrong": [
+        "solitary",
+        "impatient",
+        "secretive"
+      ],
       "why": "Welcoming strangers suits someone who enjoys company."
     },
     {
       "s": "Though the tremor was small, it was ___ enough to rattle dishes throughout the town.",
       "answer": "perceptible",
-      "wrong": ["imaginary", "inaudible", "gradual"],
+      "wrong": [
+        "imaginary",
+        "inaudible",
+        "gradual"
+      ],
       "why": "Rattling dishes across a town means the tremor could be noticed, however small it was."
     },
     {
       "s": "The lawyer's closing argument was so ___ that even the opposing side conceded the point.",
       "answer": "compelling",
-      "wrong": ["trivial", "rambling", "hesitant"],
+      "wrong": [
+        "trivial",
+        "rambling",
+        "hesitant"
+      ],
       "why": "\"So ... that\" links cause to effect: only a powerful argument makes an opponent concede."
     },
     {
       "s": "Early mapmakers were ___ about the interior of the continent, filling it with guesswork and blank space.",
       "answer": "uninformed",
-      "wrong": ["meticulous", "enthusiastic", "secretive"],
+      "wrong": [
+        "meticulous",
+        "enthusiastic",
+        "secretive"
+      ],
       "why": "Guesswork and blank space are what a mapmaker resorts to without knowledge."
+    },
+    {
+      "s": "The bridge had been ___ for decades, and engineers finally closed it to traffic.",
+      "answer": "deteriorating",
+      "wrong": [
+        "improving",
+        "expanding",
+        "gleaming"
+      ],
+      "why": "Closing a bridge is what follows decline, not improvement."
+    },
+    {
+      "s": "Far from being ___, her criticism was offered kindly and in private.",
+      "answer": "harsh",
+      "wrong": [
+        "gentle",
+        "detailed",
+        "belated"
+      ],
+      "why": "\"Far from being\" reverses the blank, so it must oppose \"kindly\"."
+    },
+    {
+      "s": "The results were ___ across all five trials, which gave the team confidence.",
+      "answer": "consistent",
+      "wrong": [
+        "erratic",
+        "surprising",
+        "preliminary"
+      ],
+      "why": "Confidence comes from results that keep agreeing with each other."
+    },
+    {
+      "s": "Rain had made the path so ___ that the guides turned the group back.",
+      "answer": "treacherous",
+      "wrong": [
+        "scenic",
+        "crowded",
+        "narrow"
+      ],
+      "why": "Only danger explains turning a group back; a scenic path would not."
+    },
+    {
+      "s": "The author's early work was ___, but her later novels show real discipline.",
+      "answer": "unfocused",
+      "wrong": [
+        "polished",
+        "celebrated",
+        "lengthy"
+      ],
+      "why": "\"But\" sets the early work against the discipline that came later."
+    },
+    {
+      "s": "Because the species is so ___, biologists have photographed it only twice.",
+      "answer": "elusive",
+      "wrong": [
+        "abundant",
+        "aggressive",
+        "colorful"
+      ],
+      "why": "Two photographs in total is what \"hard to find\" looks like as evidence."
+    },
+    {
+      "s": "The committee's decision was ___: every member voted the same way.",
+      "answer": "unanimous",
+      "wrong": [
+        "divisive",
+        "tentative",
+        "overdue"
+      ],
+      "why": "A colon introduces the proof, and everyone voting alike proves unanimity."
+    },
+    {
+      "s": "He offered a ___ apology that satisfied nobody in the room.",
+      "answer": "grudging",
+      "wrong": [
+        "heartfelt",
+        "lengthy",
+        "public"
+      ],
+      "why": "An apology that satisfies nobody was given unwillingly."
+    },
+    {
+      "s": "The new evidence did not overturn the theory so much as ___ it.",
+      "answer": "refine",
+      "wrong": [
+        "destroy",
+        "conceal",
+        "publish"
+      ],
+      "why": "\"Not so much as\" asks for a milder action than overturning."
+    },
+    {
+      "s": "Snow had ___ the road completely, and no vehicle could get through.",
+      "answer": "obstructed",
+      "wrong": [
+        "cleared",
+        "narrowed",
+        "dampened"
+      ],
+      "why": "Nothing getting through means the road was blocked, not merely narrowed."
+    },
+    {
+      "s": "Her explanation was admirably ___, covering the whole problem in three sentences.",
+      "answer": "concise",
+      "wrong": [
+        "rambling",
+        "technical",
+        "hesitant"
+      ],
+      "why": "Three sentences for a whole problem is brevity, and \"admirably\" makes it a virtue."
+    },
+    {
+      "s": "The village remained ___ long after the surrounding towns had modernized.",
+      "answer": "traditional",
+      "wrong": [
+        "industrial",
+        "populous",
+        "temporary"
+      ],
+      "why": "\"Long after\" others modernized means this one did not."
+    },
+    {
+      "s": "Rather than ___ the rumor, the company published every document it had.",
+      "answer": "deny",
+      "wrong": [
+        "confirm",
+        "discuss",
+        "record"
+      ],
+      "why": "Publishing everything is the opposite of the flat denial the sentence rejects."
+    },
+    {
+      "s": "The medicine brought only ___ relief; the pain returned within the hour.",
+      "answer": "temporary",
+      "wrong": [
+        "lasting",
+        "complete",
+        "immediate"
+      ],
+      "why": "Pain returning within the hour defines how long the relief lasted."
+    },
+    {
+      "s": "A ___ observer, she noticed the error that everyone else had read past.",
+      "answer": "keen",
+      "wrong": [
+        "careless",
+        "reluctant",
+        "hurried"
+      ],
+      "why": "Catching what others missed takes sharp attention."
+    },
+    {
+      "s": "The two accounts are so ___ that at least one witness must be mistaken.",
+      "answer": "contradictory",
+      "wrong": [
+        "similar",
+        "detailed",
+        "recent"
+      ],
+      "why": "Both cannot be true, which is what it means for accounts to conflict."
+    },
+    {
+      "s": "Once ___ throughout the region, the wolf now survives in two valleys.",
+      "answer": "widespread",
+      "wrong": [
+        "endangered",
+        "hunted",
+        "protected"
+      ],
+      "why": "\"Once ... now\" contrasts the old range with today's two valleys."
+    },
+    {
+      "s": "The lecture was so ___ that several students asked for it to be repeated.",
+      "answer": "dense",
+      "wrong": [
+        "dull",
+        "brief",
+        "informal"
+      ],
+      "why": "Asking for a repeat suggests too much packed in, not too little interest."
+    },
+    {
+      "s": "He is ___ about punctuality, and has not been late once in eleven years.",
+      "answer": "scrupulous",
+      "wrong": [
+        "indifferent",
+        "anxious",
+        "apologetic"
+      ],
+      "why": "Eleven years without lateness is exactness carried out strictly."
+    },
+    {
+      "s": "The proposal was rejected as ___, since the town could never afford it.",
+      "answer": "impractical",
+      "wrong": [
+        "ambitious",
+        "unpopular",
+        "complicated"
+      ],
+      "why": "The reason given is cost, which makes the plan unworkable rather than merely bold."
+    },
+    {
+      "s": "What began as a ___ disagreement grew into a lawsuit lasting four years.",
+      "answer": "minor",
+      "wrong": [
+        "bitter",
+        "public",
+        "legal"
+      ],
+      "why": "\"What began as\" contrasts the small start with the four-year end."
+    },
+    {
+      "s": "The map proved ___: every landmark it showed was exactly where it should be.",
+      "answer": "accurate",
+      "wrong": [
+        "outdated",
+        "decorative",
+        "unreadable"
+      ],
+      "why": "The colon supplies the evidence, and landmarks in the right place means correct."
     }
   ],
-
   "passages": [
     {
       "text": "In 1901 sponge divers working off the Greek island of Antikythera brought up a corroded lump of bronze from a Roman-era shipwreck. For decades it sat in a museum drawer, too damaged to interpret. X-ray imaging in the 1970s, and CT scanning thirty years later, finally revealed what it was: at least thirty interlocking gears, cut by hand, arranged to model the movements of the sun and moon. The device could track the lunar calendar and predict eclipses. Nothing of comparable intricacy survives from the next thousand years of European history. The mechanism does not prove that ancient Greek engineering was lost and rediscovered, but it does show that a single surviving object can overturn what historians thought a period was capable of.",
@@ -165,7 +1225,11 @@
       "vocab": {
         "word": "intricacy",
         "meaning": "complexity of detail",
-        "distractors": ["age", "monetary value", "fragility"]
+        "distractors": [
+          "age",
+          "monetary value",
+          "fragility"
+        ]
       },
       "detail": {
         "question": "According to the passage, what finally revealed the structure of the mechanism?",
@@ -186,7 +1250,11 @@
       },
       "tone": {
         "answer": "Appreciative",
-        "wrong": ["Skeptical", "Nostalgic", "Indifferent"]
+        "wrong": [
+          "Skeptical",
+          "Nostalgic",
+          "Indifferent"
+        ]
       }
     },
     {
@@ -200,7 +1268,11 @@
       "vocab": {
         "word": "dissipates",
         "meaning": "scatters and weakens",
-        "distractors": ["reflects entirely", "measures", "stores up"]
+        "distractors": [
+          "reflects entirely",
+          "measures",
+          "stores up"
+        ]
       },
       "detail": {
         "question": "According to the passage, why do mangroves grow aerial roots?",
@@ -221,7 +1293,11 @@
       },
       "tone": {
         "answer": "Measured",
-        "wrong": ["Alarmed", "Sentimental", "Scornful"]
+        "wrong": [
+          "Alarmed",
+          "Sentimental",
+          "Scornful"
+        ]
       }
     },
     {
@@ -235,7 +1311,11 @@
       "vocab": {
         "word": "ratified",
         "meaning": "formally approved",
-        "distractors": ["rejected", "drafted", "reversed"]
+        "distractors": [
+          "rejected",
+          "drafted",
+          "reversed"
+        ]
       },
       "detail": {
         "question": "According to the passage, what made local time a safety problem rather than merely an inconvenience?",
@@ -256,7 +1336,11 @@
       },
       "tone": {
         "answer": "Wry",
-        "wrong": ["Indignant", "Mournful", "Anxious"]
+        "wrong": [
+          "Indignant",
+          "Mournful",
+          "Anxious"
+        ]
       }
     },
     {
@@ -270,7 +1354,11 @@
       "vocab": {
         "word": "distributed",
         "meaning": "spread out",
-        "distractors": ["donated", "duplicated", "concentrated"]
+        "distractors": [
+          "donated",
+          "duplicated",
+          "concentrated"
+        ]
       },
       "detail": {
         "question": "According to the passage, what can an octopus arm do without instruction from the central brain?",
@@ -291,7 +1379,11 @@
       },
       "tone": {
         "answer": "Fascinated",
-        "wrong": ["Alarmed", "Dismissive", "Sentimental"]
+        "wrong": [
+          "Alarmed",
+          "Dismissive",
+          "Sentimental"
+        ]
       }
     },
     {
@@ -305,7 +1397,11 @@
       "vocab": {
         "word": "anchor",
         "meaning": "hold firmly in place",
-        "distractors": ["moisten", "fertilize", "shade"]
+        "distractors": [
+          "moisten",
+          "fertilize",
+          "shade"
+        ]
       },
       "detail": {
         "question": "According to the passage, what had previously held the plains soil through dry periods?",
@@ -326,7 +1422,11 @@
       },
       "tone": {
         "answer": "Analytical",
-        "wrong": ["Outraged", "Wistful", "Celebratory"]
+        "wrong": [
+          "Outraged",
+          "Wistful",
+          "Celebratory"
+        ]
       }
     },
     {
@@ -340,7 +1440,11 @@
       "vocab": {
         "word": "transposed",
         "meaning": "shifted into a different frame of reference",
-        "distractors": ["exaggerated", "concealed", "measured twice"]
+        "distractors": [
+          "exaggerated",
+          "concealed",
+          "measured twice"
+        ]
       },
       "detail": {
         "question": "According to the passage, what does the duration of the straight run encode?",
@@ -361,7 +1465,183 @@
       },
       "tone": {
         "answer": "Admiring",
-        "wrong": ["Doubtful", "Impatient", "Detached"]
+        "wrong": [
+          "Doubtful",
+          "Impatient",
+          "Detached"
+        ]
+      }
+    },
+    {
+      "text": "When cholera swept through a London neighborhood in 1854, the accepted explanation was bad air. John Snow, a physician, doubted it, and did something unusual for the time: he plotted every death on a street map. The marks clustered tightly around a single water pump on Broad Street, and thinned with distance from it. Two anomalies made the pattern stronger rather than weaker. Workers at a nearby brewery, who drank beer rather than water, were almost untouched; a widow who had moved away but still had Broad Street water carted to her because she preferred the taste, died. Snow persuaded the parish to remove the pump handle. The outbreak was already subsiding, so the removal probably saved fewer lives than the story suggests, and the medical establishment was not convinced for years. What the map established was not the cause of cholera but a way of arguing about it.",
+      "mainIdea": "A physician's map of cholera deaths introduced a new way of arguing from evidence, whatever it did for that particular outbreak.",
+      "wrong": [
+        "John Snow's removal of the Broad Street pump handle ended the 1854 cholera outbreak.",
+        "Nineteenth-century doctors were unwilling to look at evidence that challenged their beliefs.",
+        "Cholera spreads through water rather than through the air."
+      ],
+      "vocab": {
+        "word": "anomalies",
+        "meaning": "cases that did not fit the pattern",
+        "distractors": [
+          "exceptions to a law",
+          "sudden increases",
+          "careless errors"
+        ]
+      },
+      "detail": {
+        "question": "According to the passage, why were the brewery workers largely unaffected?",
+        "answer": "They drank beer instead of the water",
+        "wrong": [
+          "They worked too far from Broad Street",
+          "They had already survived an earlier outbreak",
+          "They were given clean water by their employer"
+        ]
+      },
+      "inference": {
+        "answer": "Evidence can change how a question is investigated before it settles the question itself.",
+        "wrong": [
+          "Snow's contemporaries were less intelligent than he was.",
+          "Mapping is the most reliable method available to epidemiologists.",
+          "The widow's death was the decisive proof for the medical establishment."
+        ]
+      },
+      "tone": {
+        "answer": "Measured",
+        "wrong": [
+          "Triumphant",
+          "Indignant",
+          "Playful"
+        ]
+      }
+    },
+    {
+      "text": "A lighthouse has a problem of geometry: light leaves a flame in every direction, and almost all of it is wasted on the sky and the ground. Early keepers put polished mirrors behind the flame, which helped a little. In 1822 the French engineer Augustin-Jean Fresnel solved it properly. A lens thick enough to bend the beam from a lighthouse flame would have been too heavy to mount and too dark to see through, so Fresnel discarded the middle of the glass. What remained was a set of concentric rings, each ground at the angle that section of a solid lens would have had, assembled into a barrel around the light. The result weighed a fraction as much, absorbed far less, and threw a beam that could be seen twenty miles out. The design has since been scaled down into camera flashes and traffic signals, and up again into the panels of solar concentrators.",
+      "mainIdea": "Fresnel solved the lighthouse's optical problem by removing the bulk of a lens while keeping the surfaces that do the bending.",
+      "wrong": [
+        "Lighthouses were ineffective until the nineteenth century.",
+        "Fresnel's greatest contribution was to the design of modern solar concentrators.",
+        "Mirrors are an inferior way to direct light in every application."
+      ],
+      "vocab": {
+        "word": "concentric",
+        "meaning": "sharing the same center",
+        "distractors": [
+          "transparent",
+          "tightly sealed",
+          "evenly spaced"
+        ]
+      },
+      "detail": {
+        "question": "According to the passage, what problem would a solid lens of the same power have had?",
+        "answer": "It would have been too heavy and too dark to use",
+        "wrong": [
+          "It would have shattered in cold weather",
+          "It would have cost more than a lighthouse could afford",
+          "It would have needed a brighter flame"
+        ]
+      },
+      "inference": {
+        "answer": "A design constraint can be met by removing material rather than by adding capability.",
+        "wrong": [
+          "Nineteenth-century engineering has not been improved upon.",
+          "Lighthouses are no longer useful now that ships carry satellite navigation.",
+          "Fresnel intended his lens to be used in cameras."
+        ]
+      },
+      "tone": {
+        "answer": "Appreciative",
+        "wrong": [
+          "Nostalgic",
+          "Skeptical",
+          "Detached"
+        ]
+      }
+    },
+    {
+      "text": "A tree adds one ring a year, and the width of that ring records the year it grew: wide in a wet season, narrow in a drought. On its own a single trunk says little, because a ring only tells you that one tree had a good year. The technique that makes tree rings useful is cross-dating. Trees in the same region share the same weather, so their ring patterns match, and a sequence from a living tree can be overlapped with a sequence from an older beam in a building, and that beam with a still older log preserved in a bog. Chained this way, chronologies now run back more than eleven thousand years in some regions. Those chronologies are used to check radiocarbon dating, which drifts because the amount of carbon-14 in the atmosphere has not been constant. A method that began as a way to study climate became the yardstick another method is measured against.",
+      "mainIdea": "Cross-dating turns individual tree rings into long chronologies, which now serve to check an unrelated dating method.",
+      "wrong": [
+        "Tree rings are the most accurate way to determine the age of an object.",
+        "Radiocarbon dating is unreliable and should be replaced.",
+        "A tree's rings record the rainfall of every year of its life."
+      ],
+      "vocab": {
+        "word": "chronologies",
+        "meaning": "dated sequences of years",
+        "distractors": [
+          "climate forecasts",
+          "tree species",
+          "measuring instruments"
+        ]
+      },
+      "detail": {
+        "question": "According to the passage, why can sequences from different pieces of wood be overlapped?",
+        "answer": "Trees in the same region shared the same weather, so their patterns match",
+        "wrong": [
+          "All trees of a species grow at the same rate",
+          "The rings are counted from the same starting year",
+          "Preserved wood decays at a predictable rate"
+        ]
+      },
+      "inference": {
+        "answer": "A technique built for one question can end up correcting the answers of another.",
+        "wrong": [
+          "Radiocarbon dating was invented before tree-ring dating.",
+          "Wood preserved in bogs is more informative than wood from buildings.",
+          "Studying past climate is the most valuable use of tree rings."
+        ]
+      },
+      "tone": {
+        "answer": "Analytical",
+        "wrong": [
+          "Enthusiastic",
+          "Cautionary",
+          "Wistful"
+        ]
+      }
+    },
+    {
+      "text": "On a mountainside in the Norwegian Arctic, a tunnel runs a hundred metres into rock that stays frozen year-round. The Svalbard Global Seed Vault holds duplicate samples of seeds from gene banks around the world: not a collection in its own right, but a backup for collections that already exist. The seeds remain the property of whoever deposited them, and only the depositor may withdraw them. That has happened once. Researchers who had run a gene bank near Aleppo requested their samples back after the Syrian war made the original site unusable, grew them out in Lebanon and Morocco, and returned fresh seed to the vault. In 2017 meltwater entered the outer part of the entrance tunnel, which was widely reported as a flood; the seed chamber itself stayed dry and frozen, and the tunnel was rebuilt. The vault is designed for a failure nobody can schedule.",
+      "mainIdea": "A seed vault in the Arctic exists as a backup for other collections, and its one withdrawal so far shows what it is for.",
+      "wrong": [
+        "The Svalbard vault is the world's most important collection of crop seeds.",
+        "Climate change has put the Svalbard Global Seed Vault at serious risk.",
+        "War in Syria destroyed an irreplaceable collection of seeds."
+      ],
+      "vocab": {
+        "word": "duplicate",
+        "meaning": "copies of something kept elsewhere",
+        "distractors": [
+          "rare",
+          "frozen",
+          "donated"
+        ]
+      },
+      "detail": {
+        "question": "According to the passage, who is permitted to withdraw seeds from the vault?",
+        "answer": "Only the gene bank that deposited them",
+        "wrong": [
+          "Any researcher with an approved project",
+          "The Norwegian government",
+          "Any country facing a crop failure"
+        ]
+      },
+      "inference": {
+        "answer": "A backup is judged by whether it works on the day it is needed, not by how often it is used.",
+        "wrong": [
+          "The vault should hold original collections rather than duplicates.",
+          "The 2017 meltwater showed the vault was badly sited.",
+          "Most gene banks will eventually need to draw on Svalbard."
+        ]
+      },
+      "tone": {
+        "answer": "Measured",
+        "wrong": [
+          "Alarmed",
+          "Admiring",
+          "Ironic"
+        ]
       }
     }
   ]

@@ -22,6 +22,15 @@ interface Feedback {
   delta: number;
 }
 
+/**
+ * What makes two served questions the same question. The prompt only: a
+ * picture item asks the same sentence every time and varies in what it draws,
+ * and reshuffled options do not make a new question.
+ */
+function asked(q: ClientQuestion): string {
+  return `${q.stem}::${q.figure ?? ""}`;
+}
+
 export function PracticeSession({ skill, videos }: { skill: Skill; videos: LessonVideo[] }) {
   // "Watch the lesson" offers the first one; the panel handles the rest.
   const video = videos[0] ?? null;
@@ -42,21 +51,34 @@ export function PracticeSession({ skill, videos }: { skill: Skill; videos: Lesso
   const loadedFor = useRef<string | null>(null);
   const continueRef = useRef<HTMLButtonElement>(null);
   const videoRef = useRef<HTMLDivElement>(null);
+  /** The question just served, so the next one is not the same one again. */
+  const lastAsked = useRef("");
 
   const fetchQuestion = useCallback(
     async (score: number) => {
-      try {
+      const level = levelForScore(score, skill.levels ?? 4);
+      const ask = async (): Promise<ClientQuestion> => {
         const res = await fetch("/api/question", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            skillId: skill.id,
-            level: levelForScore(score, skill.levels ?? 4),
-            seed: newSeed(),
-          }),
+          body: JSON.stringify({ skillId: skill.id, level, seed: newSeed() }),
         });
         if (!res.ok) throw new Error(`Request failed: ${res.status}`);
-        setQuestion((await res.json()) as ClientQuestion);
+        return (await res.json()) as ClientQuestion;
+      };
+
+      try {
+        // Skills that draw from a content bank pick an item rather than
+        // inventing one, so the same question can come up twice running. Two
+        // in a row is the repeat a learner actually notices; asking again
+        // costs one request and is bounded, because a small bank at a low
+        // tier genuinely may not have another question to give.
+        let next = await ask();
+        for (let attempt = 0; attempt < 3 && asked(next) === lastAsked.current; attempt++) {
+          next = await ask();
+        }
+        lastAsked.current = asked(next);
+        setQuestion(next);
         startedAt.current = Date.now();
         setPhase("answering");
       } catch {

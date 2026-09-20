@@ -218,7 +218,12 @@ function split(rng: Rng, total: number, parts: number, max: number): number[] {
  */
 const numberSeries: GeneratorFn = (rng, level) => {
   const MAX_BEADS = 10;
-  const shown = 3;
+  // How many rods stand before the empty one. A rod holds ten beads at most,
+  // so every extra rod costs reach: with three rods a series can climb in
+  // twos, with four it mostly climbs in ones. Varying it is what keeps the
+  // tier from serving the same handful of series -- (start, step) alone gives
+  // only about a dozen that fit on the frame.
+  const shown = level <= 2 ? 3 : rng.pick([3, 4]);
 
   if (level >= 4 && rng.bool(0.45)) {
     // A repeating pattern rather than a growing one.
@@ -235,14 +240,19 @@ const numberSeries: GeneratorFn = (rng, level) => {
     });
   }
 
-  const steps = level <= 1 ? [1] : level === 2 ? [1, 2] : level === 3 ? [2, 3, -1] : [2, 3, -2, -3];
-  const step = rng.pick(steps);
+  const steps =
+    level <= 1 ? [1, 2] : level === 2 ? [1, 2, -1] : level === 3 ? [1, 2, 3, -1, -2] : [2, 3, -2, -3];
+  // A step only fits if the whole series, answer included, stays on the frame:
+  // four rods climbing in threes would reach thirteen beads.
+  const reach = Math.floor((MAX_BEADS - 1) / shown);
+  const fitting = steps.filter((st) => Math.abs(st) <= reach);
+  const step = rng.pick(fitting.length ? fitting : [Math.sign(rng.pick(steps)) || 1]);
   // Every rod in the series, the answer included, has to fit on the frame.
   const start =
     step > 0
       ? rng.int(1, MAX_BEADS - step * shown)
       : rng.int(1 - step * shown, MAX_BEADS);
-  const rods = [0, 1, 2].map((i) => start + step * i);
+  const rods = Array.from({ length: shown }, (_, i) => start + step * i);
   const answer = start + step * shown;
 
   return abacusChoice(rng, {
