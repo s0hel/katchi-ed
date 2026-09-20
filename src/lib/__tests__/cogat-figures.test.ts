@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { skillsFor } from "../curriculum";
 import { generateQuestion } from "../generators";
-import { figLook, sameLook, type Fig } from "../generators/shapes";
+import {
+  GRID_CELL, ROW_CELL, analogyGridSvg, figLook, figRowSvg, figSvg, sameLook, type Fig,
+} from "../generators/shapes";
 
 const SEEDS = Array.from({ length: 240 }, (_, i) => i * 7919 + 13);
 
@@ -214,5 +216,35 @@ describe("figures that can be read", () => {
       }
     }
     expect(hidden.slice(0, 3)).toEqual([]);
+  });
+});
+
+describe("one scale across both panels", () => {
+  /**
+   * A question is rendered into a wide panel and its answers into narrow
+   * buttons, so whichever of them CSS sizes last decides how big the shapes
+   * come out. Left to that, a figure was drawn half the size in the answers as
+   * in the question it answered, and "the shape gets bigger" could not be read
+   * across the two.
+   *
+   * Every figure now declares its own width in cells, so as long as a figure's
+   * viewBox holds the same number of viewBox units per declared cell, one cell
+   * is one size and the two panels agree. That is the whole invariant, and it
+   * is worth a test because it is invisible until someone reads a worksheet.
+   */
+  const perCell = (svg: string) => {
+    const box = Number(/viewBox="0 0 ([\d.]+)/.exec(svg)![1]);
+    const [, wide, cell] = /--kx-fig-cell, 8rem\) \* ([\d.]+) \/ ([\d.]+)\)/.exec(svg)!;
+    return (box * Number(cell)) / Number(wide);
+  };
+
+  const one = fig({ shape: "square" });
+
+  it("measures a classification question and its options in the same cell", () => {
+    expect(perCell(figRowSvg([one, one, one], 10))).toBe(perCell(figSvg(one, 10, ROW_CELL)));
+  });
+
+  it("measures an analogy question and its options in the same cell", () => {
+    expect(perCell(analogyGridSvg(one, one, one, 10))).toBe(perCell(figSvg(one, 10, GRID_CELL)));
   });
 });

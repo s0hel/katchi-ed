@@ -1,9 +1,9 @@
 import { choice, figureChoice, nearMisses, type GeneratorFn } from "./helpers";
 import { COGAT_BANKS, pool } from "./exam-banks";
 import {
-  BOX_ROOM, GRID_ROOM, ROOMY, ROUND, ROW_ROOM, SHADINGS, SHAPES, SHAPE_WORDS, SIDES,
-  analogyGridSvg, article, describe, figLook, figRowSvg, figSvg, fitUnit, foldedSlots, foldedSvg,
-  holesKey, opposite, sameLook, unfoldHoles, unfoldedSvg,
+  GRID_CELL, ROOMY, ROUND, ROW_CELL, SHADINGS, SHAPES, SHAPE_WORDS, SIDES,
+  analogyGridSvg, article, cellRoom, describe, figLook, figRowSvg, figSvg, fitUnit, foldedSlots,
+  foldedSvg, holesKey, opposite, sameLook, unfoldHoles, unfoldedSvg,
   type Fig, type Fold, type Hole, type Shading, type ShapeName,
 } from "./shapes";
 import { abacusSvg, trainsSvg } from "./counters";
@@ -744,19 +744,17 @@ const figureAnalogies: GeneratorFn = (rng, level) => {
   offer({ ...answer, size: answer.size === 1 ? 2 : 1 });
   offer(turnBy(answer, 1));
 
-  // One unit for the question and one for the answers: the two are rendered
-  // into panels of different widths, so they cannot share a scale anyway, and
-  // within each set every figure is drawn to the same one.
-  const askUnit = fitUnit([a, b, c], GRID_ROOM);
-  const sayUnit = fitUnit([answer, ...wrong], BOX_ROOM);
+  // One unit for the whole question, question and answers together, so that
+  // "the shape gets bigger" is still bigger once it is the answer.
+  const unit = fitUnit([a, b, c, answer, ...wrong], cellRoom(GRID_CELL));
 
   return figureChoice(rng, {
     instructions: "Work out what changed in the first pair, then do the same to the next one.",
     stem: "Which picture belongs where the **?** is?",
-    figure: analogyGridSvg(a, b, c, askUnit),
+    figure: analogyGridSvg(a, b, c, unit),
     options: OPTIONS,
-    answerFigure: figSvg(answer, sayUnit),
-    distractorFigures: wrong.map((f) => figSvg(f, sayUnit)),
+    answerFigure: figSvg(answer, unit, GRID_CELL),
+    distractorFigures: wrong.map((f) => figSvg(f, unit, GRID_CELL)),
     explanation: `In the first pair, ${rule.words}: ${describe(a)} becomes ${describe(b)}. Doing the same to ${describe(c)} gives ${describe(answer)}.`,
     hint: "Ask what changed from the first picture to the second — and what stayed the same.",
   });
@@ -1276,16 +1274,17 @@ const figureClassification: GeneratorFn = (rng, level) => {
     }
   }
 
-  const askUnit = fitUnit(group, ROW_ROOM);
-  const sayUnit = fitUnit([answer, ...wrong], BOX_ROOM);
+  // One unit across the group and the answers, so "they are all the large
+  // size" is a comparison a child can actually make between the two panels.
+  const unit = fitUnit([...group, answer, ...wrong], cellRoom(ROW_CELL));
 
   return figureChoice(rng, {
     instructions: "Find what the three pictures have in common.",
     stem: "Which picture belongs with these three?",
-    figure: figRowSvg(group, askUnit),
+    figure: figRowSvg(group, unit),
     options: OPTIONS,
-    answerFigure: figSvg(answer, sayUnit),
-    distractorFigures: wrong.map((f) => figSvg(f, sayUnit)),
+    answerFigure: figSvg(answer, unit, ROW_CELL),
+    distractorFigures: wrong.map((f) => figSvg(f, unit, ROW_CELL)),
     explanation: `The three pictures are alike in one way: ${words}. Only ${describe(answer)} is like them in that way.`,
     hint: "Check one thing at a time: the shape, how many, how dark, how big — and what is inside.",
   });

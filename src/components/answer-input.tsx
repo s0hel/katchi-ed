@@ -62,8 +62,12 @@ export function AnswerInput({
                 <span
                   // A fixed width, not flex-1: an option that stretches with
                   // its button renders bigger than the prompt above it, and a
-                  // question about size cannot be read across two scales.
-                  className="kx-figure w-28 shrink-0 sm:w-32"
+                  // question about size cannot be read across two scales. One
+                  // width at every breakpoint, because a nonverbal figure sets
+                  // its own width to one cell -- 8rem -- and a narrower box
+                  // here would scale it down and put the two panels out of
+                  // step again.
+                  className="kx-figure w-32 shrink-0"
                   // Figures are SVG strings built by our own generators, never user input.
                   dangerouslySetInnerHTML={{ __html: figure }}
                 />

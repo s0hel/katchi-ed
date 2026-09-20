@@ -155,8 +155,26 @@ body {
  * (a 2 x 7 rectangle, say) has a narrow viewBox and would scale itself --
  * labels and all -- to fill the column. Capping the height instead of only
  * the width keeps it beside the question rather than instead of it.
+ *
+ * A nonverbal figure carries its own width instead, in cells, so that the
+ * question and the options it is answered from render at one scale. Capping
+ * its height would undo that for exactly the tall ones -- a stacked analogy
+ * grid -- and leave the answers drawn larger than the question.
  */
-.kx-sheet .kx-figure svg { max-height: 7.5rem; }
+.kx-sheet .kx-figure svg:not(.kx-fig-sized) { max-height: 7.5rem; }
+
+/*
+ * How big one figure cell is.
+ *
+ * A question is three cells wide and an option one, so this is the single
+ * number that keeps the two panels at one scale -- move it and they move
+ * together. It tracks the viewport because the wider of the two has to fit:
+ * left at 8rem, a three-cell question on a phone would be squeezed down to
+ * fit its panel while the options beside it stayed put, which is the very
+ * mismatch this is here to prevent. A worksheet prints smaller again.
+ */
+:root { --kx-fig-cell: min(8rem, 22vw); }
+.kx-sheet { --kx-fig-cell: 5rem; }
 
 /*
  * A figure that is as tall as it is wide gets more room than that. The cap

@@ -634,31 +634,52 @@ export function fitUnit(figs: Fig[], room: number): number {
 /* ------------------------------------------------------------ standalone */
 
 /**
- * Figures are drawn in a square box, not the wide strip they once were: a
+ * Figures are drawn in a square cell, not the wide strip they once were: a
  * figure that turns a quarter turn puts its long side where its short side
  * was, and a box that only fitted the row would clip the column.
+ *
+ * One answer option is drawn in exactly one cell, and the question above it in
+ * a whole number of the same cells -- which is what lets the two render at the
+ * same scale. Every figure here carries its own width, in cells, rather than
+ * being handed whatever width its panel happens to be: the question sits in a
+ * wide panel and an option in a narrow button, so letting CSS decide meant a
+ * shape drawn half the size in the answers as in the question it answered, and
+ * a rule like "the shape gets bigger" could not be read across the two.
+ *
+ * `--kx-fig-cell` is how big a cell renders. Moving it moves the question and
+ * the options together, which is the whole point; a worksheet sets it smaller
+ * than the screen does.
  */
-const BOX = 116;
+export const ROW_CELL = 88;
+export const GRID_CELL = 76;
 
-/** The room a figure has inside its box, as a half-width. */
-export const BOX_ROOM = BOX / 2 - 5;
+/** How much room a figure has inside one cell, as a half-width. */
+export const cellRoom = (cell: number) => cell / 2 - 7;
+
+const CELL_CSS = "var(--kx-fig-cell, 8rem)";
 
 /**
- * One figure on its own, at the unit its whole question was fitted to.
+ * A figure's own width: its viewBox, measured in cells.
  *
- * The unit is passed in rather than fixed here because it has to be the same
- * for every option in a question -- fit each one to its own box and the answer
+ * Emitted as the division rather than as the number it works out to, because
+ * rounding it is rounding the scale -- and the one thing this has to be is
+ * exactly the same on both sides of a question.
+ */
+const sized = (box: number, cell: number) =>
+  `class="kx-fig-sized" style="width: calc(${CELL_CSS} * ${box} / ${cell}); max-width: 100%"`;
+
+/**
+ * One figure on its own, at the unit and cell its whole question was fitted to.
+ *
+ * Both are passed in rather than fixed here because they have to be the same
+ * for every figure in a question -- fit each one to its own cell and the answer
  * to "which is the large one" would be "all of them".
  */
-export function figSvg(f: Fig, unit: number): string {
-  return `<svg viewBox="0 0 ${BOX} ${BOX}" role="img" aria-label="${describe(f)}">
-    ${figElements(f, BOX / 2, BOX / 2, unit)}
+export function figSvg(f: Fig, unit: number, cell: number): string {
+  return `<svg viewBox="0 0 ${cell} ${cell}" ${sized(cell, cell)} role="img" aria-label="${describe(f)}">
+    ${figElements(f, cell / 2, cell / 2, unit)}
   </svg>`;
 }
-
-const ROW_CELL = 88;
-/** The room a figure has inside one cell of a row. */
-export const ROW_ROOM = ROW_CELL / 2 - 8;
 
 /** Several figures side by side in their own boxes, e.g. "which one belongs?" */
 export function figRowSvg(figs: Fig[], unit: number): string {
@@ -672,14 +693,11 @@ export function figRowSvg(figs: Fig[], unit: number): string {
       ${figElements(f, x + cell / 2, cell / 2, unit)}`;
     })
     .join("");
-  return `<svg viewBox="0 0 ${W} ${cell}" role="img" aria-label="${figs.map(describe).join("; then ")}">
+  return `<svg viewBox="0 0 ${W} ${cell}" ${sized(W, cell)} role="img"
+    aria-label="${figs.map(describe).join("; then ")}">
     ${cells}
   </svg>`;
 }
-
-const GRID_CELL = 76;
-/** The room a figure has inside one box of the analogy grid. */
-export const GRID_ROOM = GRID_CELL / 2 - 7;
 
 /**
  * A figure analogy: `a` becomes `b`, so `c` becomes what?
@@ -718,7 +736,7 @@ export function analogyGridSvg(a: Fig, b: Fig, c: Fig, unit: number): string {
        : `<text x="${right + cell / 2}" y="${y + cell / 2 + 10}" text-anchor="middle"
            font-size="28" font-weight="700" fill="var(--kx-fig-stroke)">?</text>`)}`;
 
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" class="kx-fig-block"
+  return `<svg viewBox="0 0 ${W} ${H}" ${sized(W, cell)} role="img"
     aria-label="${describe(a)} becomes ${describe(b)}. In the same way, ${describe(c)} becomes a missing figure.">
     <rect x="0.75" y="0.75" width="${W - 1.5}" height="${H - 1.5}" rx="8"
       fill="none" stroke="var(--kx-fig-stroke)" stroke-width="1.5" opacity="0.45"/>
