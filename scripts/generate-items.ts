@@ -8,6 +8,7 @@
  *   export ANTHROPIC_API_KEY=...            # or: ant auth login
  *   npx vite-node scripts/generate-items.ts -- --bank passages --count 12
  *   npx vite-node scripts/generate-items.ts -- --bank isee.synonyms --count 20
+ *   npx vite-node scripts/generate-items.ts -- --bank ngat.oddOneOut --count 12
  *   npx vite-node scripts/generate-items.ts -- --bank all --count 8 --dry-run
  *
  * Why offline: a question is graded by re-deriving it server-side from
@@ -38,9 +39,11 @@ const ALL_BANKS: AnyBankName[] = [...BANK_NAMES, ...EXAM_BANK_NAMES];
 const FILE_OF = (bank: AnyBankName): string =>
   bank.startsWith("cogat.")
     ? "src/data/cogat-banks.json"
-    : bank.startsWith("isee.")
-      ? "src/data/isee-banks.json"
-      : "src/data/ela-banks.json";
+    : bank.startsWith("ngat.")
+      ? "src/data/ngat-banks.json"
+      : bank.startsWith("isee.")
+        ? "src/data/isee-banks.json"
+        : "src/data/ela-banks.json";
 
 /** The key inside its file: "isee.synonyms" is stored as `synonyms`. */
 const FIELD_OF = (bank: AnyBankName): string => bank.split(".").pop()!;
@@ -107,6 +110,14 @@ const WIRE: Record<AnyBankName, z.ZodTypeAny> = {
     s: z.string(), answer: picture, wrong: z.array(picture).length(3), why: z.string(),
   }),
 
+  "ngat.oddOneOut": z.object({
+    kind: z.enum(["category", "property"]),
+    concept: z.string(),
+    group: z.array(picture).length(5),
+    odd: picture,
+    why: z.string(),
+  }),
+
   "isee.synonyms": z.object({ word: z.string(), answer: z.string(), distractors: three }),
   "isee.sentenceCompletion": z.object({ s: z.string(), ...answerWrong, why: z.string() }),
   "isee.passages": z.object({
@@ -158,6 +169,9 @@ const BRIEF: Record<AnyBankName, string> = {
     "CogAT Level 7 picture classification, for a SIX-YEAR-OLD. `group` is three pictures that share ONE obvious category; `answer` is a fourth that belongs; the three wrong options must be outside the category in a way a first grader can see. Every picture is an emoji, a space, then its word. Say the category in `why`, and where a wrong option is a near miss (a carrot among fruit), say why it does not belong.",
   "cogat.sentenceCompletion":
     "CogAT Level 7 sentence completion -- the \"Can you find it?\" item -- read ALOUD to a six-year-old, who answers by pointing at a PICTURE. `s` holds one `___`. Every option is an emoji, a space, then its word, and must be a thing a child can point at: no answer like `greater`, `sick` or `loud`, however good the sentence is. The sentence may use any words a grown-up can say; the reasoning is what should make it hard -- what an object is for, where something lives, what an animal gives us, what you wear when.",
+
+  "ngat.oddOneOut":
+    "Naglieri verbal items for a FOURTH GRADER: six pictures, five of which share one idea, and one that does not. Every picture is an emoji, a space, then its word (`🧦 sock`), and nothing is read to the child -- the whole item is the six pictures, so an idea that cannot be seen in a picture cannot be used. `group` is the five that share it and `odd` is the sixth. `concept` is that idea written as a sentence the explanation can use: `they are all birds`, `each one is made of glass`. `kind` is `category` when the five share what they ARE (all insects, all buildings) and `property` when they share what they DO or HAVE (all give off their own light, all have a shell) -- the second is the harder reading and both are wanted. Pitch it above naming: the best items turn on something a fourth grader knows but has to stop and check, and the best odd one out is a near miss that fails the idea for a reason worth saying (a bat flies but is a mammal; a mirror looks bright but makes no light of its own). `why` says that reason in one sentence. Use only emoji a child recognises instantly.",
 
   "isee.synonyms":
     "ISEE Middle Level synonyms (sat by sixth graders). `word` is a single word at the level of `reluctant`, `candid` or `meticulous`; `answer` is its closest meaning in one or two plain words; the three distractors must be plainly wrong -- not shades of the same meaning, and not the exact opposite of each other. Avoid words a sixth grader would never meet in a book.",

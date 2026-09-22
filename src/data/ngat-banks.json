@@ -1,0 +1,472 @@
+{
+  "oddOneOut": [
+    {
+      "kind": "category",
+      "concept": "they are all fruit",
+      "group": [
+        "🍎 apple",
+        "🍌 banana",
+        "🍇 grapes",
+        "🍓 strawberry",
+        "🍊 orange"
+      ],
+      "odd": "🥕 carrot",
+      "why": "A carrot is a vegetable — it is the root of the plant, not the part that carries its seeds."
+    },
+    {
+      "kind": "property",
+      "concept": "each one is worn on your feet",
+      "group": [
+        "👟 trainer",
+        "👢 boot",
+        "🩴 sandal",
+        "🧦 sock",
+        "👠 high-heeled shoe"
+      ],
+      "odd": "🧤 glove",
+      "why": "A glove is worn, but on a hand."
+    },
+    {
+      "kind": "category",
+      "concept": "they are all sports balls",
+      "group": [
+        "⚽ football",
+        "🏀 basketball",
+        "🎾 tennis ball",
+        "⚾ baseball",
+        "🏐 volleyball"
+      ],
+      "odd": "🎲 die",
+      "why": "A die is used in games too, but you roll it rather than throw or kick it, and it is not a ball."
+    },
+    {
+      "kind": "property",
+      "concept": "they all have wheels",
+      "group": [
+        "🚗 car",
+        "🚲 bicycle",
+        "🛒 shopping trolley",
+        "🛹 skateboard",
+        "✈️ aeroplane"
+      ],
+      "odd": "🛶 canoe",
+      "why": "A canoe carries people the way the others do, but it slides through water on nothing at all."
+    },
+    {
+      "kind": "category",
+      "concept": "they are all musical instruments",
+      "group": [
+        "🎸 guitar",
+        "🥁 drum",
+        "🎺 trumpet",
+        "🎻 violin",
+        "🎹 piano"
+      ],
+      "odd": "🎤 microphone",
+      "why": "A microphone carries sound to a loudspeaker; it makes no sound of its own."
+    },
+    {
+      "kind": "property",
+      "concept": "they all give off their own light",
+      "group": [
+        "💡 light bulb",
+        "🕯️ candle",
+        "🔦 torch",
+        "☀️ sun",
+        "🏮 lantern"
+      ],
+      "odd": "🪞 mirror",
+      "why": "A mirror looks bright, but it only sends back light that something else made."
+    },
+    {
+      "kind": "category",
+      "concept": "they are all birds",
+      "group": [
+        "🦅 eagle",
+        "🦉 owl",
+        "🦆 duck",
+        "🐧 penguin",
+        "🦜 parrot"
+      ],
+      "odd": "🦇 bat",
+      "why": "A bat flies and has wings, but it is a mammal — it has fur and feeds its young on milk."
+    },
+    {
+      "kind": "property",
+      "concept": "each one is used for writing or drawing",
+      "group": [
+        "✏️ pencil",
+        "🖊️ pen",
+        "🖍️ crayon",
+        "🖌️ paintbrush",
+        "🪶 quill"
+      ],
+      "odd": "📏 ruler",
+      "why": "A ruler guides a line and measures it, but it leaves no mark of its own."
+    },
+    {
+      "kind": "category",
+      "concept": "they are all tools for building",
+      "group": [
+        "🔨 hammer",
+        "🪚 saw",
+        "🪛 screwdriver",
+        "🔧 spanner",
+        "🪓 axe"
+      ],
+      "odd": "🧱 brick",
+      "why": "A brick is what gets built with, not what does the building."
+    },
+    {
+      "kind": "property",
+      "concept": "they all float",
+      "group": [
+        "🛶 canoe",
+        "⛵ sailing boat",
+        "🦆 duck",
+        "🪵 log",
+        "🎈 balloon"
+      ],
+      "odd": "⚓ anchor",
+      "why": "An anchor is made to do the opposite: it sinks, and holds a boat in place."
+    },
+    {
+      "kind": "category",
+      "concept": "they are all clothes",
+      "group": [
+        "👕 t-shirt",
+        "👖 jeans",
+        "🧥 coat",
+        "👗 dress",
+        "🧦 sock"
+      ],
+      "odd": "👜 handbag",
+      "why": "A handbag is carried rather than worn, and nothing goes inside it but your things."
+    },
+    {
+      "kind": "property",
+      "concept": "every one of them tells you the time",
+      "group": [
+        "⌚ watch",
+        "⏰ alarm clock",
+        "⏳ hourglass",
+        "🕰️ mantel clock",
+        "⏱️ stopwatch"
+      ],
+      "odd": "🧭 compass",
+      "why": "A compass has a dial and a moving needle like a clock, but it tells you which way you are facing."
+    },
+    {
+      "kind": "category",
+      "concept": "they are all insects",
+      "group": [
+        "🐝 bee",
+        "🐜 ant",
+        "🦋 butterfly",
+        "🪰 fly",
+        "🦗 cricket"
+      ],
+      "odd": "🕷️ spider",
+      "why": "A spider has eight legs and no wings; every insect has six legs and three body parts."
+    },
+    {
+      "kind": "property",
+      "concept": "they all keep the rain off you",
+      "group": [
+        "☂️ umbrella",
+        "🧥 raincoat",
+        "👢 wellington boot",
+        "🏠 house",
+        "⛺ tent"
+      ],
+      "odd": "🕶️ sunglasses",
+      "why": "Sunglasses are for bright weather, not wet weather — they keep light out, not water."
+    },
+    {
+      "kind": "category",
+      "concept": "they are all buildings",
+      "group": [
+        "🏫 school",
+        "🏥 hospital",
+        "🏦 bank",
+        "🏰 castle",
+        "⛪ church"
+      ],
+      "odd": "🌉 bridge",
+      "why": "A bridge is built, but nobody lives or works inside it — it carries you across."
+    },
+    {
+      "kind": "property",
+      "concept": "they all come from a plant",
+      "group": [
+        "🍎 apple",
+        "🌽 corn",
+        "🥕 carrot",
+        "🥔 potato",
+        "🫘 beans"
+      ],
+      "odd": "🥚 egg",
+      "why": "An egg is laid by a bird; everything else here was grown."
+    },
+    {
+      "kind": "category",
+      "concept": "they are all sea animals",
+      "group": [
+        "🐟 fish",
+        "🐙 octopus",
+        "🦈 shark",
+        "🐬 dolphin",
+        "🦐 prawn"
+      ],
+      "odd": "🦅 eagle",
+      "why": "An eagle hunts fish and flies over the sea, but it lives in the air and on land."
+    },
+    {
+      "kind": "property",
+      "concept": "each one measures something",
+      "group": [
+        "📏 ruler",
+        "⚖️ scales",
+        "🌡️ thermometer",
+        "⏱️ stopwatch",
+        "📐 set square"
+      ],
+      "odd": "🔍 magnifying glass",
+      "why": "A magnifying glass makes things look bigger; it never tells you how big they are."
+    },
+    {
+      "kind": "category",
+      "concept": "they are all kinds of weather",
+      "group": [
+        "☀️ sunshine",
+        "🌧️ rain",
+        "❄️ snow",
+        "🌪️ tornado",
+        "⛈️ thunderstorm"
+      ],
+      "odd": "🌡️ thermometer",
+      "why": "A thermometer measures the weather; it is not weather itself."
+    },
+    {
+      "kind": "property",
+      "concept": "each one has a shell",
+      "group": [
+        "🐚 seashell",
+        "🐌 snail",
+        "🐢 tortoise",
+        "🦀 crab",
+        "🥚 egg"
+      ],
+      "odd": "🐸 frog",
+      "why": "A frog has bare, damp skin and nothing hard on the outside."
+    },
+    {
+      "kind": "category",
+      "concept": "they are all mammals",
+      "group": [
+        "🐘 elephant",
+        "🐴 horse",
+        "🐻 bear",
+        "🐬 dolphin",
+        "🐨 koala"
+      ],
+      "odd": "🐧 penguin",
+      "why": "A dolphin lives in the sea but is still a mammal; a penguin is a bird, with feathers and eggs."
+    },
+    {
+      "kind": "property",
+      "concept": "all of them fly with no engine",
+      "group": [
+        "🪁 kite",
+        "🎈 balloon",
+        "🦋 butterfly",
+        "🪶 feather",
+        "🐝 bee"
+      ],
+      "odd": "🚁 helicopter",
+      "why": "A helicopter stays up only while its engine runs."
+    },
+    {
+      "kind": "category",
+      "concept": "they are all trees or plants",
+      "group": [
+        "🌳 tree",
+        "🌵 cactus",
+        "🌲 pine tree",
+        "🌴 palm tree",
+        "🌻 sunflower"
+      ],
+      "odd": "🍄 mushroom",
+      "why": "A mushroom is a fungus: it has no leaves and makes no food from sunlight."
+    },
+    {
+      "kind": "property",
+      "concept": "they all need electricity to work",
+      "group": [
+        "💻 laptop",
+        "📺 television",
+        "📱 phone",
+        "💡 light bulb",
+        "🔦 torch"
+      ],
+      "odd": "🕯️ candle",
+      "why": "A candle makes its light by burning, with no electricity at all."
+    },
+    {
+      "kind": "category",
+      "concept": "they are all parts of your body",
+      "group": [
+        "👁️ eye",
+        "👂 ear",
+        "👃 nose",
+        "🦶 foot",
+        "✋ hand"
+      ],
+      "odd": "🧢 cap",
+      "why": "A cap goes on a body, but it is not part of one."
+    },
+    {
+      "kind": "property",
+      "concept": "each one is made of glass",
+      "group": [
+        "🪟 window",
+        "🥛 glass",
+        "🔍 magnifying glass",
+        "💡 light bulb",
+        "🪞 mirror"
+      ],
+      "odd": "🧱 brick",
+      "why": "A brick is baked clay — hard like glass, but you cannot see through it."
+    },
+    {
+      "kind": "category",
+      "concept": "they are all things you find in a kitchen",
+      "group": [
+        "🍴 fork",
+        "🍳 frying pan",
+        "🥄 spoon",
+        "🔪 knife",
+        "🫖 teapot"
+      ],
+      "odd": "🪥 toothbrush",
+      "why": "A toothbrush belongs in a bathroom; everything else here is for cooking or eating."
+    },
+    {
+      "kind": "property",
+      "concept": "every one of them holds water",
+      "group": [
+        "🪣 bucket",
+        "🍵 cup",
+        "🏺 jar",
+        "🥛 glass",
+        "🫙 storage jar"
+      ],
+      "odd": "🧺 basket",
+      "why": "A basket is a container too, but water runs straight out through the weave."
+    },
+    {
+      "kind": "category",
+      "concept": "they are all found in the sky",
+      "group": [
+        "☁️ cloud",
+        "🌙 moon",
+        "⭐ star",
+        "🌈 rainbow",
+        "☀️ sun"
+      ],
+      "odd": "🌊 wave",
+      "why": "A wave belongs to the sea, however high it rises."
+    },
+    {
+      "kind": "property",
+      "concept": "each one is frozen",
+      "group": [
+        "🧊 ice cube",
+        "⛄ snowman",
+        "❄️ snowflake",
+        "🍦 ice cream",
+        "🏔️ snowy mountain"
+      ],
+      "odd": "🔥 fire",
+      "why": "Fire is the one thing here that melts the rest."
+    },
+    {
+      "kind": "category",
+      "concept": "they are all ways of travelling on land",
+      "group": [
+        "🚗 car",
+        "🚌 bus",
+        "🚂 train",
+        "🚲 bicycle",
+        "🛹 skateboard"
+      ],
+      "odd": "⛵ sailing boat",
+      "why": "A sailing boat carries you, but only across water."
+    },
+    {
+      "kind": "property",
+      "concept": "they are all made of metal",
+      "group": [
+        "🔑 key",
+        "🔨 hammer",
+        "⚓ anchor",
+        "🪙 coin",
+        "🔧 spanner"
+      ],
+      "odd": "🪵 log",
+      "why": "A log is wood — it floats, it burns, and it was once alive."
+    },
+    {
+      "kind": "category",
+      "concept": "they are all written or printed to be read",
+      "group": [
+        "📕 book",
+        "📰 newspaper",
+        "📜 scroll",
+        "📝 note",
+        "🗞️ rolled newspaper"
+      ],
+      "odd": "🖍️ crayon",
+      "why": "A crayon is what you write with, not something written."
+    },
+    {
+      "kind": "property",
+      "concept": "each one of them can be eaten",
+      "group": [
+        "🍞 bread",
+        "🧀 cheese",
+        "🍯 honey",
+        "🥚 egg",
+        "🍄 mushroom"
+      ],
+      "odd": "🧼 soap",
+      "why": "Soap is shaped and wrapped like food, and it is the one thing here you must not eat."
+    },
+    {
+      "kind": "category",
+      "concept": "they are all reptiles",
+      "group": [
+        "🐍 snake",
+        "🐢 tortoise",
+        "🦎 lizard",
+        "🐊 crocodile",
+        "🐉 dragon"
+      ],
+      "odd": "🐸 frog",
+      "why": "A frog is an amphibian: it starts life in water as a tadpole and keeps damp skin."
+    },
+    {
+      "kind": "property",
+      "concept": "every one of them gives out heat",
+      "group": [
+        "🔥 fire",
+        "☀️ sun",
+        "🕯️ candle",
+        "🌋 volcano",
+        "💡 light bulb"
+      ],
+      "odd": "🧊 ice cube",
+      "why": "An ice cube does the opposite — it takes heat out of whatever it touches."
+    }
+  ]
+}

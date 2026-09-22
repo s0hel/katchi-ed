@@ -1,5 +1,6 @@
 import cogatRaw from "../../data/cogat-banks.json";
 import iseeRaw from "../../data/isee-banks.json";
+import ngatRaw from "../../data/ngat-banks.json";
 import type { SentenceItem, VocabTarget, WordItem } from "./banks";
 
 /**
@@ -13,10 +14,11 @@ import type { SentenceItem, VocabTarget, WordItem } from "./banks";
  * to be extended by scripts/generate-ela-items.ts.
  *
  * They live apart from ela-banks.json because they are pitched at a different
- * target: CogAT items are read aloud to a six-year-old, and ISEE items are
+ * target: CogAT items are read aloud to a six-year-old, NGAT items are looked
+ * at by a fourth grader and never read to them at all, and ISEE items are
  * written at the reading level of an admissions test for grades 7-8. Mixing
- * them into one file would put both out of reach of a reviewer asking "is this
- * right for the child in front of me?"
+ * them into one file would put all three out of reach of a reviewer asking "is
+ * this right for the child in front of me?"
  */
 
 /* ------------------------------------------------------------------ CogAT */
@@ -66,6 +68,39 @@ export interface CogatBanks {
   sentenceCompletion: PictureSentence[];
 }
 
+/* ------------------------------------------------------------------- NGAT */
+
+/**
+ * A Naglieri verbal item: six pictures, five of which share one idea.
+ *
+ * The child picks the one that does not. That is the whole of the NGAT's
+ * verbal test -- one item type, asked over and over with a harder idea each
+ * time -- and it is a different question from CogAT's classification, which
+ * shows three that belong and asks for a fourth. Here nothing is given as an
+ * example: the group and the odd one out arrive together, and finding the idea
+ * IS the item.
+ *
+ * `kind` is ours, not the test's. Five pictures can share what they *are* (all
+ * insects) or what they *do or have* (all give off light), and the second is
+ * reliably the harder reading of a picture -- so they are two skills in the
+ * catalog rather than one that ramps between them invisibly.
+ */
+export interface OddOneOut {
+  kind: "category" | "property";
+  /** what the five share, as the explanation says it: "they are all birds" */
+  concept: string;
+  /** five pictures that share the concept */
+  group: string[];
+  /** the sixth, which does not */
+  odd: string;
+  /** why the odd one is out, in one sentence */
+  why: string;
+}
+
+export interface NgatBanks {
+  oddOneOut: OddOneOut[];
+}
+
 /* ------------------------------------------------------------------- ISEE */
 
 /**
@@ -106,6 +141,7 @@ export interface IseeBanks {
 }
 
 export const COGAT_BANKS = cogatRaw as CogatBanks;
+export const NGAT_BANKS = ngatRaw as NgatBanks;
 export const ISEE_BANKS = iseeRaw as IseeBanks;
 
 /** Bank names the offline generator script can extend, per exam. */
@@ -113,27 +149,40 @@ export const COGAT_BANK_NAMES = [
   "pictureAnalogies", "pictureGroups", "sentenceCompletion",
 ] as const satisfies readonly (keyof CogatBanks)[];
 
+export const NGAT_BANK_NAMES = [
+  "oddOneOut",
+] as const satisfies readonly (keyof NgatBanks)[];
+
 export const ISEE_BANK_NAMES = [
   "synonyms", "sentenceCompletion", "passages",
 ] as const satisfies readonly (keyof IseeBanks)[];
 
 export type CogatBankName = (typeof COGAT_BANK_NAMES)[number];
+export type NgatBankName = (typeof NGAT_BANK_NAMES)[number];
 export type IseeBankName = (typeof ISEE_BANK_NAMES)[number];
 
 /** Every exam bank, addressed as "cogat.pictureAnalogies" / "isee.synonyms". */
 export type ExamBankName =
   | `cogat.${CogatBankName}`
+  | `ngat.${NgatBankName}`
   | `isee.${IseeBankName}`;
 
 export const EXAM_BANK_NAMES: ExamBankName[] = [
   ...COGAT_BANK_NAMES.map((n) => `cogat.${n}` as const),
+  ...NGAT_BANK_NAMES.map((n) => `ngat.${n}` as const),
   ...ISEE_BANK_NAMES.map((n) => `isee.${n}` as const),
 ];
 
+const BANKS_BY_EXAM: Record<string, unknown> = {
+  cogat: COGAT_BANKS,
+  ngat: NGAT_BANKS,
+  isee: ISEE_BANKS,
+};
+
 export function examBankItems(name: ExamBankName): unknown[] {
   const [exam, bank] = name.split(".");
-  const banks = (exam === "cogat" ? COGAT_BANKS : ISEE_BANKS) as unknown as Record<string, unknown[]>;
-  return banks[bank] ?? [];
+  const banks = BANKS_BY_EXAM[exam] as Record<string, unknown[]> | undefined;
+  return banks?.[bank] ?? [];
 }
 
 /**

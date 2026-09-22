@@ -53,7 +53,15 @@ const RETRY_STRIDE = 1000;
  * same question twice, however different the options look. The prompt figure
  * is part of it because a picture item asks the same sentence every time
  * ("which picture belongs here?") and varies entirely in what it draws.
+ *
+ * An item with no prompt figure at all falls back to its options, because
+ * there is one kind of question whose options *are* the prompt: the NGAT's
+ * verbal item lays out six pictures and asks which does not belong. Sorted, so
+ * that reshuffling them is still not a new question -- which is the same rule
+ * as everywhere else here, applied to the only place the pictures live.
  */
 export function identity(q: Question): string {
-  return `${q.stem}::${q.figure ?? ""}`;
+  const options =
+    q.format.kind === "choice" ? [...(q.format.figures ?? [])].sort().join("") : "";
+  return `${q.stem}::${q.figure ?? options}`;
 }

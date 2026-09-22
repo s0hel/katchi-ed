@@ -1,12 +1,12 @@
 /**
- * Vendors the picture icons the CogAT banks need (run by a maintainer, not at
- * runtime).
+ * Vendors the picture icons the CogAT and NGAT banks need (run by a maintainer,
+ * not at runtime).
  *
  *   npx vite-node scripts/build-icons.ts
  *   npx vite-node scripts/build-icons.ts -- --check   # CI: fail, do not write
  *
- * CogAT's verbal battery is pictures, and a picture has to be big and clear
- * enough for a six-year-old to name at a glance. An emoji set in running text
+ * Both tests answer their verbal items with pictures, and a picture has to be
+ * big and clear enough to name at a glance. An emoji set in running text
  * is neither: it renders at the font size, and it renders as whatever glyph
  * the reader's device happens to ship. So the banks keep writing pictures as
  * emoji -- which is what makes them reviewable in a diff -- and this script
@@ -22,7 +22,7 @@
  * and the README provide.
  */
 import { readFileSync, writeFileSync } from "node:fs";
-import { COGAT_BANKS } from "../src/lib/generators/exam-banks";
+import { COGAT_BANKS, NGAT_BANKS } from "../src/lib/generators/exam-banks";
 import { COUNTABLE_OBJECTS } from "../src/lib/generators/pictures";
 
 const OUT = "src/data/picture-icons.json";
@@ -54,6 +54,9 @@ function usedEmoji(): string[] {
   }
   for (const item of COGAT_BANKS.sentenceCompletion) {
     pictures.push(item.answer, ...item.wrong);
+  }
+  for (const item of NGAT_BANKS.oddOneOut) {
+    pictures.push(...item.group, item.odd);
   }
   // Not from a bank: number analogies count these, and an object with no
   // artwork would be drawn as a text glyph six times over.

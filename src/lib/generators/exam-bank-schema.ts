@@ -6,12 +6,13 @@ import {
 import { EXAM_BANK_NAMES, examBankItems, type ExamBankName } from "./exam-banks";
 
 /**
- * Shape and sanity rules for the CogAT and ISEE banks.
+ * Shape and sanity rules for the CogAT, NGAT and ISEE banks.
  *
  * The ELA banks' rules, reused where the shape is the same (a sentence with a
  * blank is a sentence with a blank, whoever is reading it) and extended where
  * the exam asks for something the ELA banks never do: a picture item has to
- * carry a picture, and an ISEE passage keys the author's tone.
+ * carry a picture, an NGAT item needs five pictures that agree and one that
+ * does not, and an ISEE passage keys the author's tone.
  *
  * As with `bank-schema.ts`, these run in two places -- the offline generator
  * script rejects drafts with them, and exam-banks.test.ts holds what is already
@@ -55,6 +56,32 @@ const pictureSentence = z
   .refine((i) => i.s.includes("___"), { message: "s must contain a ___ blank" })
   .refine((i) => allDistinct([i.answer, ...i.wrong]), { message: "answer must differ from wrong options" });
 
+/**
+ * A Naglieri verbal item: six pictures, five sharing one idea.
+ *
+ * The check that matters is that all six are different pictures. The five are
+ * shown together with the odd one and the child picks from all six, so the
+ * same emoji twice is not a repeated distractor -- it is two options that
+ * cannot be told apart, one of which is keyed.
+ *
+ * `concept` is held to the sentence the explanation is built from ("they are
+ * all birds"), because a bank item that only names the category ("birds")
+ * reads fine in a diff and lands in front of a child as a fragment.
+ */
+const oddOneOut = z
+  .object({
+    kind: z.enum(["category", "property"]),
+    concept: nonEmpty.refine((v) => v.split(/\s+/).length >= 3, {
+      message: 'concept must read as a sentence, e.g. "they are all birds"',
+    }),
+    group: z.array(picture).length(5),
+    odd: picture,
+    why: nonEmpty,
+  })
+  .refine((i) => allDistinct([...i.group, i.odd]), {
+    message: "every picture in the item must be different",
+  });
+
 /** An ISEE passage: four keyed question types over one piece of prose. */
 const iseePassage = z
   .object({
@@ -84,6 +111,7 @@ export const EXAM_ITEM_SCHEMA = {
   "cogat.pictureAnalogies": pictureAnalogy,
   "cogat.pictureGroups": pictureGroup,
   "cogat.sentenceCompletion": pictureSentence,
+  "ngat.oddOneOut": oddOneOut,
   "isee.synonyms": wordItem,
   "isee.sentenceCompletion": sentenceItem,
   "isee.passages": iseePassage,
@@ -94,6 +122,9 @@ export const examDedupeKey: Record<ExamBankName, (item: never) => string> = {
   "cogat.pictureAnalogies": (i: { a: string; c: string }) => `${i.a}:${i.c}`.toLowerCase(),
   "cogat.pictureGroups": (i: { group: string[] }) => i.group.join("|").toLowerCase(),
   "cogat.sentenceCompletion": (i: { s: string }) => i.s.toLowerCase(),
+  // Deduped on the idea, not on the pictures: a second item keyed on "they are
+  // all birds" is the same question with a different eagle in it.
+  "ngat.oddOneOut": (i: { concept: string }) => i.concept.toLowerCase(),
   // Two synonym items for the same prompt word are one item, however
   // differently the options are written.
   "isee.synonyms": (i: [string, string, string[]]) => i[0].toLowerCase(),

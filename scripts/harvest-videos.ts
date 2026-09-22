@@ -109,7 +109,8 @@ const NO_GOOD_MATCH = new Set(["synonyms-antonyms", "analogies"]);
  * confidently unrelated. These are curated by hand or left empty; the app
  * says so rather than offering a lesson about something else.
  */
-const isExamFormat = (generator: string) => generator.startsWith("cogat-") || generator.startsWith("isee-");
+const isExamFormat = (generator: string) =>
+  ["cogat-", "ngat-", "isee-"].some((prefix) => generator.startsWith(prefix));
 
 /**
  * Per-skill overrides, for the cases where two skills share a generator but

@@ -14,14 +14,25 @@ export function str(params: Params, key: string, fallback: string): string {
   return typeof v === "string" ? v : fallback;
 }
 
-/** Build a multiple-choice question, shuffling distractors around the answer. */
+/**
+ * Build a multiple-choice question, shuffling distractors around the answer.
+ *
+ * `options` is how many the item offers in all, and it is per-exam rather than
+ * global: CogAT prints four and the NGAT prints five. A generator that cannot
+ * supply enough distinct distractors serves fewer, which is a quiet way to
+ * make an item easier -- so the exams that care assert the count in a test.
+ */
 export function choice(
   rng: Rng,
-  q: Omit<GeneratedQuestion, "format" | "answer"> & { answer: string; distractors: string[] },
+  q: Omit<GeneratedQuestion, "format" | "answer"> & {
+    answer: string;
+    distractors: string[];
+    options?: number;
+  },
 ): GeneratedQuestion {
-  const { distractors, answer, ...rest } = q;
+  const { distractors, answer, options = 4, ...rest } = q;
   const unique = Array.from(new Set(distractors.filter((d) => d !== answer)));
-  const choices = rng.shuffle([answer, ...unique.slice(0, 3)]);
+  const choices = rng.shuffle([answer, ...unique.slice(0, Math.max(1, options - 1))]);
   return { ...rest, answer, format: { kind: "choice", choices } };
 }
 
@@ -173,7 +184,12 @@ export function figureChoice(
   };
 }
 
-export const CHOICE_LABELS = ["A", "B", "C", "D", "E"] as const;
+/**
+ * Labels for picture options. Six, because the NGAT's verbal test shows six
+ * pictures and asks which of them does not belong -- the options are the
+ * question, so the count is not ours to pick.
+ */
+export const CHOICE_LABELS = ["A", "B", "C", "D", "E", "F"] as const;
 
 /**
  * A multiple-choice question whose options must keep their written order --

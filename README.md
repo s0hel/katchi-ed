@@ -1,8 +1,9 @@
 # Katchi
 
 Adaptive practice and assessments for K–8 math and language arts, plus Algebra 1
-— and entrance-test practice for the CogAT (first grade) and the ISEE (sixth
-grade). Built with Next.js App Router and deployed on Vercel.
+— and gifted- and entrance-test practice for the CogAT (first grade), the NGAT
+(fourth grade) and the ISEE (sixth grade). Built with Next.js App Router and
+deployed on Vercel.
 
 **Live:** https://katchi-ed.vercel.app
 
@@ -37,10 +38,12 @@ YouTube's privacy-enhanced player.
 
 ```
 src/lib/rng.ts            seeded xorshift PRNG — all question generation is pure
-src/lib/generators/       75 generators: 47 math, 15 ELA, 9 CogAT, 4 ISEE
-src/lib/generators/shapes.ts    figures for CogAT's nonverbal battery
-src/lib/generators/counters.ts  the abacus and the trains
-src/lib/generators/pictures.ts  picture items, drawn from vendored artwork
+src/lib/generators/       84 generators: 47 math, 15 ELA, 9 CogAT, 9 NGAT, 4 ISEE
+src/lib/generators/shapes.ts        drawing a figure: geometry, turns, shading
+src/lib/generators/figure-rules.ts  choosing one, and changing it by a rule
+src/lib/generators/grids.ts         NGAT's matrices, cut-out patterns, numerals
+src/lib/generators/counters.ts      the abacus and the trains
+src/lib/generators/pictures.ts      picture items, drawn from vendored artwork
 src/lib/curriculum.ts     the skill catalog (subject → grade → strand → skill)
 src/lib/grading.ts        answer normalization and comparison
 src/lib/smartscore.ts     the mastery meter
@@ -130,9 +133,9 @@ under `--refresh`, since no search would find them again.
 Otherwise the catalog is keyed by skill id, with one exception: a test-prep
 skill that shares a generator with a math skill shows that skill's lesson,
 because it is the same topic under a different name. A skill with no
-counterpart and no curated lesson — paper folding, ISEE synonyms, quantitative
-comparison — shows nothing and says why, rather than sending a parent to search
-for a lesson that does not exist.
+counterpart and no curated lesson — paper folding, every NGAT item, ISEE
+synonyms, quantitative comparison — shows nothing and says why, rather than
+sending a parent to search for a lesson that does not exist.
 
 ```bash
 npx vite-node scripts/harvest-videos.ts            # fill in skills with no video
@@ -144,9 +147,9 @@ npx vite-node scripts/harvest-videos.ts --refresh  # re-harvest everything
 > ordinary linking rather than redistribution, but if this becomes a paid
 > product, get that reviewed rather than assuming the embed settles it.
 
-## Test prep: CogAT and the ISEE
+## Test prep: CogAT, the NGAT, and the ISEE
 
-Two subjects in the catalog are exams rather than courses, and they behave a
+Three subjects in the catalog are exams rather than courses, and they behave a
 little differently: each is pitched at a single grade, because an exam is sat
 at one point rather than taught across a band. `SUBJECTS` marks them
 `kind: "test-prep"`, which is what the app keys off to word an assessment as a
@@ -202,15 +205,19 @@ one confound the format exists to avoid. So:
   applied twice, the rule applied to the wrong attribute, the paper left
   folded.
 
-One deliberate departure: **fewer options at the bottom tiers**. Levels 1–2 of
-a picture item offer three choices, levels 3–4 offer four. With nothing to
-read, the number of pictures to hold in mind is most of the difficulty.
+One decision worth recording: **four options everywhere, at every level.** The
+bottom tiers used to offer three, on the reasoning that an item with nothing to
+read is mostly about how many pictures a child can hold in mind at once. That
+is true, and it is exactly why three is the wrong number to practise on —
+holding four in mind is part of what the real form asks. The ramp has to come
+from the items themselves, not from hiding an option.
 
-Picture artwork is [Twemoji](https://github.com/jdecked/twemoji), licensed
-CC BY 4.0 — attribution required wherever it appears, which is why the credit
-renders under the practice question and in the worksheet footer rather than on
-a licences page nobody opens. Only the icons the banks actually use are
-vendored, so the repo carries ~140 of them rather than all 3,700:
+Picture artwork — here and in the NGAT's verbal test below — is
+[Twemoji](https://github.com/jdecked/twemoji), licensed CC BY 4.0: attribution
+is required wherever it appears, which is why the credit renders under the
+practice question and in the worksheet footer rather than on a licences page
+nobody opens. Only the icons the banks actually use are vendored, so the repo
+carries ~300 of them rather than all 3,700:
 
 ```bash
 npx vite-node scripts/build-icons.ts           # after adding picture items
@@ -221,6 +228,76 @@ npx vite-node scripts/build-icons.ts -- --check # fail if the file is stale
 > is not built on the premise that it does. What it removes is the part of a low
 > score that is only unfamiliarity — the first few figure matrices a child ever
 > sees are spent working out what is being asked rather than answering it.
+
+**NGAT — fourth grade.** The Naglieri General Ability Tests are three separate
+tests rather than one form with batteries inside it, and districts sit any
+combination of them, so the catalog keeps them apart the way a score report
+does:
+
+| Test | Skills |
+| --- | --- |
+| Verbal | Odd one out by category, Odd one out by property |
+| Nonverbal | Figure matrices, Serial reasoning, Pattern completion, Spatial visualization |
+| Quantitative | Number series, Number analogies, Number matrices, Equal amounts |
+
+Fourth grade because that is the one grade all three bands cover: the nonverbal
+and quantitative tests are levelled 3rd–4th and the verbal one 3rd–6th. Adding
+third or fifth is another key in `NGAT_BY_GRADE` and a wider verbal bank.
+
+**The only text on an NGAT page is numerals.** The instructions are animated and
+wordless so that they need no translation; the verbal test is pictures; the
+quantitative test is patterns and states outright that it contains no word
+problems. That is a different reason from CogAT Level 7's, which avoids text
+because a six-year-old cannot be assumed to read — the NGAT avoids it at every
+age because reading is the thing it is trying not to measure. Two things follow:
+
+- **Numerals are allowed, and used.** A fourth grader can reason about 3, 8, 13
+  without it becoming a reading test, and drawing those as sets of objects
+  instead would cap a series at what fits in a box. So number series and number
+  matrices are digits in boxes. Number analogies stay drawn, because that item
+  is about how many and not which — and because the published sample is exactly
+  that: two gifts become three, so one pair of scissors becomes how many.
+- **The nonverbal items are matrices with no arrows.** CogAT draws an arrow to
+  say which way the rule runs. Working that out is part of what the NGAT is
+  measuring, so a figure item here is a 2×2 or 3×3 grid with a `?` in it and
+  nothing telling you which direction to read.
+
+The verbal test is one item type — six pictures, five of which share an idea,
+pick the one that does not — so it is not three skills pretending otherwise.
+It is two, split by whether the five share what they **are** (all insects, all
+buildings) or what they **do or have** (all give off their own light, all have
+a shell). That split is ours rather than the test's: the second is reliably the
+harder reading of a picture, and one skill would ramp from the first to the
+second invisibly. The options *are* the question here — six pictures, labelled
+A to F — which is why `CHOICE_LABELS` runs to six and why the item has no prompt
+figure above the options at all.
+
+Everything nonverbal reuses the CogAT figure kit, which is why adding this test
+split it in two: `shapes.ts` draws a figure and `figure-rules.ts` chooses one
+and changes it. Both exams want the same twenty transformations over the same
+thirteen shapes and ask different questions of them; two copies would have
+drifted apart. What is new is in `grids.ts`, and two pieces of it are worth
+reading:
+
+- **Pattern completion** describes its design as numbers — families of parallel
+  lines, each with an angle, a spacing and an offset — and then draws it. The
+  right patch is that design cropped to the hole, so it cannot disagree with
+  the pattern around it; every wrong patch is the same renderer with one number
+  moved. A child rules an option out because its lines do not meet the ones
+  either side of the hole, not because it was drawn worse. Each patch emits only
+  the lines inside its own window, so two patches that look identical *are*
+  identical and one of them gets dropped rather than appearing twice.
+- **Spatial visualization** asks which option is the figure *turned*, and makes
+  the other four its mirror image at four angles. The item only exists if the
+  figure has a handedness at all — a star is its own mirror image and every
+  option would then be right — so the figure is built, then checked: none of
+  its four turns may coincide with any of its mirror's four, or the item has two
+  defensible answers and one of them is marked wrong.
+
+Every NGAT item offers five options, which is what the published samples show,
+except the verbal one, which offers six because the format does. Nothing here
+narrows the board at the lower tiers; the ramp comes from the rules a level
+allows and the slice of the bank it draws from.
 
 **ISEE, Middle Level — sixth grade.** A sixth grader applying for grades 7–8
 sits the Middle Level, and the catalog covers its four scored sections: Verbal
@@ -261,15 +338,17 @@ student cannot exhaust a skill.
 
 Anything built on words is different. Those generators pick from curated content
 — a seed chooses an item, it does not invent one — so the banks are the ceiling
-on variety: `src/data/ela-banks.json`, and `cogat-banks.json` /
-`isee-banks.json` for the two exams. `scripts/generate-items.ts` raises that
-ceiling by drafting new items with Claude offline. Banks are addressed by name,
+on variety: `src/data/ela-banks.json`, and `cogat-banks.json`,
+`ngat-banks.json` and `isee-banks.json` for the three exams.
+`scripts/generate-items.ts` raises that ceiling by drafting new items with
+Claude offline. Banks are addressed by name,
 an exam bank qualified by its test:
 
 ```bash
 export ANTHROPIC_API_KEY=...   # or: ant auth login
 npx vite-node scripts/generate-items.ts -- --bank passages --count 12
 npx vite-node scripts/generate-items.ts -- --bank isee.synonyms --count 20
+npx vite-node scripts/generate-items.ts -- --bank ngat.oddOneOut --count 12
 npx vite-node scripts/generate-items.ts -- --bank all --count 8 --dry-run
 ```
 
@@ -334,7 +413,7 @@ The production alias is public.
    accepts its own answer, and that it rejects a wrong one.
 4. Optionally add a search hint in `scripts/harvest-videos.ts` and re-run it.
 5. For a skill that draws on written content, add its bank to the right JSON
-   file, type it in `banks.ts` (ELA) or `exam-banks.ts` (CogAT, ISEE), and give
+   file, type it in `banks.ts` (ELA) or `exam-banks.ts` (the exams), and give
    it a schema and a brief in `bank-schema.ts` / `exam-bank-schema.ts` and
    `scripts/generate-items.ts` so it can be extended.
 6. For a picture skill, run `npx vite-node scripts/build-icons.ts` so the new

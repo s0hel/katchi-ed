@@ -141,7 +141,7 @@ export function DiagnosticRunner() {
           </div>
           <p className="mt-1.5 text-xs text-[var(--kx-muted)]">
             Test prep isn&apos;t offered here: a diagnostic reports the grade level you are working
-            at, and CogAT and the ISEE are each pitched at one grade. Use an assessment for those.
+            at, and CogAT, the NGAT and the ISEE are each pitched at one grade. Use an assessment for those.
           </p>
         </Field>
 

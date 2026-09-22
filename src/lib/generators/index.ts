@@ -3,6 +3,7 @@ import type { GeneratedQuestion, Question, Skill } from "../types";
 import { mathGenerators } from "./math";
 import { elaGenerators } from "./ela";
 import { cogatGenerators } from "./cogat";
+import { ngatGenerators } from "./ngat";
 import { iseeGenerators } from "./isee";
 import type { GeneratorFn } from "./helpers";
 
@@ -10,6 +11,7 @@ export const generators: Record<string, GeneratorFn> = {
   ...mathGenerators,
   ...elaGenerators,
   ...cogatGenerators,
+  ...ngatGenerators,
   ...iseeGenerators,
 };
 

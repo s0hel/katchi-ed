@@ -34,6 +34,13 @@ export const SUBJECTS: SubjectInfo[] = [
     blurb: "Cognitive Abilities Test, Level 7 — the form first graders sit. All three batteries.",
   },
   {
+    id: "ngat",
+    name: "NGAT",
+    lower: "NGAT",
+    kind: "test-prep",
+    blurb: "Naglieri General Ability Tests, fourth grade — all three tests, and almost nothing to read.",
+  },
+  {
     id: "isee",
     name: "ISEE",
     lower: "ISEE",
@@ -62,6 +69,13 @@ export const ELA_STRANDS = ["Vocabulary", "Grammar & Mechanics", "Reading Compre
  *  useless for reading a score report. */
 export const COGAT_STRANDS = ["Verbal Battery", "Quantitative Battery", "Nonverbal Battery"] as const;
 
+/**
+ * The NGAT is three separate tests rather than one form with batteries inside
+ * it, and a school may sit any combination of them -- so a catalog that ran
+ * them together would not match the report a parent is handed.
+ */
+export const NGAT_STRANDS = ["Verbal Test", "Nonverbal Test", "Quantitative Test"] as const;
+
 /** The four scored ISEE sections. The essay is sent unscored, so it has no
  *  strand here -- there would be nothing to grade against. */
 export const ISEE_STRANDS = [
@@ -86,7 +100,10 @@ const e = (name: string, strand: (typeof ELA_STRANDS)[number], generator: string
 /** Test-prep draft: the strand is a section of the exam, not a school strand. */
 const t = (
   name: string,
-  strand: (typeof COGAT_STRANDS)[number] | (typeof ISEE_STRANDS)[number],
+  strand:
+    | (typeof COGAT_STRANDS)[number]
+    | (typeof NGAT_STRANDS)[number]
+    | (typeof ISEE_STRANDS)[number],
   generator: string,
   params?: Skill["params"],
   levels?: number,
@@ -282,6 +299,37 @@ const COGAT_BY_GRADE: Record<number, Draft[]> = {
 };
 
 /**
+ * NGAT, fourth grade.
+ *
+ * The Naglieri tests are levelled by their own grade bands and they do not
+ * agree with each other: a fourth grader sits the 3rd-4th form of the
+ * nonverbal and quantitative tests and the 3rd-6th form of the verbal one.
+ * Four is the grade here because that is the one all three bands cover and
+ * where districts most often screen; adding third or fifth is a matter of
+ * another key in this table and a wider verbal bank.
+ *
+ * The strand counts are not even, and deliberately. The verbal test is a
+ * single item type asked over and over, so it is split only by what the five
+ * pictures share -- what they are, or what they do -- and no further. The
+ * nonverbal test really does ask four different questions, which is the four
+ * item types the practice literature names for a Naglieri matrix test.
+ */
+const NGAT_BY_GRADE: Record<number, Draft[]> = {
+  4: [
+    t("Odd one out by category", "Verbal Test", "ngat-odd-one-out", { kind: "category" }),
+    t("Odd one out by property", "Verbal Test", "ngat-odd-one-out", { kind: "property" }),
+    t("Figure matrices", "Nonverbal Test", "ngat-figure-matrices"),
+    t("Serial reasoning", "Nonverbal Test", "ngat-serial-reasoning"),
+    t("Pattern completion", "Nonverbal Test", "ngat-pattern-completion"),
+    t("Spatial visualization", "Nonverbal Test", "ngat-spatial-visualization"),
+    t("Number series", "Quantitative Test", "ngat-number-series"),
+    t("Number analogies", "Quantitative Test", "ngat-number-analogies"),
+    t("Number matrices", "Quantitative Test", "ngat-number-matrices"),
+    t("Equal amounts", "Quantitative Test", "ngat-equal-amounts"),
+  ],
+};
+
+/**
  * ISEE Middle Level (sixth grade).
  *
  * Mathematics Achievement reuses the math generators rather than duplicating
@@ -325,6 +373,7 @@ function build(): Skill[] {
     ["math", MATH_BY_GRADE],
     ["ela", ELA_BY_GRADE],
     ["cogat", COGAT_BY_GRADE],
+    ["ngat", NGAT_BY_GRADE],
     ["isee", ISEE_BY_GRADE],
   ] as const) {
     for (const [gradeStr, drafts] of Object.entries(table)) {

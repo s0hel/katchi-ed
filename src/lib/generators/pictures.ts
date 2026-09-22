@@ -37,6 +37,8 @@ const PICTURE_GENERATORS = new Set([
   "cogat-picture-groups",
   "cogat-sentence-completion",
   "cogat-number-analogies",
+  "ngat-odd-one-out",
+  "ngat-number-analogies",
 ]);
 
 /**
@@ -184,14 +186,21 @@ export function pictureCardSvg(picture: string): string {
 const SET_W = 82;
 const SET_H = 64;
 
-/** `count` copies of one object, packed to stay countable inside the box. */
+/**
+ * `count` copies of one object, packed to stay countable inside the box.
+ *
+ * Up to nine, because the NGAT's fourth-grade form multiplies where CogAT's
+ * first-grade one adds -- three becoming six needs a box that can hold six.
+ * Past nine the objects are too small to name, and counting them stops being
+ * incidental to the question.
+ */
 function objectSet(picture: string, count: number, x: number, y: number): string {
   const { emoji } = parsePicture(picture);
   const art = ICONS[emoji];
   // Four reads as a square, not as a row of three with one stranded below.
   const perRow = count <= 3 ? count : count === 4 ? 2 : 3;
   const rows = Math.ceil(count / perRow);
-  const size = rows === 1 ? (count <= 2 ? 27 : 23) : count <= 4 ? 24 : 21;
+  const size = rows === 1 ? (count <= 2 ? 27 : 23) : rows === 2 ? (count <= 4 ? 24 : 21) : 18;
   const stepX = size + 2;
   const stepY = size + 1;
 

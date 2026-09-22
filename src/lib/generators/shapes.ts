@@ -665,7 +665,7 @@ const CELL_CSS = "var(--kx-fig-cell, 8rem)";
  * rounding it is rounding the scale -- and the one thing this has to be is
  * exactly the same on both sides of a question.
  */
-const sized = (box: number, cell: number) =>
+export const sizedInCells = (box: number, cell: number) =>
   `class="kx-fig-sized" style="width: calc(${CELL_CSS} * ${box} / ${cell}); max-width: 100%"`;
 
 /**
@@ -676,7 +676,7 @@ const sized = (box: number, cell: number) =>
  * to "which is the large one" would be "all of them".
  */
 export function figSvg(f: Fig, unit: number, cell: number): string {
-  return `<svg viewBox="0 0 ${cell} ${cell}" ${sized(cell, cell)} role="img" aria-label="${describe(f)}">
+  return `<svg viewBox="0 0 ${cell} ${cell}" ${sizedInCells(cell, cell)} role="img" aria-label="${describe(f)}">
     ${figElements(f, cell / 2, cell / 2, unit)}
   </svg>`;
 }
@@ -693,7 +693,7 @@ export function figRowSvg(figs: Fig[], unit: number): string {
       ${figElements(f, x + cell / 2, cell / 2, unit)}`;
     })
     .join("");
-  return `<svg viewBox="0 0 ${W} ${cell}" ${sized(W, cell)} role="img"
+  return `<svg viewBox="0 0 ${W} ${cell}" ${sizedInCells(W, cell)} role="img"
     aria-label="${figs.map(describe).join("; then ")}">
     ${cells}
   </svg>`;
@@ -736,7 +736,7 @@ export function analogyGridSvg(a: Fig, b: Fig, c: Fig, unit: number): string {
        : `<text x="${right + cell / 2}" y="${y + cell / 2 + 10}" text-anchor="middle"
            font-size="28" font-weight="700" fill="var(--kx-fig-stroke)">?</text>`)}`;
 
-  return `<svg viewBox="0 0 ${W} ${H}" ${sized(W, cell)} role="img"
+  return `<svg viewBox="0 0 ${W} ${H}" ${sizedInCells(W, cell)} role="img"
     aria-label="${describe(a)} becomes ${describe(b)}. In the same way, ${describe(c)} becomes a missing figure.">
     <rect x="0.75" y="0.75" width="${W - 1.5}" height="${H - 1.5}" rx="8"
       fill="none" stroke="var(--kx-fig-stroke)" stroke-width="1.5" opacity="0.45"/>

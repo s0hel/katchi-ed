@@ -2,7 +2,7 @@
  * Core subjects teach a grade band; test-prep subjects rehearse one exam at
  * one entry point, which is why they pin a single grade in the catalog.
  */
-export type Subject = "math" | "ela" | "cogat" | "isee";
+export type Subject = "math" | "ela" | "cogat" | "ngat" | "isee";
 
 export type AnswerFormat =
   | { kind: "numeric" }
