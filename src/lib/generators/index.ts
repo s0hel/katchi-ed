@@ -43,7 +43,12 @@ export function generateQuestion(skill: Skill, level: number, seed: number): Que
   // Fold the skill id into the seed so two skills sharing a generator at the
   // same level don't serve identical questions.
   const rng = new Rng(seed ^ hashString(skill.id) ^ (level * 0x9e3779b9));
-  const q: GeneratedQuestion = fn(rng, level, skill.params ?? {});
+  // The catalog entry's own grade is handed to the generator as a parameter,
+  // because for a test-prep skill it is not decoration: the exams are levelled
+  // by grade band, and the same generator serves a first grader's form and a
+  // fourth grader's. An explicit `grade` in the skill's params still wins, so
+  // a skill can sit a form other than the one its grade names.
+  const q: GeneratedQuestion = fn(rng, level, { grade: skill.grade, ...(skill.params ?? {}) });
 
   const display = { ...q };
   for (const field of DISPLAY_FIELDS) {

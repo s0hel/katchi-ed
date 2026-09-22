@@ -70,6 +70,7 @@ const pictureSentence = z
  */
 const oddOneOut = z
   .object({
+    band: z.enum(["K-2", "3-6"]),
     kind: z.enum(["category", "property"]),
     concept: nonEmpty.refine((v) => v.split(/\s+/).length >= 3, {
       message: 'concept must read as a sentence, e.g. "they are all birds"',
@@ -123,7 +124,11 @@ export const examDedupeKey: Record<ExamBankName, (item: never) => string> = {
   "cogat.pictureGroups": (i: { group: string[] }) => i.group.join("|").toLowerCase(),
   "cogat.sentenceCompletion": (i: { s: string }) => i.s.toLowerCase(),
   // Deduped on the idea, not on the pictures: a second item keyed on "they are
-  // all birds" is the same question with a different eagle in it.
+  // all birds" is the same question with a different eagle in it. Across the
+  // bands too, and that is the stricter rule on purpose -- "they are all
+  // fruit" written for both forms is not a first-grade item and a fourth-grade
+  // item, it is one item filed twice, and it makes the harder form open on a
+  // question its own readers were asked three years earlier.
   "ngat.oddOneOut": (i: { concept: string }) => i.concept.toLowerCase(),
   // Two synonym items for the same prompt word are one item, however
   // differently the options are written.

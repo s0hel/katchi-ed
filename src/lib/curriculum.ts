@@ -299,22 +299,37 @@ const COGAT_BY_GRADE: Record<number, Draft[]> = {
 };
 
 /**
- * NGAT, fourth grade.
+ * NGAT, first and fourth grade.
  *
- * The Naglieri tests are levelled by their own grade bands and they do not
- * agree with each other: a fourth grader sits the 3rd-4th form of the
- * nonverbal and quantitative tests and the 3rd-6th form of the verbal one.
- * Four is the grade here because that is the one all three bands cover and
- * where districts most often screen; adding third or fifth is a matter of
- * another key in this table and a wider verbal bank.
+ * The Naglieri tests are levelled by grade band, and the bands do not line up
+ * with each other. A first grader sits the 1st-grade nonverbal and
+ * quantitative forms and the K-2 verbal one; a fourth grader sits the 3rd-4th
+ * forms and the 3rd-6th verbal. Both grades ask the same ten questions, which
+ * is the point of the test -- it is one instrument read at different ages --
+ * and each form decides what those questions are made of. A generator is
+ * handed its catalog entry's grade and looks the form up from it, so adding
+ * second or fifth grade is another key here and, for the verbal skills, a bank
+ * written for that band.
  *
- * The strand counts are not even, and deliberately. The verbal test is a
- * single item type asked over and over, so it is split only by what the five
- * pictures share -- what they are, or what they do -- and no further. The
- * nonverbal test really does ask four different questions, which is the four
- * item types the practice literature names for a Naglieri matrix test.
+ * The strand counts are uneven, and deliberately. The verbal test is a single
+ * item type asked over and over, so it is split only by what the five pictures
+ * share -- what they are, or what they do -- and no further. The nonverbal
+ * test really does ask four different questions, which is the four item types
+ * the practice literature names for a Naglieri matrix test.
  */
 const NGAT_BY_GRADE: Record<number, Draft[]> = {
+  1: [
+    t("Odd one out by category", "Verbal Test", "ngat-odd-one-out", { kind: "category" }),
+    t("Odd one out by property", "Verbal Test", "ngat-odd-one-out", { kind: "property" }),
+    t("Figure matrices", "Nonverbal Test", "ngat-figure-matrices"),
+    t("Serial reasoning", "Nonverbal Test", "ngat-serial-reasoning"),
+    t("Pattern completion", "Nonverbal Test", "ngat-pattern-completion"),
+    t("Spatial visualization", "Nonverbal Test", "ngat-spatial-visualization"),
+    t("Number series", "Quantitative Test", "ngat-number-series"),
+    t("Number analogies", "Quantitative Test", "ngat-number-analogies"),
+    t("Number matrices", "Quantitative Test", "ngat-number-matrices"),
+    t("Equal amounts", "Quantitative Test", "ngat-equal-amounts"),
+  ],
   4: [
     t("Odd one out by category", "Verbal Test", "ngat-odd-one-out", { kind: "category" }),
     t("Odd one out by property", "Verbal Test", "ngat-odd-one-out", { kind: "property" }),

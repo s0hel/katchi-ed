@@ -80,12 +80,22 @@ export interface CogatBanks {
  * example: the group and the odd one out arrive together, and finding the idea
  * IS the item.
  *
+ * `band` is the test's own, and the only one the verbal test has that the
+ * other two do not share: it is levelled K-2, 3-6 and 7-12, so a first grader
+ * and a fourth grader sit different forms of the same item. A bank written for
+ * one of them is not a harder or easier version of the other -- "they are all
+ * bugs" and "each one is made of glass" are different questions, not the same
+ * question at two settings.
+ *
  * `kind` is ours, not the test's. Five pictures can share what they *are* (all
  * insects) or what they *do or have* (all give off light), and the second is
  * reliably the harder reading of a picture -- so they are two skills in the
  * catalog rather than one that ramps between them invisibly.
  */
+export type VerbalBand = "K-2" | "3-6";
+
 export interface OddOneOut {
+  band: VerbalBand;
   kind: "category" | "property";
   /** what the five share, as the explanation says it: "they are all birds" */
   concept: string;

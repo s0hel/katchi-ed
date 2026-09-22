@@ -1,5 +1,5 @@
-import { choice, figureChoice, str, type GeneratorFn } from "./helpers";
-import { NGAT_BANKS, pool } from "./exam-banks";
+import { choice, figureChoice, num, str, type GeneratorFn, type Params } from "./helpers";
+import { NGAT_BANKS, pool, type VerbalBand } from "./exam-banks";
 import { COUNTABLE_OBJECTS, countAnalogySvg, countCardSvg, pictureCardSvg } from "./pictures";
 import {
   DOT_PER_ROW_MAX, MATRIX_CELL, cutoutSvg, dotArraySvg, dotsFit, matrixSvg, numberGridSvg,
@@ -57,6 +57,49 @@ import type { Rng } from "../rng";
 const OPTIONS = 5;
 const VERBAL_OPTIONS = 6;
 
+/**
+ * Which form a grade sits.
+ *
+ * The Naglieri tests are levelled by grade band, and the bands do not line up
+ * with each other: a first grader sits the 1st-grade nonverbal and
+ * quantitative forms and the K-2 verbal one, a fourth grader the 3rd-4th forms
+ * and the 3rd-6th verbal. So this is not a difficulty dial bolted onto one
+ * form. It decides which questions get asked at all -- whether the grid is
+ * ever three across, whether the numbers ever multiply, which bank the verbal
+ * item draws from -- and each grade's four levels then ramp inside that.
+ *
+ * The grade arrives as a parameter because `generateQuestion` hands every
+ * generator the grade of the catalog entry it is serving.
+ */
+interface Form {
+  band: VerbalBand;
+  /** how far past `level` the figure rules and the series tiers reach */
+  reach: number;
+  /** the biggest grid this form asks anyone to read */
+  grid: 2 | 3;
+  /** the most objects one box may hold and stay countable at a glance */
+  maxSet: number;
+  /** whether the quantitative items multiply, or only add and take away */
+  times: boolean;
+  /** how high the numerals go */
+  ceiling: number;
+  /** how many numbers a series prints, the missing one included */
+  terms: number;
+}
+
+const FORMS: Record<number, Form> = {
+  1: { band: "K-2", reach: 0, grid: 2, maxSet: 6, times: false, ceiling: 20, terms: 5 },
+  4: { band: "3-6", reach: 2, grid: 3, maxSet: 9, times: true, ceiling: 999, terms: 6 },
+};
+
+const formOf = (params: Params): Form => FORMS[num(params, "grade", 4)] ?? FORMS[4];
+
+/** Whether this form ever prints the bigger grid, at this level. */
+const wide = (form: Form, level: number) => form.grid === 3 && level >= 3;
+
+/** The hardest tier of rule or series a level may reach on this form. */
+const tierCap = (form: Form, level: number) => Math.min(4, level + form.reach);
+
 /* ----------------------------------------------------------------- verbal */
 
 /**
@@ -68,15 +111,19 @@ const VERBAL_OPTIONS = 6;
  * together and finding the idea is the item. The pictures carry no words, for
  * the same reason the real test's do not.
  *
- * `kind` splits the bank into two skills -- what five pictures *are* against
- * what they *do or have*. The test does not label them; we do, because a child
- * who can see that five things are insects may still not see that five things
- * give off their own light, and a single skill would ramp from one to the
- * other invisibly.
+ * The bank is cut twice. By `band`, which is the test's own -- the verbal test
+ * is levelled K-2, 3-6 and 7-12, and a first grader's form is not a fourth
+ * grader's with the hard items taken out. And by `kind`, which is ours: what
+ * five pictures *are* against what they *do or have*. The test does not label
+ * that second one, but a child who can see that five things are insects may
+ * still not see that five things give off their own light, and a single skill
+ * would ramp from one to the other invisibly.
  */
 const oddOneOut: GeneratorFn = (rng, level, params) => {
+  const { band } = formOf(params);
   const kind = str(params, "kind", "category");
-  const item = rng.pick(pool(NGAT_BANKS.oddOneOut.filter((i) => i.kind === kind), level));
+  const items = NGAT_BANKS.oddOneOut.filter((i) => i.band === band && i.kind === kind);
+  const item = rng.pick(pool(items, level));
   return figureChoice(rng, {
     instructions: "Five of these six pictures are alike in one way.",
     stem: "Which picture does **not** belong with the others?",
@@ -136,10 +183,11 @@ function threeShapes(rng: Rng): ShapeName[] {
  * above" answers it -- and no other rule may explain the top row and then
  * disagree about the bottom.
  */
-function analogyMatrix(rng: Rng, level: number): ReturnType<GeneratorFn> {
-  // A fourth grader starts where CogAT's top tiers leave off, so level 1 here
-  // already draws on rules that are level 3 material for a six-year-old.
-  const makers = RULE_MAKERS.filter((m) => m.tier <= level + 2);
+function analogyMatrix(rng: Rng, level: number, form: Form): ReturnType<GeneratorFn> {
+  // A fourth grader starts where CogAT's top tiers leave off, so level 1 on
+  // that form already draws on rules that are level 3 material for a
+  // six-year-old. A first grader's form walks the same list from the bottom.
+  const makers = RULE_MAKERS.filter((m) => m.tier <= tierCap(form, level));
 
   let rule: Rule = FALLBACK;
   let a = rule.start(rng);
@@ -341,11 +389,11 @@ function buildGrid(rng: Rng, makers: SeriesMaker[]): Grid | null {
  * The three-by-three matrix: one change along the rows, another down the
  * columns, and one cell left out.
  */
-function progressionMatrix(rng: Rng, level: number): ReturnType<GeneratorFn> {
-  const makers = SERIES_MAKERS.filter((m) => m.tier <= level);
+function progressionMatrix(rng: Rng, level: number, form: Form): ReturnType<GeneratorFn> {
+  const makers = SERIES_MAKERS.filter((m) => m.tier <= tierCap(form, level));
   const grid = buildGrid(rng, makers) ?? buildGrid(rng, SERIES_MAKERS.filter((m) => m.tier <= 2));
   // Nothing drew: fall back to the two-by-two, which cannot fail.
-  if (!grid) return analogyMatrix(rng, level);
+  if (!grid) return analogyMatrix(rng, level, form);
 
   const { cells, across, down, base } = grid;
   // The bottom right is the cell a reader reaches last. Level 4 moves it, so
@@ -387,9 +435,19 @@ function progressionMatrix(rng: Rng, level: number): ReturnType<GeneratorFn> {
   });
 }
 
-/** Figure matrices: a pair of boxes at the bottom, a filled grid at the top. */
-const figureMatrices: GeneratorFn = (rng, level) =>
-  level <= 2 ? analogyMatrix(rng, level) : progressionMatrix(rng, level);
+/**
+ * Figure matrices: four boxes at the bottom of a form, nine at the top of it.
+ *
+ * The three-by-three is the fourth-grade form's, and not because it is harder
+ * arithmetic -- it asks a different question. Two boxes over two show one rule
+ * and ask you to apply it; nine show two rules at once and ask you to find
+ * where they meet. A first grader's form stays at four all the way up, and
+ * ramps through the rules instead.
+ */
+const figureMatrices: GeneratorFn = (rng, level, params) => {
+  const form = formOf(params);
+  return wide(form, level) ? progressionMatrix(rng, level, form) : analogyMatrix(rng, level, form);
+};
 
 /* ------------------------------------------------------- serial reasoning */
 
@@ -423,14 +481,17 @@ function nearMissFigs(rng: Rng, f: Fig, owned: string[]): Fig[] {
  * Serial reasoning: the same three figures, once in every row and once in
  * every column.
  *
- * At the bottom two levels it is a plain sequence read the way a page is read
- * -- two rows of three, the cycle starting again on the second row -- which is
- * the form the published sample shows. Above that it is the square the test is
- * known for: three states arranged so that no row and no column repeats one,
- * which cannot be answered by continuing left to right.
+ * On the first-grade form, and at the bottom of the fourth-grade one, it is a
+ * plain sequence read the way a page is read -- two rows of three, the cycle
+ * starting again on the second row -- which is the form the published sample
+ * shows. Above that it is the square the test is known for: three states
+ * arranged so that no row and no column repeats one, which cannot be answered
+ * by continuing left to right.
  */
-const serialReasoning: GeneratorFn = (rng, level) => {
-  const makers = SERIES_MAKERS.filter((m) => m.tier <= Math.max(2, level));
+const serialReasoning: GeneratorFn = (rng, level, params) => {
+  const form = formOf(params);
+  const square = wide(form, level);
+  const makers = SERIES_MAKERS.filter((m) => m.tier <= Math.max(2, tierCap(form, level)));
   let series: Series | null = null;
   let states: Fig[] = [];
   for (let attempt = 0; attempt < 24 && !series; attempt++) {
@@ -443,17 +504,17 @@ const serialReasoning: GeneratorFn = (rng, level) => {
     series = candidate;
     states = drawn;
   }
-  if (!series) return analogyMatrix(rng, level);
+  if (!series) return analogyMatrix(rng, level, form);
 
   // Which state sits in each cell. Reading order at the bottom two levels; a
   // Latin square -- every state once per row and once per column -- above.
   const shift = rng.pick([1, 2]);
   const offset = rng.int(0, 2);
-  const rows = level <= 2 ? 2 : 3;
+  const rows = square ? 3 : 2;
   const at = (r: number, c: number) =>
-    level <= 2 ? (r * 3 + c + offset) % 3 : (r * shift + c + offset) % 3;
+    square ? (r * shift + c + offset) % 3 : (r * 3 + c + offset) % 3;
 
-  const [mr, mc] = level <= 2 ? [rows - 1, 2] : [rng.int(0, rows - 1), rng.int(0, 2)];
+  const [mr, mc] = square ? [rng.int(0, rows - 1), rng.int(0, 2)] : [rows - 1, 2];
   const answer = states[at(mr, mc)];
 
   const seen = new Set([figLook(answer)]);
@@ -475,23 +536,20 @@ const serialReasoning: GeneratorFn = (rng, level) => {
   const unit = fitUnit([...states, ...wrong], cellRoom(MATRIX_CELL));
 
   return figureChoice(rng, {
-    instructions:
-      level <= 2
-        ? "The same few figures keep coming round, in order."
-        : "Every row has each figure once, and so does every column.",
+    instructions: square
+      ? "Every row has each figure once, and so does every column."
+      : "The same few figures keep coming round, in order.",
     stem: "Which figure belongs where the **?** is?",
     figure: matrixSvg(cells, unit),
     options: OPTIONS,
     answerFigure: figSvg(answer, unit, MATRIX_CELL),
     distractorFigures: wrong.map((f) => figSvg(f, unit, MATRIX_CELL)),
-    explanation:
-      level <= 2
-        ? `Read the boxes the way you read a page. Three figures keep repeating, and ${series.words}. The next one round is ${describe(answer)}.`
-        : `Three figures appear once in every row and once in every column, and ${series.words}. That row and that column both still need ${describe(answer)}.`,
-    hint:
-      level <= 2
-        ? "Say the figures out loud in order, and keep going past the end of the first row."
-        : "Cover everything but the row with the ? in it. Which of the three is missing from it?",
+    explanation: square
+      ? `Three figures appear once in every row and once in every column, and ${series.words}. That row and that column both still need ${describe(answer)}.`
+      : `Read the boxes the way you read a page. Three figures keep repeating, and ${series.words}. The next one round is ${describe(answer)}.`,
+    hint: square
+      ? "Cover everything but the row with the ? in it. Which of the three is missing from it?"
+      : "Say the figures out loud in order, and keep going past the end of the first row.",
   });
 };
 
@@ -512,7 +570,7 @@ const turns = (f: Fig): Fig[] => [0, 1, 2, 3].map((q) => turnBy(f, q));
  * side -- a copy behind it, a solid block, a half cut off, two different
  * shapes inside.
  */
-function chiralFig(rng: Rng, level: number): Fig {
+function chiralFig(rng: Rng, level: number, form: Form): Fig {
   const dress: ((rng: Rng, f: Fig) => Fig)[] = [
     (_r, f) => ({ ...f, shape: _r.pick(["arrow", "ell", "parallelogram"] as ShapeName[]) }),
     (_r, f) => ({ ...f, ghost: true }),
@@ -524,8 +582,10 @@ function chiralFig(rng: Rng, level: number): Fig {
     },
   ];
   // More than one dressing at the top levels, so the figure carries more to
-  // keep track of while it is being turned.
-  const layers = level <= 1 ? 1 : level <= 3 ? rng.int(1, 2) : 2;
+  // keep track of while it is being turned. The first-grade form stays at one:
+  // turning a figure in your head is hard enough at six without two things
+  // hanging off it.
+  const layers = form.grid === 2 || level <= 1 ? 1 : level <= 3 ? rng.int(1, 2) : 2;
 
   for (let attempt = 0; attempt < 30; attempt++) {
     let f = anyFig(rng, { size: 2, count: 1 });
@@ -551,8 +611,8 @@ function chiralFig(rng: Rng, level: number): Fig {
  * be answered by naming what changed: a mirror image and a turn look like the
  * same kind of change until you try to make one out of the other.
  */
-const spatialVisualization: GeneratorFn = (rng, level) => {
-  const f = chiralFig(rng, level);
+const spatialVisualization: GeneratorFn = (rng, level, params) => {
+  const f = chiralFig(rng, level, formOf(params));
   const quarter = rng.pick([1, 2, 3]);
   const answer = turnBy(f, quarter);
   const wrong = rng.shuffle(turns(mirrored(f))).slice(0, 4);
@@ -576,16 +636,24 @@ const ANGLES: Family["angle"][] = [0, 90, 45, 135];
 /** Wide enough to count, close enough that every window shows at least one. */
 const SPACINGS = [26, 32, 38, 44];
 
-function makeFamilies(rng: Rng, level: number): Family[] {
-  const angles: Family["angle"][] = rng.shuffle(level <= 1 ? [0, 90] : [...ANGLES]);
-  const howMany = level <= 2 ? 1 : 2;
+function makeFamilies(rng: Rng, level: number, form: Form): Family[] {
+  // The first-grade form keeps to one set of lines, further apart, and only
+  // slants them once the bottom two levels are behind it. Two sets crossing is
+  // a fourth-grade question: it is not one pattern read more carefully, it is
+  // two patterns that both have to hold through the same hole.
+  const straightOnly = level <= (form.grid === 2 ? 2 : 1);
+  const angles: Family["angle"][] = rng.shuffle(straightOnly ? [0, 90] : [...ANGLES]);
+  // Wider spacing while the lines are still straight, so the first thing a
+  // six-year-old has to track is a couple of lines rather than six.
+  const spacings = form.grid === 2 && level <= 2 ? SPACINGS.slice(2) : SPACINGS;
+  const howMany = wide(form, level) ? 2 : 1;
   return angles.slice(0, howMany).map((angle, i) => {
-    const spacing = rng.pick(SPACINGS);
+    const spacing = rng.pick(spacings);
     return {
       angle,
       spacing,
       phase: rng.int(0, spacing - 1),
-      dashed: level >= 4 && i === 1,
+      dashed: form.grid === 3 && level >= 4 && i === 1,
     };
   });
 }
@@ -609,21 +677,32 @@ const SLANT: Record<Family["angle"], string> = {
   135: "slanting down to the right",
 };
 
-const patternCompletion: GeneratorFn = (rng, level) => {
-  const families = makeFamilies(rng, level);
+const patternCompletion: GeneratorFn = (rng, level, params) => {
+  const families = makeFamilies(rng, level, formOf(params));
   const design: Design = { families };
   const where: Window = { col: rng.int(0, 2), row: rng.int(0, 2) };
 
+  // One wrong option per kind of mistake, and only one of them at the wrong
+  // angle. Every angle the pattern is not used to be offered, which on a
+  // one-family design meant three of the four wrong pieces could be ruled out
+  // without looking at the hole at all -- leaving a five-option item that was
+  // really a choice between two.
   const spoil: Design[] = [];
+  const spare: Design[] = [];
   families.forEach((f, i) => {
     const swap = (over: Partial<Family>): Design => ({
       families: families.map((g, j) => (j === i ? { ...g, ...over } : g)),
     });
+    const elsewhere = ANGLES.filter((a) => a !== f.angle);
     spoil.push(swap({ phase: f.phase + Math.round(f.spacing / 2) }));
     spoil.push(swap({ spacing: f.spacing === SPACINGS[0] ? SPACINGS[2] : SPACINGS[0] }));
-    for (const angle of ANGLES) if (angle !== f.angle) spoil.push(swap({ angle }));
+    spoil.push(swap({ angle: rng.pick(elsewhere) }));
     spoil.push(swap({ dashed: !f.dashed }));
     if (families.length > 1) spoil.push({ families: families.filter((_, j) => j !== i) });
+    // Only reached when two of the four above draw the same lines through this
+    // particular window, which a small hole makes possible.
+    for (const angle of elsewhere) spare.push(swap({ angle }));
+    spare.push(swap({ phase: f.phase + Math.round(f.spacing / 3) }));
   });
 
   return figureChoice(rng, {
@@ -633,8 +712,9 @@ const patternCompletion: GeneratorFn = (rng, level) => {
     options: OPTIONS,
     answerFigure: patchSvg(design, where),
     // Two spoiled designs can look the same through one small window;
-    // `figureChoice` keeps the first of each and drops the repeats.
-    distractorFigures: rng.shuffle(spoil).map((d) => patchSvg(d, where)),
+    // `figureChoice` keeps the first of each and drops the repeats, and the
+    // spares are there so that dropping one never leaves the item short.
+    distractorFigures: [...rng.shuffle(spoil), ...rng.shuffle(spare)].map((d) => patchSvg(d, where)),
     explanation:
       families.length === 1
         ? `The pattern is one set of evenly spaced lines running ${SLANT[families[0].angle]}. The piece that fits carries them straight on, at the same slant and the same distance apart.`
@@ -673,9 +753,19 @@ interface Run {
   spread: number;
 }
 
-function makeRun(rng: Rng, level: number): Run {
-  const kinds =
-    level <= 1
+function makeRun(rng: Rng, level: number, form: Form): Run {
+  const n = form.terms;
+  const small = !form.times;
+  // A first grader's form adds, takes away, and repeats. Doubling and widening
+  // gaps are not those rules made harder -- they want multiplication and a
+  // second difference, neither of which anything else on that form asks for.
+  const kinds = small
+    ? level <= 1
+      ? ["add"]
+      : level === 2
+        ? ["add", "repeat"]
+        : ["add", "subtract", "repeat"]
+    : level <= 1
       ? ["add"]
       : level === 2
         ? ["add", "subtract"]
@@ -685,21 +775,22 @@ function makeRun(rng: Rng, level: number): Run {
 
   switch (rng.pick(kinds)) {
     case "subtract": {
-      const d = rng.int(2, level >= 3 ? 12 : 9);
-      const start = rng.int(d * 5 + 1, d * 5 + 40);
-      return { terms: run(6, start, (t) => t - d), words: `Take ${d} away each time`, spread: d };
+      const d = rng.int(small ? 1 : 2, small ? 3 : level >= 3 ? 12 : 9);
+      const floor = d * (n - 1) + 1;
+      const start = rng.int(floor, Math.min(form.ceiling, floor + (small ? 5 : 40)));
+      return { terms: run(n, start, (t) => t - d), words: `Take ${d} away each time`, spread: d };
     }
     case "multiply": {
       const k = rng.pick([2, 3]);
       const start = rng.int(1, k === 2 ? 5 : 3);
-      return { terms: run(5, start, (t) => t * k), words: k === 2 ? "Double each time" : `Multiply by ${k} each time`, spread: start * k * 2 };
+      return { terms: run(Math.min(5, n), start, (t) => t * k), words: k === 2 ? "Double each time" : `Multiply by ${k} each time`, spread: start * k * 2 };
     }
     case "growing": {
       const first = rng.int(1, 6);
       const grow = rng.int(1, level >= 4 ? 4 : 2);
       let gap = first;
       const start = rng.int(1, 12);
-      const terms = run(6, start, (t) => {
+      const terms = run(n, start, (t) => {
         const next = t + gap;
         gap += grow;
         return next;
@@ -712,18 +803,27 @@ function makeRun(rng: Rng, level: number): Run {
       const down = rng.intExcept(2, 10, [up]);
       const start = rng.int(down + 1, 40);
       let i = 0;
-      const terms = run(6, start, (t) => t + (i++ % 2 === 0 ? up : -down));
+      const terms = run(n, start, (t) => t + (i++ % 2 === 0 ? up : -down));
       return { terms, words: `Add ${up}, then take ${down} away, over and over`, spread: up };
     }
     case "repeat": {
-      const cycle = rng.sample([rng.int(2, 9), rng.int(10, 29), rng.int(30, 60)], rng.pick([2, 3]));
-      const terms = Array.from({ length: 6 }, (_, i) => cycle[i % cycle.length]);
-      return { terms, words: `The same ${cycle.length} numbers keep coming round`, spread: 12 };
+      // Drawn from ranges that cannot collide, so the cycle never repeats a
+      // number and "the same two keep coming round" stays true of the picture.
+      const pool = small ? [rng.int(1, 9), rng.int(10, 20)] : [rng.int(2, 9), rng.int(10, 29), rng.int(30, 60)];
+      const cycle = rng.sample(pool, small ? 2 : rng.pick([2, 3]));
+      const terms = Array.from({ length: n }, (_, i) => cycle[i % cycle.length]);
+      return { terms, words: `The same ${cycle.length} numbers keep coming round`, spread: small ? 6 : 12 };
     }
     default: {
-      const d = rng.int(2, level >= 2 ? 12 : 9);
-      const start = rng.int(1, 20);
-      return { terms: run(6, start, (t) => t + d), words: `Add ${d} each time`, spread: d };
+      // The floor rises with the ceiling, or a top-level run comes out as
+      // "add 1" and is easier than a bottom-level one.
+      const d = small
+        ? rng.int(level <= 2 ? 1 : 2, level <= 2 ? 3 : 4)
+        : rng.int(level >= 3 ? 4 : 2, level >= 2 ? 12 : 9);
+      // Every term has to stay inside what this form's numerals reach, so the
+      // run starts low enough that its last one still does.
+      const start = rng.int(1, Math.max(1, Math.min(20, form.ceiling - d * (n - 1))));
+      return { terms: run(n, start, (t) => t + d), words: `Add ${d} each time`, spread: d };
     }
   }
 }
@@ -742,11 +842,12 @@ const run = (n: number, start: number, next: (t: number) => number): number[] =>
  * eight, then thirteen of something is not what makes the item hard -- while
  * drawing them would cap the series at what fits in a box.
  */
-const numberSeries: GeneratorFn = (rng, level) => {
-  let { terms, words, spread } = makeRun(rng, level);
-  // A fourth grader has not met negative numbers, so a run that dips below
+const numberSeries: GeneratorFn = (rng, level, params) => {
+  const form = formOf(params);
+  let { terms, words, spread } = makeRun(rng, level, form);
+  // Nobody sitting this has met negative numbers, so a run that dips below
   // zero is not a harder item -- it is one asking something it never taught.
-  if (terms.some((t) => t < 0)) ({ terms, words, spread } = makeRun(rng, 1));
+  if (terms.some((t) => t < 0)) ({ terms, words, spread } = makeRun(rng, 1, form));
   // Above the bottom tiers the blank can fall inside the run, so it has to be
   // read from both sides rather than simply continued.
   const blank = level <= 2 ? terms.length - 1 : rng.int(2, terms.length - 1);
@@ -783,36 +884,49 @@ const numberSeries: GeneratorFn = (rng, level) => {
  * which. The rows deliberately use different objects, so matching on the
  * object rather than the count gets it wrong.
  *
- * Fourth grade is where this stops being addition: the top tiers double and
- * treble, which is why the boxes here hold up to nine where CogAT's hold six.
+ * Fourth grade is where this stops being addition: that form's top tiers
+ * double and treble, which is why its boxes hold up to nine. A first grader's
+ * form adds and takes away inside six, the same ceiling CogAT's Level 7 uses,
+ * because seven of anything in a box is a counting test and this is not one.
  */
-const numberAnalogies: GeneratorFn = (rng, level) => {
-  const MAX_SET = 9;
+const numberAnalogies: GeneratorFn = (rng, level, params) => {
+  const form = formOf(params);
+  const MAX_SET = form.maxSet;
   interface Change {
     to: (n: number) => number;
     words: string;
+    /** counts this change can start from and still fit the box */
     from: number[];
+    tier: 1 | 2 | 3 | 4;
+    /** whether it needs multiplying, which not every form asks for */
+    times?: boolean;
   }
   const all: Change[] = [
-    ...[1, 2, 3, 4].map((d) => ({ to: (n: number) => n + d, words: `${d} more`, from: range(1, MAX_SET - d) })),
-    ...[1, 2, 3].map((d) => ({ to: (n: number) => n - d, words: `${d} fewer`, from: range(d + 1, MAX_SET) })),
-    ...[2, 3, 4].map((k) => ({ to: (n: number) => n * k, words: `${k} times as many`, from: range(1, Math.floor(MAX_SET / k)) })),
-    { to: (n: number) => n / 2, words: "half as many", from: [2, 4, 6, 8] },
-    { to: (n: number) => n / 3, words: "a third as many", from: [3, 6, 9] },
+    ...([1, 2, 3, 4] as const).map((d) => ({
+      to: (n: number) => n + d, words: `${d} more`, from: range(1, MAX_SET - d),
+      tier: (d <= 2 ? 1 : d === 3 ? 2 : 3) as 1 | 2 | 3,
+    })),
+    ...([1, 2, 3] as const).map((d) => ({
+      to: (n: number) => n - d, words: `${d} fewer`, from: range(d + 1, MAX_SET),
+      tier: (d <= 2 ? 2 : 3) as 2 | 3,
+    })),
+    ...([2, 3, 4] as const).map((k) => ({
+      to: (n: number) => n * k, words: `${k} times as many`,
+      from: range(1, Math.floor(MAX_SET / k)), tier: (k === 2 ? 3 : 4) as 3 | 4, times: true,
+    })),
+    { to: (n: number) => n / 2, words: "half as many", from: [2, 4, 6, 8], tier: 4, times: true },
+    { to: (n: number) => n / 3, words: "a third as many", from: [3, 6, 9], tier: 4, times: true },
   ];
-  const changes =
-    level <= 1
-      ? all.filter((c) => c.words.endsWith("more"))
-      : level === 2
-        ? all.filter((c) => /more|fewer/.test(c.words))
-        : level === 3
-          ? all.filter((c) => !/third|4 times/.test(c.words))
-          : all;
 
   // A change needs two starting counts: one for the worked row and a different
   // one for the row being asked about, so the rule cannot be read as "copy the
-  // box above".
-  const change = rng.pick(changes.filter((c) => c.from.length >= 2));
+  // box above". A change whose starting counts have run out of box -- four
+  // times as many, in a box that holds six -- drops out here rather than being
+  // listed twice.
+  const changes = all.filter(
+    (c) => c.tier <= tierCap(form, level) && (form.times || !c.times) && c.from.length >= 2,
+  );
+  const change = rng.pick(changes.length ? changes : all.filter((c) => c.from.length >= 2));
   const [topFrom, bottomFrom] = rng.sample(change.from, 2);
   const answer = change.to(bottomFrom);
   const [topPicture, bottomPicture] = rng.sample(COUNTABLE_OBJECTS, 2);
@@ -862,14 +976,16 @@ const range = (lo: number, hi: number): number[] =>
  * boxes -- which is what the quantitative test's own description promises:
  * numbers and shapes arranged in a pattern, and never a word problem.
  */
-const numberMatrices: GeneratorFn = (rng, level) => {
-  const size = level <= 2 ? 2 : 3;
-  const dc = rng.int(2, level >= 3 ? 15 : 9);
-  const dr = rng.intExcept(2, level >= 3 ? 20 : 12, [dc]);
-  const base = rng.int(1, 20);
-  // At the top level the rows multiply rather than add, so the two directions
-  // are not the same kind of step.
-  const times = level >= 4 ? rng.pick([2, 3]) : 1;
+const numberMatrices: GeneratorFn = (rng, level, params) => {
+  const form = formOf(params);
+  const size = wide(form, level) ? 3 : 2;
+  const small = !form.times;
+  const dc = rng.int(small ? 1 : 2, small ? 4 : level >= 3 ? 15 : 9);
+  const dr = rng.intExcept(small ? 1 : 2, small ? 5 : level >= 3 ? 20 : 12, [dc]);
+  const base = rng.int(1, small ? 6 : 20);
+  // At the top of the fourth-grade form the rows multiply rather than add, so
+  // the two directions are not the same kind of step.
+  const times = form.times && level >= 4 ? rng.pick([2, 3]) : 1;
 
   const cell = (r: number, c: number) => (base + r * dr) * times ** c + (times === 1 ? c * dc : 0);
   const grid = range(0, size - 1).map((r) => range(0, size - 1).map((c) => cell(r, c)));
@@ -928,8 +1044,11 @@ const layoutsFor = (total: number): number[] =>
  * wrong options come from the same pool, so a short last row is never itself a
  * clue.
  */
-const equalAmounts: GeneratorFn = (rng, level) => {
-  const [lo, hi] = level <= 1 ? [6, 11] : level === 2 ? [8, 15] : level === 3 ? [10, 20] : [14, 28];
+const equalAmounts: GeneratorFn = (rng, level, params) => {
+  const form = formOf(params);
+  const [lo, hi] = form.times
+    ? level <= 1 ? [6, 11] : level === 2 ? [8, 15] : level === 3 ? [10, 20] : [14, 28]
+    : level <= 1 ? [4, 8] : level === 2 ? [5, 10] : level === 3 ? [6, 12] : [8, 14];
   let total = 0;
   let shownRow = 0;
   let answerRow = 0;

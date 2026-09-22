@@ -2,7 +2,7 @@
 
 Adaptive practice and assessments for K–8 math and language arts, plus Algebra 1
 — and gifted- and entrance-test practice for the CogAT (first grade), the NGAT
-(fourth grade) and the ISEE (sixth grade). Built with Next.js App Router and
+(first and fourth grade) and the ISEE (sixth grade). Built with Next.js App Router and
 deployed on Vercel.
 
 **Live:** https://katchi-ed.vercel.app
@@ -229,9 +229,9 @@ npx vite-node scripts/build-icons.ts -- --check # fail if the file is stale
 > score that is only unfamiliarity — the first few figure matrices a child ever
 > sees are spent working out what is being asked rather than answering it.
 
-**NGAT — fourth grade.** The Naglieri General Ability Tests are three separate
-tests rather than one form with batteries inside it, and districts sit any
-combination of them, so the catalog keeps them apart the way a score report
+**NGAT — first and fourth grade.** The Naglieri General Ability Tests are three
+separate tests rather than one form with batteries inside it, and districts sit
+any combination of them, so the catalog keeps them apart the way a score report
 does:
 
 | Test | Skills |
@@ -240,9 +240,33 @@ does:
 | Nonverbal | Figure matrices, Serial reasoning, Pattern completion, Spatial visualization |
 | Quantitative | Number series, Number analogies, Number matrices, Equal amounts |
 
-Fourth grade because that is the one grade all three bands cover: the nonverbal
-and quantitative tests are levelled 3rd–4th and the verbal one 3rd–6th. Adding
-third or fifth is another key in `NGAT_BY_GRADE` and a wider verbal bank.
+Both grades are asked those same ten questions, because that is what the test
+is: one instrument read at different ages. What changes is the **form**. The
+three tests are levelled by grade band and the bands do not line up with each
+other — a first grader sits the 1st-grade nonverbal and quantitative forms and
+the K–2 verbal one; a fourth grader sits the 3rd–4th forms and the 3rd–6th
+verbal. `FORMS` in `ngat.ts` is that table, and a generator looks its form up
+from the grade of the catalog entry it is serving, which `generateQuestion`
+hands it as a parameter.
+
+A form is not a difficulty dial. It decides what gets asked at all:
+
+| | First grade | Fourth grade |
+| --- | --- | --- |
+| Figure matrices | four boxes | four, then nine |
+| Serial reasoning | two rows of three | that, then the 3×3 square |
+| Pattern completion | one set of lines | one, then two crossing |
+| Quantitative | adds and takes away, inside 20 | doubles and trebles, no ceiling |
+| Verbal bank | the K–2 band | the 3–6 band |
+
+Nine boxes is not four boxes made harder: four show one rule and ask you to
+apply it, nine show two and ask you to find where they meet. `ngat.test.ts`
+asserts both halves of that table — that the first-grade form never reaches
+them, and that the fourth-grade one does, because every assertion of the first
+kind also passes if a form simply never reaches its own top.
+
+Adding second, third or fifth grade is another key in `FORMS` and
+`NGAT_BY_GRADE`, plus a verbal bank for whichever band it sits.
 
 **The only text on an NGAT page is numerals.** The instructions are animated and
 wordless so that they need no translation; the verbal test is pictures; the
@@ -251,12 +275,16 @@ problems. That is a different reason from CogAT Level 7's, which avoids text
 because a six-year-old cannot be assumed to read — the NGAT avoids it at every
 age because reading is the thing it is trying not to measure. Two things follow:
 
-- **Numerals are allowed, and used.** A fourth grader can reason about 3, 8, 13
-  without it becoming a reading test, and drawing those as sets of objects
-  instead would cap a series at what fits in a box. So number series and number
-  matrices are digits in boxes. Number analogies stay drawn, because that item
-  is about how many and not which — and because the published sample is exactly
-  that: two gifts become three, so one pair of scissors becomes how many.
+- **Numerals are allowed, and used** — at both grades. A number is not reading,
+  and a first grader who can count to twenty can read 2, 4, 6, 8 without it
+  becoming a reading test. (This is where the two exams in this repo part
+  company: CogAT Level 7, sat by the same six-year-olds, draws its whole
+  quantitative battery as beads and dots, because that is what *its* form
+  does.) Drawing a series as sets of objects would also cap it at what fits in
+  a box, so number series and number matrices are digits in boxes. Number
+  analogies stay drawn, because that item is about how many and not which — and
+  because the published sample is exactly that: two gifts become three, so one
+  pair of scissors becomes how many.
 - **The nonverbal items are matrices with no arrows.** CogAT draws an arrow to
   say which way the rule runs. Working that out is part of what the NGAT is
   measuring, so a figure item here is a 2×2 or 3×3 grid with a `?` in it and
@@ -271,6 +299,12 @@ harder reading of a picture, and one skill would ramp from the first to the
 second invisibly. The options *are* the question here — six pictures, labelled
 A to F — which is why `CHOICE_LABELS` runs to six and why the item has no prompt
 figure above the options at all.
+
+The bank is cut again by `band`, and that one *is* the test's: the verbal test
+is levelled K–2, 3–6 and 7–12. No concept appears in both bands, which is the
+stricter rule on purpose — "they are all fruit" written for both is not two
+items, it is one filed twice, and it makes the harder form open on a question
+its own readers were asked three years earlier.
 
 Everything nonverbal reuses the CogAT figure kit, which is why adding this test
 split it in two: `shapes.ts` draws a figure and `figure-rules.ts` chooses one
@@ -296,8 +330,8 @@ reading:
 
 Every NGAT item offers five options, which is what the published samples show,
 except the verbal one, which offers six because the format does. Nothing here
-narrows the board at the lower tiers; the ramp comes from the rules a level
-allows and the slice of the bank it draws from.
+narrows the board at the lower tiers or on the younger form; the ramp comes
+from the rules a level allows and the slice of the bank it draws from.
 
 **ISEE, Middle Level — sixth grade.** A sixth grader applying for grades 7–8
 sits the Middle Level, and the catalog covers its four scored sections: Verbal

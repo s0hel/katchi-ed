@@ -1,6 +1,35 @@
 {
   "oddOneOut": [
     {
+      "band": "K-2",
+      "kind": "category",
+      "concept": "they are all animals",
+      "group": [
+        "🐶 dog",
+        "🐱 cat",
+        "🐴 horse",
+        "🐄 cow",
+        "🐑 sheep"
+      ],
+      "odd": "🌳 tree",
+      "why": "A tree is alive and it grows, but it cannot move about or eat."
+    },
+    {
+      "band": "K-2",
+      "kind": "property",
+      "concept": "you wear all of them",
+      "group": [
+        "👕 t-shirt",
+        "🧦 sock",
+        "👟 shoe",
+        "🧤 glove",
+        "🧢 cap"
+      ],
+      "odd": "🪑 chair",
+      "why": "A chair is something you sit on, not something you put on."
+    },
+    {
+      "band": "K-2",
       "kind": "category",
       "concept": "they are all fruit",
       "group": [
@@ -8,12 +37,363 @@
         "🍌 banana",
         "🍇 grapes",
         "🍓 strawberry",
-        "🍊 orange"
+        "🍐 pear"
       ],
       "odd": "🥕 carrot",
-      "why": "A carrot is a vegetable — it is the root of the plant, not the part that carries its seeds."
+      "why": "A carrot grows under the ground and is a vegetable."
     },
     {
+      "band": "K-2",
+      "kind": "property",
+      "concept": "they all have wheels",
+      "group": [
+        "🚗 car",
+        "🚌 bus",
+        "🚲 bicycle",
+        "🛴 scooter",
+        "🛒 trolley"
+      ],
+      "odd": "🛶 canoe",
+      "why": "A canoe moves along on water, so it needs no wheels at all."
+    },
+    {
+      "band": "K-2",
+      "kind": "category",
+      "concept": "they are all toys",
+      "group": [
+        "🧸 teddy bear",
+        "🪀 yo-yo",
+        "🪁 kite",
+        "🧩 jigsaw",
+        "🎈 balloon"
+      ],
+      "odd": "🥄 spoon",
+      "why": "A spoon is something a grown-up uses for eating, not a toy."
+    },
+    {
+      "band": "K-2",
+      "kind": "property",
+      "concept": "you can eat all of them",
+      "group": [
+        "🍞 bread",
+        "🧀 cheese",
+        "🍎 apple",
+        "🥚 egg",
+        "🍪 biscuit"
+      ],
+      "odd": "🧦 sock",
+      "why": "A sock is not food, however hungry you are."
+    },
+    {
+      "band": "K-2",
+      "kind": "category",
+      "concept": "they are all farm animals",
+      "group": [
+        "🐄 cow",
+        "🐖 pig",
+        "🐔 hen",
+        "🐑 sheep",
+        "🐴 horse"
+      ],
+      "odd": "🦁 lion",
+      "why": "A lion is a wild animal. Nobody keeps one on a farm."
+    },
+    {
+      "band": "K-2",
+      "kind": "property",
+      "concept": "they all live in water",
+      "group": [
+        "🐟 fish",
+        "🐙 octopus",
+        "🦀 crab",
+        "🐬 dolphin",
+        "🐋 whale"
+      ],
+      "odd": "🐿️ squirrel",
+      "why": "A squirrel lives in trees, up in the dry air."
+    },
+    {
+      "band": "K-2",
+      "kind": "category",
+      "concept": "they are all hats",
+      "group": [
+        "🧢 cap",
+        "🎩 top hat",
+        "👑 crown",
+        "⛑️ helmet",
+        "🎓 school cap"
+      ],
+      "odd": "👟 shoe",
+      "why": "A shoe is worn too, but on your foot and never on your head."
+    },
+    {
+      "band": "K-2",
+      "kind": "property",
+      "concept": "they can all fly",
+      "group": [
+        "🐦 bird",
+        "🦋 butterfly",
+        "🐝 bee",
+        "✈️ aeroplane",
+        "🪁 kite"
+      ],
+      "odd": "🐢 tortoise",
+      "why": "A tortoise walks very slowly along the ground."
+    },
+    {
+      "band": "K-2",
+      "kind": "category",
+      "concept": "they are all flowers",
+      "group": [
+        "🌷 tulip",
+        "🌻 sunflower",
+        "🌹 rose",
+        "🌼 daisy",
+        "🌺 hibiscus"
+      ],
+      "odd": "🌳 tree",
+      "why": "A tree is a plant as well, but it is tall and woody and is not a flower."
+    },
+    {
+      "band": "K-2",
+      "kind": "property",
+      "concept": "they are all hot",
+      "group": [
+        "🔥 fire",
+        "☀️ sun",
+        "☕ hot drink",
+        "🌋 volcano",
+        "🕯️ candle"
+      ],
+      "odd": "⛄ snowman",
+      "why": "A snowman is cold, and heat is the one thing that melts him."
+    },
+    {
+      "band": "K-2",
+      "kind": "category",
+      "concept": "they are all bugs",
+      "group": [
+        "🐝 bee",
+        "🐜 ant",
+        "🦋 butterfly",
+        "🐞 ladybird",
+        "🦗 grasshopper"
+      ],
+      "odd": "🐟 fish",
+      "why": "A fish swims in water and is much bigger than a bug."
+    },
+    {
+      "band": "K-2",
+      "kind": "property",
+      "concept": "they all make a sound",
+      "group": [
+        "🔔 bell",
+        "🥁 drum",
+        "🎺 trumpet",
+        "📣 megaphone",
+        "📢 loudspeaker"
+      ],
+      "odd": "🪨 rock",
+      "why": "A rock just sits there. It makes no sound of its own."
+    },
+    {
+      "band": "K-2",
+      "kind": "category",
+      "concept": "they are all vegetables",
+      "group": [
+        "🥕 carrot",
+        "🌽 corn",
+        "🥔 potato",
+        "🥦 broccoli",
+        "🧅 onion"
+      ],
+      "odd": "🍓 strawberry",
+      "why": "A strawberry is sweet and is a fruit."
+    },
+    {
+      "band": "K-2",
+      "kind": "property",
+      "concept": "you can drink all of them",
+      "group": [
+        "🥛 milk",
+        "☕ coffee",
+        "🧃 juice",
+        "🍵 tea",
+        "💧 water"
+      ],
+      "odd": "🍞 bread",
+      "why": "Bread is food you chew. You cannot drink it."
+    },
+    {
+      "band": "K-2",
+      "kind": "category",
+      "concept": "they are all birds",
+      "group": [
+        "🐔 hen",
+        "🦆 duck",
+        "🦉 owl",
+        "🦅 eagle",
+        "🐧 penguin"
+      ],
+      "odd": "🐰 rabbit",
+      "why": "A rabbit has fur and long ears. Birds have feathers and beaks."
+    },
+    {
+      "band": "K-2",
+      "kind": "property",
+      "concept": "they all keep you warm",
+      "group": [
+        "🧥 coat",
+        "🧦 sock",
+        "🧤 glove",
+        "🧣 scarf",
+        "🔥 fire"
+      ],
+      "odd": "🧊 ice cube",
+      "why": "An ice cube makes you colder, not warmer."
+    },
+    {
+      "band": "K-2",
+      "kind": "category",
+      "concept": "they are all clothes",
+      "group": [
+        "👕 t-shirt",
+        "👖 trousers",
+        "🧦 sock",
+        "👗 dress",
+        "🧥 coat"
+      ],
+      "odd": "🪑 chair",
+      "why": "A chair is furniture. You cannot put it on."
+    },
+    {
+      "band": "K-2",
+      "kind": "property",
+      "concept": "they are all round",
+      "group": [
+        "⚽ football",
+        "🏀 basketball",
+        "🍊 orange",
+        "🌕 moon",
+        "🪙 coin"
+      ],
+      "odd": "📕 book",
+      "why": "A book has straight edges and four corners."
+    },
+    {
+      "band": "K-2",
+      "kind": "category",
+      "concept": "they are all sea animals",
+      "group": [
+        "🐟 fish",
+        "🐙 octopus",
+        "🦈 shark",
+        "🐬 dolphin",
+        "🦀 crab"
+      ],
+      "odd": "🐄 cow",
+      "why": "A cow lives in a field on dry land."
+    },
+    {
+      "band": "K-2",
+      "kind": "property",
+      "concept": "you can see in the dark with all of them",
+      "group": [
+        "🔦 torch",
+        "🕯️ candle",
+        "💡 light bulb",
+        "🏮 lantern",
+        "🌕 full moon"
+      ],
+      "odd": "☂️ umbrella",
+      "why": "An umbrella keeps the rain off. It gives no light."
+    },
+    {
+      "band": "K-2",
+      "kind": "category",
+      "concept": "they are all musical instruments",
+      "group": [
+        "🥁 drum",
+        "🎸 guitar",
+        "🎺 trumpet",
+        "🎻 violin",
+        "🪗 accordion"
+      ],
+      "odd": "🎨 paints",
+      "why": "Paints are for making pictures, not sounds."
+    },
+    {
+      "band": "K-2",
+      "kind": "property",
+      "concept": "they all have legs",
+      "group": [
+        "🐶 dog",
+        "🐔 hen",
+        "🐘 elephant",
+        "🕷️ spider",
+        "🪑 chair"
+      ],
+      "odd": "🐍 snake",
+      "why": "A snake has no legs at all. It slides along on its belly."
+    },
+    {
+      "band": "K-2",
+      "kind": "category",
+      "concept": "they are all kinds of weather",
+      "group": [
+        "☀️ sunshine",
+        "🌧️ rain",
+        "❄️ snow",
+        "⛈️ thunderstorm",
+        "🌫️ fog"
+      ],
+      "odd": "🌙 moon",
+      "why": "The moon is up in the sky in all weathers, but it is not weather."
+    },
+    {
+      "band": "K-2",
+      "kind": "property",
+      "concept": "you can write or draw with all of them",
+      "group": [
+        "✏️ pencil",
+        "🖊️ pen",
+        "🖍️ crayon",
+        "🖌️ paintbrush",
+        "✒️ ink pen"
+      ],
+      "odd": "📒 notebook",
+      "why": "A notebook is what you write on, not what you write with."
+    },
+    {
+      "band": "K-2",
+      "kind": "category",
+      "concept": "they are all parts of a face",
+      "group": [
+        "👁️ eye",
+        "👂 ear",
+        "👃 nose",
+        "👄 mouth",
+        "🦷 tooth"
+      ],
+      "odd": "🦶 foot",
+      "why": "A foot is part of you, but it is a long way from your face."
+    },
+    {
+      "band": "K-2",
+      "kind": "property",
+      "concept": "they all open and shut",
+      "group": [
+        "🚪 door",
+        "📕 book",
+        "☂️ umbrella",
+        "💼 case",
+        "🪟 window"
+      ],
+      "odd": "🪨 rock",
+      "why": "A rock is solid all the way through. There is nothing to open."
+    },
+    {
+      "band": "3-6",
       "kind": "property",
       "concept": "each one is worn on your feet",
       "group": [
@@ -27,6 +407,7 @@
       "why": "A glove is worn, but on a hand."
     },
     {
+      "band": "3-6",
       "kind": "category",
       "concept": "they are all sports balls",
       "group": [
@@ -40,32 +421,21 @@
       "why": "A die is used in games too, but you roll it rather than throw or kick it, and it is not a ball."
     },
     {
-      "kind": "property",
-      "concept": "they all have wheels",
-      "group": [
-        "🚗 car",
-        "🚲 bicycle",
-        "🛒 shopping trolley",
-        "🛹 skateboard",
-        "✈️ aeroplane"
-      ],
-      "odd": "🛶 canoe",
-      "why": "A canoe carries people the way the others do, but it slides through water on nothing at all."
-    },
-    {
+      "band": "3-6",
       "kind": "category",
-      "concept": "they are all musical instruments",
+      "concept": "they are all things a doctor uses",
       "group": [
-        "🎸 guitar",
-        "🥁 drum",
-        "🎺 trumpet",
-        "🎻 violin",
-        "🎹 piano"
+        "💉 syringe",
+        "🩺 stethoscope",
+        "🩹 plaster",
+        "💊 pill",
+        "🌡️ thermometer"
       ],
-      "odd": "🎤 microphone",
-      "why": "A microphone carries sound to a loudspeaker; it makes no sound of its own."
+      "odd": "🔨 hammer",
+      "why": "A hammer is a builder's tool. Nobody is treated with one."
     },
     {
+      "band": "3-6",
       "kind": "property",
       "concept": "they all give off their own light",
       "group": [
@@ -79,32 +449,7 @@
       "why": "A mirror looks bright, but it only sends back light that something else made."
     },
     {
-      "kind": "category",
-      "concept": "they are all birds",
-      "group": [
-        "🦅 eagle",
-        "🦉 owl",
-        "🦆 duck",
-        "🐧 penguin",
-        "🦜 parrot"
-      ],
-      "odd": "🦇 bat",
-      "why": "A bat flies and has wings, but it is a mammal — it has fur and feeds its young on milk."
-    },
-    {
-      "kind": "property",
-      "concept": "each one is used for writing or drawing",
-      "group": [
-        "✏️ pencil",
-        "🖊️ pen",
-        "🖍️ crayon",
-        "🖌️ paintbrush",
-        "🪶 quill"
-      ],
-      "odd": "📏 ruler",
-      "why": "A ruler guides a line and measures it, but it leaves no mark of its own."
-    },
-    {
+      "band": "3-6",
       "kind": "category",
       "concept": "they are all tools for building",
       "group": [
@@ -118,6 +463,21 @@
       "why": "A brick is what gets built with, not what does the building."
     },
     {
+      "band": "3-6",
+      "kind": "category",
+      "concept": "they are all made of paper",
+      "group": [
+        "📰 newspaper",
+        "📒 notebook",
+        "🧻 paper roll",
+        "🎫 ticket",
+        "📦 cardboard box"
+      ],
+      "odd": "🪟 window",
+      "why": "A window is glass, however thin it looks."
+    },
+    {
+      "band": "3-6",
       "kind": "property",
       "concept": "they all float",
       "group": [
@@ -131,19 +491,7 @@
       "why": "An anchor is made to do the opposite: it sinks, and holds a boat in place."
     },
     {
-      "kind": "category",
-      "concept": "they are all clothes",
-      "group": [
-        "👕 t-shirt",
-        "👖 jeans",
-        "🧥 coat",
-        "👗 dress",
-        "🧦 sock"
-      ],
-      "odd": "👜 handbag",
-      "why": "A handbag is carried rather than worn, and nothing goes inside it but your things."
-    },
-    {
+      "band": "3-6",
       "kind": "property",
       "concept": "every one of them tells you the time",
       "group": [
@@ -157,6 +505,21 @@
       "why": "A compass has a dial and a moving needle like a clock, but it tells you which way you are facing."
     },
     {
+      "band": "3-6",
+      "kind": "property",
+      "concept": "they all carry things from place to place",
+      "group": [
+        "🚚 lorry",
+        "✉️ envelope",
+        "🪣 bucket",
+        "🛒 trolley",
+        "🎒 backpack"
+      ],
+      "odd": "🪑 chair",
+      "why": "A chair holds something up, but it stays where it is put."
+    },
+    {
+      "band": "3-6",
       "kind": "category",
       "concept": "they are all insects",
       "group": [
@@ -170,6 +533,7 @@
       "why": "A spider has eight legs and no wings; every insect has six legs and three body parts."
     },
     {
+      "band": "3-6",
       "kind": "property",
       "concept": "they all keep the rain off you",
       "group": [
@@ -183,6 +547,7 @@
       "why": "Sunglasses are for bright weather, not wet weather — they keep light out, not water."
     },
     {
+      "band": "3-6",
       "kind": "category",
       "concept": "they are all buildings",
       "group": [
@@ -196,6 +561,21 @@
       "why": "A bridge is built, but nobody lives or works inside it — it carries you across."
     },
     {
+      "band": "3-6",
+      "kind": "category",
+      "concept": "they are all grains, or made from grain",
+      "group": [
+        "🌾 wheat",
+        "🍞 bread",
+        "🍚 rice",
+        "🍝 pasta",
+        "🥣 porridge"
+      ],
+      "odd": "🥛 milk",
+      "why": "Milk comes from an animal; everything else here was grown in a field."
+    },
+    {
+      "band": "3-6",
       "kind": "property",
       "concept": "they all come from a plant",
       "group": [
@@ -209,19 +589,7 @@
       "why": "An egg is laid by a bird; everything else here was grown."
     },
     {
-      "kind": "category",
-      "concept": "they are all sea animals",
-      "group": [
-        "🐟 fish",
-        "🐙 octopus",
-        "🦈 shark",
-        "🐬 dolphin",
-        "🦐 prawn"
-      ],
-      "odd": "🦅 eagle",
-      "why": "An eagle hunts fish and flies over the sea, but it lives in the air and on land."
-    },
-    {
+      "band": "3-6",
       "kind": "property",
       "concept": "each one measures something",
       "group": [
@@ -235,19 +603,7 @@
       "why": "A magnifying glass makes things look bigger; it never tells you how big they are."
     },
     {
-      "kind": "category",
-      "concept": "they are all kinds of weather",
-      "group": [
-        "☀️ sunshine",
-        "🌧️ rain",
-        "❄️ snow",
-        "🌪️ tornado",
-        "⛈️ thunderstorm"
-      ],
-      "odd": "🌡️ thermometer",
-      "why": "A thermometer measures the weather; it is not weather itself."
-    },
-    {
+      "band": "3-6",
       "kind": "property",
       "concept": "each one has a shell",
       "group": [
@@ -261,6 +617,21 @@
       "why": "A frog has bare, damp skin and nothing hard on the outside."
     },
     {
+      "band": "3-6",
+      "kind": "category",
+      "concept": "they were all once alive",
+      "group": [
+        "🪵 log",
+        "🍂 fallen leaf",
+        "🐚 seashell",
+        "🪶 feather",
+        "🧶 wool"
+      ],
+      "odd": "🪨 rock",
+      "why": "A rock was never alive — it was never part of a plant or an animal."
+    },
+    {
+      "band": "3-6",
       "kind": "category",
       "concept": "they are all mammals",
       "group": [
@@ -274,6 +645,7 @@
       "why": "A dolphin lives in the sea but is still a mammal; a penguin is a bird, with feathers and eggs."
     },
     {
+      "band": "3-6",
       "kind": "property",
       "concept": "all of them fly with no engine",
       "group": [
@@ -287,6 +659,7 @@
       "why": "A helicopter stays up only while its engine runs."
     },
     {
+      "band": "3-6",
       "kind": "category",
       "concept": "they are all trees or plants",
       "group": [
@@ -300,6 +673,21 @@
       "why": "A mushroom is a fungus: it has no leaves and makes no food from sunlight."
     },
     {
+      "band": "3-6",
+      "kind": "property",
+      "concept": "every one of them is a liquid",
+      "group": [
+        "💧 water",
+        "🥛 milk",
+        "🍯 honey",
+        "🛢️ oil",
+        "☕ coffee"
+      ],
+      "odd": "🧊 ice cube",
+      "why": "An ice cube is water too, but frozen solid — it holds its own shape instead of taking the shape of its container."
+    },
+    {
+      "band": "3-6",
       "kind": "property",
       "concept": "they all need electricity to work",
       "group": [
@@ -313,6 +701,7 @@
       "why": "A candle makes its light by burning, with no electricity at all."
     },
     {
+      "band": "3-6",
       "kind": "category",
       "concept": "they are all parts of your body",
       "group": [
@@ -326,6 +715,7 @@
       "why": "A cap goes on a body, but it is not part of one."
     },
     {
+      "band": "3-6",
       "kind": "property",
       "concept": "each one is made of glass",
       "group": [
@@ -339,6 +729,21 @@
       "why": "A brick is baked clay — hard like glass, but you cannot see through it."
     },
     {
+      "band": "3-6",
+      "kind": "category",
+      "concept": "they are all sources of energy",
+      "group": [
+        "☀️ sun",
+        "💨 wind",
+        "🔋 battery",
+        "🌊 wave",
+        "🔥 fire"
+      ],
+      "odd": "💡 light bulb",
+      "why": "A light bulb uses energy up rather than supplying it."
+    },
+    {
+      "band": "3-6",
       "kind": "category",
       "concept": "they are all things you find in a kitchen",
       "group": [
@@ -352,6 +757,7 @@
       "why": "A toothbrush belongs in a bathroom; everything else here is for cooking or eating."
     },
     {
+      "band": "3-6",
       "kind": "property",
       "concept": "every one of them holds water",
       "group": [
@@ -365,6 +771,7 @@
       "why": "A basket is a container too, but water runs straight out through the weave."
     },
     {
+      "band": "3-6",
       "kind": "category",
       "concept": "they are all found in the sky",
       "group": [
@@ -378,6 +785,21 @@
       "why": "A wave belongs to the sea, however high it rises."
     },
     {
+      "band": "3-6",
+      "kind": "property",
+      "concept": "each one of them turns into something else",
+      "group": [
+        "🐛 caterpillar",
+        "🥚 egg",
+        "🌰 acorn",
+        "🌱 seedling",
+        "🧊 ice cube"
+      ],
+      "odd": "🪨 rock",
+      "why": "A rock stays a rock. Everything else here becomes a different thing entirely."
+    },
+    {
+      "band": "3-6",
       "kind": "property",
       "concept": "each one is frozen",
       "group": [
@@ -391,6 +813,7 @@
       "why": "Fire is the one thing here that melts the rest."
     },
     {
+      "band": "3-6",
       "kind": "category",
       "concept": "they are all ways of travelling on land",
       "group": [
@@ -404,6 +827,7 @@
       "why": "A sailing boat carries you, but only across water."
     },
     {
+      "band": "3-6",
       "kind": "property",
       "concept": "they are all made of metal",
       "group": [
@@ -417,6 +841,21 @@
       "why": "A log is wood — it floats, it burns, and it was once alive."
     },
     {
+      "band": "3-6",
+      "kind": "category",
+      "concept": "they all travel in space",
+      "group": [
+        "🚀 rocket",
+        "🛰️ satellite",
+        "🌍 Earth",
+        "☄️ comet",
+        "🌕 moon"
+      ],
+      "odd": "✈️ aeroplane",
+      "why": "An aeroplane needs air under its wings, so it can never leave the sky."
+    },
+    {
+      "band": "3-6",
       "kind": "category",
       "concept": "they are all written or printed to be read",
       "group": [
@@ -430,19 +869,7 @@
       "why": "A crayon is what you write with, not something written."
     },
     {
-      "kind": "property",
-      "concept": "each one of them can be eaten",
-      "group": [
-        "🍞 bread",
-        "🧀 cheese",
-        "🍯 honey",
-        "🥚 egg",
-        "🍄 mushroom"
-      ],
-      "odd": "🧼 soap",
-      "why": "Soap is shaped and wrapped like food, and it is the one thing here you must not eat."
-    },
-    {
+      "band": "3-6",
       "kind": "category",
       "concept": "they are all reptiles",
       "group": [
@@ -456,6 +883,7 @@
       "why": "A frog is an amphibian: it starts life in water as a tadpole and keeps damp skin."
     },
     {
+      "band": "3-6",
       "kind": "property",
       "concept": "every one of them gives out heat",
       "group": [
