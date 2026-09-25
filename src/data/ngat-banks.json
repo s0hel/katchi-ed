@@ -896,5 +896,877 @@
       "odd": "🧊 ice cube",
       "why": "An ice cube does the opposite — it takes heat out of whatever it touches."
     }
+  ],
+  "pictureAnalogies": [
+    {
+      "band": "K-2",
+      "a": "🐄 cow",
+      "b": "🥛 milk",
+      "c": "🐔 hen",
+      "answer": "🥚 egg",
+      "wrong": [
+        "🌾 wheat",
+        "🍞 bread",
+        "🐣 chick",
+        "🍯 honey"
+      ],
+      "why": "A cow gives us milk, and a hen gives us eggs."
+    },
+    {
+      "band": "K-2",
+      "a": "🦶 foot",
+      "b": "🧦 sock",
+      "c": "✋ hand",
+      "answer": "🧤 glove",
+      "wrong": [
+        "👟 shoe",
+        "🧢 cap",
+        "👂 ear",
+        "👖 trousers"
+      ],
+      "why": "A sock goes on a foot, so the thing that goes on a hand is a glove."
+    },
+    {
+      "band": "K-2",
+      "a": "🍋 lemon",
+      "b": "🌻 sunflower",
+      "c": "🍅 tomato",
+      "answer": "🍓 strawberry",
+      "wrong": [
+        "🫐 blueberry",
+        "🥬 lettuce",
+        "🍇 grapes",
+        "🍌 banana"
+      ],
+      "why": "The first two are both yellow, so the next two must both be red."
+    },
+    {
+      "band": "K-2",
+      "a": "☂️ umbrella",
+      "b": "🌧️ rain",
+      "c": "🕶️ sunglasses",
+      "answer": "☀️ sunshine",
+      "wrong": [
+        "❄️ snow",
+        "🌙 moon",
+        "☁️ cloud",
+        "💨 wind"
+      ],
+      "why": "You carry an umbrella in the rain, and you wear sunglasses in the sunshine."
+    },
+    {
+      "band": "K-2",
+      "a": "🥚 egg",
+      "b": "🐔 hen",
+      "c": "🌱 seedling",
+      "answer": "🌳 tree",
+      "wrong": [
+        "🌻 flower",
+        "🍎 apple",
+        "🪵 log",
+        "🐛 caterpillar"
+      ],
+      "why": "An egg grows into a hen, and a seedling grows into a tree."
+    },
+    {
+      "band": "K-2",
+      "a": "🚗 car",
+      "b": "🛣️ road",
+      "c": "🚂 train",
+      "answer": "🛤️ railway track",
+      "wrong": [
+        "🌊 sea",
+        "☁️ sky",
+        "🏠 house",
+        "🚲 bicycle"
+      ],
+      "why": "A car runs on a road, and a train runs on a track."
+    },
+    {
+      "band": "K-2",
+      "a": "🐝 bee",
+      "b": "🌼 flower",
+      "c": "🐦 bird",
+      "answer": "🪱 worm",
+      "wrong": [
+        "🌳 tree",
+        "🪺 nest",
+        "☁️ cloud",
+        "🐛 caterpillar"
+      ],
+      "why": "A bee feeds at a flower, and a bird feeds on a worm."
+    },
+    {
+      "band": "K-2",
+      "a": "🐟 fish",
+      "b": "🌊 sea",
+      "c": "🐦 bird",
+      "answer": "☁️ sky",
+      "wrong": [
+        "🪺 nest",
+        "🌳 tree",
+        "🏠 house",
+        "🌍 world map"
+      ],
+      "why": "A fish moves through the sea, and a bird moves through the sky."
+    },
+    {
+      "band": "K-2",
+      "a": "🥄 spoon",
+      "b": "🍲 soup",
+      "c": "🍴 fork",
+      "answer": "🍝 pasta",
+      "wrong": [
+        "🥛 milk",
+        "🍵 tea",
+        "🧊 ice cube",
+        "🍞 bread"
+      ],
+      "why": "You eat soup with a spoon, and you eat pasta with a fork."
+    },
+    {
+      "band": "K-2",
+      "a": "🍌 banana",
+      "b": "🧀 cheese",
+      "c": "🍓 strawberry",
+      "answer": "🍎 apple",
+      "wrong": [
+        "🫐 blueberry",
+        "🥒 cucumber",
+        "🍇 grapes",
+        "🥔 potato"
+      ],
+      "why": "The first two are both yellow, so the next two must both be red."
+    },
+    {
+      "band": "K-2",
+      "a": "🥛 milk",
+      "b": "🧀 cheese",
+      "c": "🌾 wheat",
+      "answer": "🍞 bread",
+      "wrong": [
+        "🥚 egg",
+        "🍎 apple",
+        "🍚 rice",
+        "🍯 honey"
+      ],
+      "why": "Cheese is made from milk, and bread is made from wheat."
+    },
+    {
+      "band": "K-2",
+      "a": "🐔 hen",
+      "b": "🥚 egg",
+      "c": "🌳 tree",
+      "answer": "🍎 apple",
+      "wrong": [
+        "🍂 fallen leaf",
+        "🪵 log",
+        "🐛 caterpillar",
+        "🌰 acorn"
+      ],
+      "why": "A hen gives us eggs, and a tree gives us apples."
+    },
+    {
+      "band": "K-2",
+      "a": "🎹 piano",
+      "b": "🎵 music",
+      "c": "🖍️ crayon",
+      "answer": "🖼️ picture",
+      "wrong": [
+        "📕 book",
+        "🎤 microphone",
+        "✏️ pencil",
+        "🎨 paints"
+      ],
+      "why": "A piano makes music, and a crayon makes a picture."
+    },
+    {
+      "band": "K-2",
+      "a": "🐜 ant",
+      "b": "🐘 elephant",
+      "c": "🐁 mouse",
+      "answer": "🐴 horse",
+      "wrong": [
+        "🐝 bee",
+        "🐀 rat",
+        "🐢 tortoise",
+        "🐦 bird"
+      ],
+      "why": "The first is tiny and the second is huge, and a mouse is tiny where a horse is huge."
+    },
+    {
+      "band": "3-6",
+      "a": "🌾 wheat",
+      "b": "🍞 bread",
+      "c": "🌽 corn",
+      "answer": "🍿 popcorn",
+      "wrong": [
+        "🥛 milk",
+        "🍎 apple",
+        "🥔 potato",
+        "🧀 cheese"
+      ],
+      "why": "Bread is made from wheat, and popcorn is made from corn."
+    },
+    {
+      "band": "3-6",
+      "a": "📕 book",
+      "b": "📚 library",
+      "c": "🖼️ painting",
+      "answer": "🏛️ museum",
+      "wrong": [
+        "🏫 school",
+        "🏠 house",
+        "🏥 hospital",
+        "🎭 theatre"
+      ],
+      "why": "A library is where books are kept, and a museum is where paintings are kept."
+    },
+    {
+      "band": "3-6",
+      "a": "🔭 telescope",
+      "b": "⭐ star",
+      "c": "🔬 microscope",
+      "answer": "🦠 germ",
+      "wrong": [
+        "🌳 tree",
+        "🏔️ mountain",
+        "🐘 elephant",
+        "🌈 rainbow"
+      ],
+      "why": "A telescope shows you things too far away to see, and a microscope shows you things too small to see."
+    },
+    {
+      "band": "3-6",
+      "a": "🕷️ spider",
+      "b": "🕸️ web",
+      "c": "🐦 bird",
+      "answer": "🪺 nest",
+      "wrong": [
+        "🌳 tree",
+        "🥚 egg",
+        "🪶 feather",
+        "🐛 caterpillar"
+      ],
+      "why": "A spider builds a web, and a bird builds a nest."
+    },
+    {
+      "band": "3-6",
+      "a": "🐑 sheep",
+      "b": "🧶 wool",
+      "c": "🦆 duck",
+      "answer": "🪶 feather",
+      "wrong": [
+        "🥛 milk",
+        "🥚 egg",
+        "🧵 thread",
+        "🍖 meat"
+      ],
+      "why": "Wool is what covers a sheep, and feathers are what cover a duck."
+    },
+    {
+      "band": "3-6",
+      "a": "🩺 stethoscope",
+      "b": "🏥 hospital",
+      "c": "🔨 hammer",
+      "answer": "🏗️ building site",
+      "wrong": [
+        "🏫 school",
+        "🏦 bank",
+        "🏠 house",
+        "🚒 fire engine"
+      ],
+      "why": "A stethoscope is a tool of the hospital, and a hammer is a tool of the building site."
+    },
+    {
+      "band": "3-6",
+      "a": "🌰 acorn",
+      "b": "🌳 oak tree",
+      "c": "🐛 caterpillar",
+      "answer": "🦋 butterfly",
+      "wrong": [
+        "🍂 fallen leaf",
+        "🌱 seedling",
+        "🐝 bee",
+        "🪵 log"
+      ],
+      "why": "An acorn grows into an oak, and a caterpillar turns into a butterfly."
+    },
+    {
+      "band": "3-6",
+      "a": "🐪 camel",
+      "b": "🏜️ desert",
+      "c": "🐻‍❄️ polar bear",
+      "answer": "❄️ snow",
+      "wrong": [
+        "🌳 tree",
+        "🌊 sea",
+        "🏠 house",
+        "🌵 cactus"
+      ],
+      "why": "A camel is built for the desert, and a polar bear is built for the snow and ice."
+    },
+    {
+      "band": "3-6",
+      "a": "🌳 tree",
+      "b": "🍂 leaf",
+      "c": "📕 book",
+      "answer": "📄 page",
+      "wrong": [
+        "🖊️ pen",
+        "📚 books",
+        "🪵 log",
+        "🔖 bookmark"
+      ],
+      "why": "A leaf is one part of a tree, and a page is one part of a book."
+    },
+    {
+      "band": "3-6",
+      "a": "✈️ aeroplane",
+      "b": "☁️ sky",
+      "c": "🚢 ship",
+      "answer": "🌊 sea",
+      "wrong": [
+        "🛣️ road",
+        "🏔️ mountain",
+        "🚂 train",
+        "🏖️ beach"
+      ],
+      "why": "An aeroplane travels through the sky, and a ship travels across the sea."
+    },
+    {
+      "band": "3-6",
+      "a": "🕰️ clock",
+      "b": "⏳ hourglass",
+      "c": "📏 ruler",
+      "answer": "📐 set square",
+      "wrong": [
+        "🖊️ pen",
+        "📕 book",
+        "🔦 torch",
+        "🧵 thread"
+      ],
+      "why": "The first two both measure time, so the next two must both measure length."
+    },
+    {
+      "band": "3-6",
+      "a": "🐄 cow",
+      "b": "🌾 grass",
+      "c": "🦁 lion",
+      "answer": "🍖 meat",
+      "wrong": [
+        "🥛 milk",
+        "🌳 tree",
+        "🐘 elephant",
+        "🍎 apple"
+      ],
+      "why": "A cow eats grass, and a lion eats meat."
+    },
+    {
+      "band": "3-6",
+      "a": "✂️ scissors",
+      "b": "📄 paper",
+      "c": "🪚 saw",
+      "answer": "🪵 log",
+      "wrong": [
+        "🔨 hammer",
+        "🧵 thread",
+        "🪨 rock",
+        "🧱 brick"
+      ],
+      "why": "Scissors are for cutting paper, and a saw is for cutting wood."
+    },
+    {
+      "band": "3-6",
+      "a": "🚒 fire engine",
+      "b": "🔥 fire",
+      "c": "🚑 ambulance",
+      "answer": "🤕 injury",
+      "wrong": [
+        "🚓 police car",
+        "🏥 hospital",
+        "🚨 siren",
+        "💊 pill"
+      ],
+      "why": "A fire engine is sent to a fire, and an ambulance is sent to someone hurt."
+    }
+  ],
+  "pairs": [
+    {
+      "band": "K-2",
+      "top": [
+        "🧦 sock",
+        "🍎 apple",
+        "🚗 car"
+      ],
+      "answer": "🍌 banana",
+      "mate": "🍎 apple",
+      "wrong": [
+        "🪑 chair",
+        "🐶 dog",
+        "☁️ cloud",
+        "🖊️ pen"
+      ],
+      "why": "An apple and a banana are both fruit. Nothing else here goes with a sock or a car."
+    },
+    {
+      "band": "K-2",
+      "top": [
+        "🐟 fish",
+        "👟 shoe",
+        "🌳 tree"
+      ],
+      "answer": "👢 boot",
+      "mate": "👟 shoe",
+      "wrong": [
+        "🍞 bread",
+        "🌙 moon",
+        "🔨 hammer",
+        "🎈 balloon"
+      ],
+      "why": "A shoe and a boot are both worn on your feet."
+    },
+    {
+      "band": "K-2",
+      "top": [
+        "🥕 carrot",
+        "🔨 hammer",
+        "☂️ umbrella"
+      ],
+      "answer": "🪛 screwdriver",
+      "mate": "🔨 hammer",
+      "wrong": [
+        "🐱 cat",
+        "🌈 rainbow",
+        "🎈 balloon",
+        "🍪 biscuit"
+      ],
+      "why": "A hammer and a screwdriver are both tools."
+    },
+    {
+      "band": "K-2",
+      "top": [
+        "🐝 bee",
+        "📕 book",
+        "🥛 milk"
+      ],
+      "answer": "🐜 ant",
+      "mate": "🐝 bee",
+      "wrong": [
+        "🚲 bicycle",
+        "⛅ cloudy sky",
+        "👟 shoe",
+        "🪑 chair"
+      ],
+      "why": "A bee and an ant are both insects."
+    },
+    {
+      "band": "K-2",
+      "top": [
+        "☀️ sun",
+        "🧦 sock",
+        "🐴 horse"
+      ],
+      "answer": "🌙 moon",
+      "mate": "☀️ sun",
+      "wrong": [
+        "🍞 bread",
+        "🔑 key",
+        "🪣 bucket",
+        "🎨 paints"
+      ],
+      "why": "The sun and the moon are both up in the sky."
+    },
+    {
+      "band": "K-2",
+      "top": [
+        "🍞 bread",
+        "🚲 bicycle",
+        "🐦 bird"
+      ],
+      "answer": "🧀 cheese",
+      "mate": "🍞 bread",
+      "wrong": [
+        "🪨 rock",
+        "🌧️ rain",
+        "👑 crown",
+        "🖍️ crayon"
+      ],
+      "why": "Bread and cheese are both things you eat."
+    },
+    {
+      "band": "K-2",
+      "top": [
+        "🐶 dog",
+        "🎸 guitar",
+        "🪣 bucket"
+      ],
+      "answer": "🥁 drum",
+      "mate": "🎸 guitar",
+      "wrong": [
+        "🍏 green apple",
+        "🧦 sock",
+        "🌵 cactus",
+        "🚪 door"
+      ],
+      "why": "A guitar and a drum are both musical instruments."
+    },
+    {
+      "band": "K-2",
+      "top": [
+        "🌻 sunflower",
+        "🚌 bus",
+        "🥄 spoon"
+      ],
+      "answer": "🚚 lorry",
+      "mate": "🚌 bus",
+      "wrong": [
+        "🐟 fish",
+        "🕯️ candle",
+        "🧤 glove",
+        "🪺 nest"
+      ],
+      "why": "A bus and a lorry both carry things along a road on wheels."
+    },
+    {
+      "band": "K-2",
+      "top": [
+        "🧢 cap",
+        "🍇 grapes",
+        "🔔 bell"
+      ],
+      "answer": "🎩 top hat",
+      "mate": "🧢 cap",
+      "wrong": [
+        "🐘 elephant",
+        "🌊 wave",
+        "🪵 log",
+        "🖊️ pen"
+      ],
+      "why": "A cap and a top hat are both worn on your head."
+    },
+    {
+      "band": "K-2",
+      "top": [
+        "🐄 cow",
+        "✏️ pencil",
+        "🎈 balloon"
+      ],
+      "answer": "🐑 sheep",
+      "mate": "🐄 cow",
+      "wrong": [
+        "🚪 door",
+        "🍵 tea",
+        "🌂 umbrella",
+        "🪟 window"
+      ],
+      "why": "A cow and a sheep are both farm animals."
+    },
+    {
+      "band": "K-2",
+      "top": [
+        "🌧️ rain",
+        "👕 t-shirt",
+        "🍌 banana"
+      ],
+      "answer": "❄️ snow",
+      "mate": "🌧️ rain",
+      "wrong": [
+        "🐸 frog",
+        "🪑 chair",
+        "🔦 torch",
+        "🎺 trumpet"
+      ],
+      "why": "Rain and snow are both weather falling out of the sky."
+    },
+    {
+      "band": "K-2",
+      "top": [
+        "🔑 key",
+        "🐠 fish",
+        "🥦 broccoli"
+      ],
+      "answer": "🥕 carrot",
+      "mate": "🥦 broccoli",
+      "wrong": [
+        "🎻 violin",
+        "🧱 brick",
+        "🌙 moon",
+        "🐕 dog"
+      ],
+      "why": "Broccoli and carrots are both vegetables."
+    },
+    {
+      "band": "K-2",
+      "top": [
+        "🦷 tooth",
+        "⚽ football",
+        "🪵 log"
+      ],
+      "answer": "🏀 basketball",
+      "mate": "⚽ football",
+      "wrong": [
+        "🌻 sunflower",
+        "🧃 juice",
+        "🚪 door",
+        "🐝 bee"
+      ],
+      "why": "A football and a basketball are both balls you play with."
+    },
+    {
+      "band": "K-2",
+      "top": [
+        "🕯️ candle",
+        "🐢 tortoise",
+        "🍪 biscuit"
+      ],
+      "answer": "🔦 torch",
+      "mate": "🕯️ candle",
+      "wrong": [
+        "🧱 brick",
+        "🚲 bicycle",
+        "🌽 corn",
+        "👂 ear"
+      ],
+      "why": "A candle and a torch both give you light in the dark."
+    },
+    {
+      "band": "3-6",
+      "top": [
+        "🥕 carrot",
+        "🎻 violin",
+        "🌧️ rain"
+      ],
+      "answer": "🥔 potato",
+      "mate": "🥕 carrot",
+      "wrong": [
+        "🍎 apple",
+        "🥬 lettuce",
+        "🌽 corn",
+        "🍅 tomato"
+      ],
+      "why": "A carrot and a potato are the parts of the plant that grow underground. The lettuce is a leaf and the tomato is a fruit."
+    },
+    {
+      "band": "3-6",
+      "top": [
+        "🐍 snake",
+        "📕 book",
+        "🥛 milk"
+      ],
+      "answer": "🐢 tortoise",
+      "mate": "🐍 snake",
+      "wrong": [
+        "🐸 frog",
+        "🐟 fish",
+        "🦋 butterfly",
+        "🐭 mouse"
+      ],
+      "why": "A snake and a tortoise are both reptiles. A frog is an amphibian, which is the near miss."
+    },
+    {
+      "band": "3-6",
+      "top": [
+        "🧊 ice cube",
+        "🌳 tree",
+        "👟 shoe"
+      ],
+      "answer": "💧 water",
+      "mate": "🧊 ice cube",
+      "wrong": [
+        "🔥 fire",
+        "🪨 rock",
+        "🍃 leaf",
+        "🧂 salt"
+      ],
+      "why": "Ice and water are the same stuff — one frozen, one melted."
+    },
+    {
+      "band": "3-6",
+      "top": [
+        "🕰️ clock",
+        "🌵 cactus",
+        "🧦 sock"
+      ],
+      "answer": "🌡️ thermometer",
+      "mate": "🕰️ clock",
+      "wrong": [
+        "🔍 magnifying glass",
+        "🖊️ pen",
+        "🔦 torch",
+        "🪞 mirror"
+      ],
+      "why": "A clock and a thermometer both measure something and tell you the number."
+    },
+    {
+      "band": "3-6",
+      "top": [
+        "🪵 log",
+        "🎹 piano",
+        "🐟 fish"
+      ],
+      "answer": "🍂 fallen leaf",
+      "mate": "🪵 log",
+      "wrong": [
+        "🪨 rock",
+        "🧱 brick",
+        "🪙 coin",
+        "🧊 ice cube"
+      ],
+      "why": "A log and a leaf both came from a tree."
+    },
+    {
+      "band": "3-6",
+      "top": [
+        "🎺 trumpet",
+        "🪨 rock",
+        "🍇 grapes"
+      ],
+      "answer": "🪈 flute",
+      "mate": "🎺 trumpet",
+      "wrong": [
+        "🥁 drum",
+        "🎻 violin",
+        "🎹 piano",
+        "🪗 accordion"
+      ],
+      "why": "A trumpet and a flute are both played by blowing into them. The others are struck, bowed or pressed."
+    },
+    {
+      "band": "3-6",
+      "top": [
+        "☀️ sun",
+        "🎒 backpack",
+        "🪑 chair"
+      ],
+      "answer": "🔋 battery",
+      "mate": "☀️ sun",
+      "wrong": [
+        "💡 light bulb",
+        "🪟 window",
+        "📺 television",
+        "🧊 ice cube"
+      ],
+      "why": "The sun and a battery both supply energy. A bulb and a television use it up."
+    },
+    {
+      "band": "3-6",
+      "top": [
+        "🌋 volcano",
+        "🧦 sock",
+        "📖 book"
+      ],
+      "answer": "🔥 fire",
+      "mate": "🌋 volcano",
+      "wrong": [
+        "❄️ snow",
+        "🌊 wave",
+        "🪨 rock",
+        "🌙 moon"
+      ],
+      "why": "A volcano and a fire both give out heat."
+    },
+    {
+      "band": "3-6",
+      "top": [
+        "💉 syringe",
+        "🌽 corn",
+        "🚲 bicycle"
+      ],
+      "answer": "💊 pill",
+      "mate": "💉 syringe",
+      "wrong": [
+        "🍬 sweet",
+        "🧂 salt",
+        "🔋 battery",
+        "🥄 spoon"
+      ],
+      "why": "A syringe and a pill are both ways of giving medicine. A sweet looks similar and is not one."
+    },
+    {
+      "band": "3-6",
+      "top": [
+        "🕸️ spider web",
+        "🥖 bread",
+        "🎧 headphones"
+      ],
+      "answer": "🪺 nest",
+      "mate": "🕸️ spider web",
+      "wrong": [
+        "🏠 house",
+        "🧱 brick",
+        "🪵 log",
+        "🌳 tree"
+      ],
+      "why": "A web and a nest are both built by an animal. A house is built, but by people."
+    },
+    {
+      "band": "3-6",
+      "top": [
+        "🪙 coin",
+        "🌻 sunflower",
+        "🧤 glove"
+      ],
+      "answer": "🔑 key",
+      "mate": "🪙 coin",
+      "wrong": [
+        "🧱 brick",
+        "🪵 log",
+        "📒 notebook",
+        "🧊 ice cube"
+      ],
+      "why": "A coin and a key are both made of metal."
+    },
+    {
+      "band": "3-6",
+      "top": [
+        "🍚 rice",
+        "🎨 paints",
+        "🐘 elephant"
+      ],
+      "answer": "🍝 pasta",
+      "mate": "🍚 rice",
+      "wrong": [
+        "🥛 milk",
+        "🍎 apple",
+        "🥔 potato",
+        "🧀 cheese"
+      ],
+      "why": "Rice and pasta both come from grain grown in a field."
+    },
+    {
+      "band": "3-6",
+      "top": [
+        "🚀 rocket",
+        "🪑 chair",
+        "🍇 grapes"
+      ],
+      "answer": "🛰️ satellite",
+      "mate": "🚀 rocket",
+      "wrong": [
+        "✈️ aeroplane",
+        "🚁 helicopter",
+        "🪁 kite",
+        "🎈 balloon"
+      ],
+      "why": "A rocket and a satellite both go beyond the sky into space. Everything else here needs air to stay up."
+    },
+    {
+      "band": "3-6",
+      "top": [
+        "🦇 bat",
+        "🪟 window",
+        "🍞 bread"
+      ],
+      "answer": "🐬 dolphin",
+      "mate": "🦇 bat",
+      "wrong": [
+        "🐧 penguin",
+        "🦅 eagle",
+        "🐍 snake",
+        "🐢 tortoise"
+      ],
+      "why": "A bat and a dolphin are both mammals, however little they look like it."
+    }
   ]
 }

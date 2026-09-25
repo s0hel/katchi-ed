@@ -107,8 +107,48 @@ export interface OddOneOut {
   why: string;
 }
 
+/**
+ * A Naglieri verbal analogy: the pair at the top go together somehow, and the
+ * answer has to go with `c` the same way.
+ *
+ * The relation may be semantic ("a cow gives milk") or an attribute the two
+ * pictures share ("both yellow") -- the published walkthrough uses one of
+ * each, and a bank of only the first kind would miss half the item type.
+ */
+export interface PictureAnalogy {
+  band: VerbalBand;
+  a: string;
+  b: string;
+  c: string;
+  answer: string;
+  wrong: string[];
+  why: string;
+}
+
+/**
+ * "Which two go together?": a row of pictures, and a set to find a partner in.
+ *
+ * On the real test the child picks two, one from each of two rows. Ours shows
+ * the first row and asks for the one option that partners something in it,
+ * which is the same search -- scan both sets, find the single link -- reduced
+ * to the one answer our multiple choice can key. `mate` is which picture in
+ * `top` the answer goes with, so the explanation can name the pair.
+ */
+export interface PicturePair {
+  band: VerbalBand;
+  /** the row shown above, three pictures, exactly one of which has a partner */
+  top: string[];
+  answer: string;
+  /** the picture in `top` that `answer` belongs with */
+  mate: string;
+  wrong: string[];
+  why: string;
+}
+
 export interface NgatBanks {
   oddOneOut: OddOneOut[];
+  pictureAnalogies: PictureAnalogy[];
+  pairs: PicturePair[];
 }
 
 /* ------------------------------------------------------------------- ISEE */
@@ -160,7 +200,7 @@ export const COGAT_BANK_NAMES = [
 ] as const satisfies readonly (keyof CogatBanks)[];
 
 export const NGAT_BANK_NAMES = [
-  "oddOneOut",
+  "oddOneOut", "pictureAnalogies", "pairs",
 ] as const satisfies readonly (keyof NgatBanks)[];
 
 export const ISEE_BANK_NAMES = [

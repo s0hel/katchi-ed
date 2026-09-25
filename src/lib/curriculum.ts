@@ -301,46 +301,51 @@ const COGAT_BY_GRADE: Record<number, Draft[]> = {
 /**
  * NGAT, first and fourth grade.
  *
+ * The twelve skills are the twelve item types the test's own published
+ * walkthrough demonstrates -- three verbal, five nonverbal, four quantitative.
+ * Worth saying because an earlier version of this table had ten, and the two
+ * it was missing were not oversights but a wrong belief: that the verbal test
+ * asks one thing. It asks three, and the odd one out was split two ways here
+ * to fill the space where the other two belonged.
+ *
  * The Naglieri tests are levelled by grade band, and the bands do not line up
  * with each other. A first grader sits the 1st-grade nonverbal and
  * quantitative forms and the K-2 verbal one; a fourth grader sits the 3rd-4th
- * forms and the 3rd-6th verbal. Both grades ask the same ten questions, which
- * is the point of the test -- it is one instrument read at different ages --
- * and each form decides what those questions are made of. A generator is
- * handed its catalog entry's grade and looks the form up from it, so adding
- * second or fifth grade is another key here and, for the verbal skills, a bank
+ * forms and the 3rd-6th verbal. Both grades ask the same twelve questions,
+ * which is the point of the test -- it is one instrument read at different
+ * ages -- and each form decides what those questions are made of. A generator
+ * is handed its catalog entry's grade and looks the form up from it, so adding
+ * second or fifth grade is another key here and, for the verbal skills, banks
  * written for that band.
- *
- * The strand counts are uneven, and deliberately. The verbal test is a single
- * item type asked over and over, so it is split only by what the five pictures
- * share -- what they are, or what they do -- and no further. The nonverbal
- * test really does ask four different questions, which is the four item types
- * the practice literature names for a Naglieri matrix test.
  */
 const NGAT_BY_GRADE: Record<number, Draft[]> = {
   1: [
-    t("Odd one out by category", "Verbal Test", "ngat-odd-one-out", { kind: "category" }),
-    t("Odd one out by property", "Verbal Test", "ngat-odd-one-out", { kind: "property" }),
+    t("Odd one out", "Verbal Test", "ngat-odd-one-out"),
+    t("Picture analogies", "Verbal Test", "ngat-picture-analogies"),
+    t("Which two go together", "Verbal Test", "ngat-picture-pairs"),
     t("Figure matrices", "Nonverbal Test", "ngat-figure-matrices"),
     t("Serial reasoning", "Nonverbal Test", "ngat-serial-reasoning"),
+    t("Figure odd one out", "Nonverbal Test", "ngat-figure-odd-one-out"),
     t("Pattern completion", "Nonverbal Test", "ngat-pattern-completion"),
     t("Spatial visualization", "Nonverbal Test", "ngat-spatial-visualization"),
     t("Number series", "Quantitative Test", "ngat-number-series"),
     t("Number analogies", "Quantitative Test", "ngat-number-analogies"),
     t("Number matrices", "Quantitative Test", "ngat-number-matrices"),
-    t("Equal amounts", "Quantitative Test", "ngat-equal-amounts"),
+    t("Balance the scales", "Quantitative Test", "ngat-balance"),
   ],
   4: [
-    t("Odd one out by category", "Verbal Test", "ngat-odd-one-out", { kind: "category" }),
-    t("Odd one out by property", "Verbal Test", "ngat-odd-one-out", { kind: "property" }),
+    t("Odd one out", "Verbal Test", "ngat-odd-one-out"),
+    t("Picture analogies", "Verbal Test", "ngat-picture-analogies"),
+    t("Which two go together", "Verbal Test", "ngat-picture-pairs"),
     t("Figure matrices", "Nonverbal Test", "ngat-figure-matrices"),
     t("Serial reasoning", "Nonverbal Test", "ngat-serial-reasoning"),
+    t("Figure odd one out", "Nonverbal Test", "ngat-figure-odd-one-out"),
     t("Pattern completion", "Nonverbal Test", "ngat-pattern-completion"),
     t("Spatial visualization", "Nonverbal Test", "ngat-spatial-visualization"),
     t("Number series", "Quantitative Test", "ngat-number-series"),
     t("Number analogies", "Quantitative Test", "ngat-number-analogies"),
     t("Number matrices", "Quantitative Test", "ngat-number-matrices"),
-    t("Equal amounts", "Quantitative Test", "ngat-equal-amounts"),
+    t("Balance the scales", "Quantitative Test", "ngat-balance"),
   ],
 };
 

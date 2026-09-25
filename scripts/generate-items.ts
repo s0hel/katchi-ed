@@ -119,6 +119,17 @@ const WIRE: Record<AnyBankName, z.ZodTypeAny> = {
     why: z.string(),
   }),
 
+  "ngat.pictureAnalogies": z.object({
+    band: z.enum(["K-2", "3-6"]),
+    a: picture, b: picture, c: picture, answer: picture,
+    wrong: z.array(picture).length(4), why: z.string(),
+  }),
+  "ngat.pairs": z.object({
+    band: z.enum(["K-2", "3-6"]),
+    top: z.array(picture).length(3), answer: picture, mate: picture,
+    wrong: z.array(picture).length(4), why: z.string(),
+  }),
+
   "isee.synonyms": z.object({ word: z.string(), answer: z.string(), distractors: three }),
   "isee.sentenceCompletion": z.object({ s: z.string(), ...answerWrong, why: z.string() }),
   "isee.passages": z.object({
@@ -173,6 +184,11 @@ const BRIEF: Record<AnyBankName, string> = {
 
   "ngat.oddOneOut":
     "Naglieri verbal items for a FOURTH GRADER: six pictures, five of which share one idea, and one that does not. Every picture is an emoji, a space, then its word (`🧦 sock`), and nothing is read to the child -- the whole item is the six pictures, so an idea that cannot be seen in a picture cannot be used. `group` is the five that share it and `odd` is the sixth. `concept` is that idea written as a sentence the explanation can use: `they are all birds`, `each one is made of glass`. `band` is the verbal form the item belongs to: `K-2` for items a six-year-old already has the ideas for (all animals, they all have wheels, you can eat all of them), `3-6` for ones that need a fact a fourth grader has met (all reptiles, each one is made of glass, they all give off their own light). Write for the band you are asked for and do not drift towards the other. `kind` is `category` when the five share what they ARE (all insects, all buildings) and `property` when they share what they DO or HAVE (all give off their own light, all have a shell) -- the second is the harder reading and both are wanted. Pitch it above naming: the best items turn on something a fourth grader knows but has to stop and check, and the best odd one out is a near miss that fails the idea for a reason worth saying (a bat flies but is a mammal; a mirror looks bright but makes no light of its own). `why` says that reason in one sentence. Use only emoji a child recognises instantly.",
+
+  "ngat.pictureAnalogies":
+    "Naglieri verbal picture analogies. `a` goes with `b`, and `answer` must go with `c` in the SAME way. Every field is an emoji, a space, then its word, and nothing is read to the child. The relation may be semantic (a cow gives milk, a saw cuts wood) or an attribute the pair share (both yellow, both measure time) -- the test uses both, so write both. The four wrong options must each be related to `c` and wrong for the relation. `band` is `K-2` for relations a six-year-old already has, `3-6` for ones needing a fact a fourth grader has met. `why` states the relation once, for both pairs, in a sentence. Every picture in one item must be a different emoji.",
+  "ngat.pairs":
+    "Naglieri \"which two go together\" items. `top` is three pictures. Exactly ONE of the five options (`answer` plus four `wrong`) shares a clear concept with exactly ONE picture in `top`, and `mate` names that picture. Nothing else may pair with anything: check every option against all three top pictures before you finish. The concept should be specific enough to exclude near misses (root vegetables, not `food`), and the best wrong options are near misses on the concept. Every field is an emoji, a space, then its word. `band` as above. `why` names the pair and the concept, and where a wrong option is a near miss, says why it fails.",
 
   "isee.synonyms":
     "ISEE Middle Level synonyms (sat by sixth graders). `word` is a single word at the level of `reluctant`, `candid` or `meticulous`; `answer` is its closest meaning in one or two plain words; the three distractors must be plainly wrong -- not shades of the same meaning, and not the exact opposite of each other. Avoid words a sixth grader would never meet in a book.",

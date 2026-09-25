@@ -1,17 +1,21 @@
-import { choice, figureChoice, num, str, type GeneratorFn, type Params } from "./helpers";
+import { choice, figureChoice, num, type GeneratorFn, type Params } from "./helpers";
 import { NGAT_BANKS, pool, type VerbalBand } from "./exam-banks";
-import { COUNTABLE_OBJECTS, countAnalogySvg, countCardSvg, pictureCardSvg } from "./pictures";
 import {
-  DOT_PER_ROW_MAX, MATRIX_CELL, cutoutSvg, dotArraySvg, dotsFit, matrixSvg, numberGridSvg,
-  patchSvg, type Design, type Family, type Window,
+  COUNTABLE_OBJECTS, countAnalogySvg, countCardSvg, parsePicture, pictureCardSvg,
+  pictureMatrixSvg, pictureRowSvg,
+} from "./pictures";
+import {
+  MATRIX_CELL, PAN_UNIT, TARGET_SPAN, balanceSvg, cellsKey, cutoutSvg, matrixSvg, normalize,
+  numberGridSvg, panSvg, patchSvg, piecesSvg, targetSvg,
+  type Cell, type Design, type Family, type Window,
 } from "./grids";
 import {
   ROOMY, SHADINGS, SHAPES, SHAPE_WORDS, cellRoom, describe, figLook, figSvg, fitUnit, sameLook,
-  type Fig, type ShapeName,
+  type Fig, type Shading, type ShapeName,
 } from "./shapes";
 import {
-  DARKER, FALLBACK, LIGHTER, RULE_MAKERS, TURNABLE, TWINS, ambiguous, anyShape, plural,
-  turnBy, unlike, type Rule,
+  DARKER, FALLBACK, KINSHIPS, LIGHTER, PROPS, RULE_MAKERS, TURNABLE, TWINS, ambiguous, anyShape,
+  plural, turnBy, unlike, type Rule,
 } from "./figure-rules";
 import type { Rng } from "../rng";
 
@@ -103,27 +107,37 @@ const tierCap = (form: Form, level: number) => Math.min(4, level + form.reach);
 /* ----------------------------------------------------------------- verbal */
 
 /**
- * The Naglieri verbal test: six pictures, five with something in common.
+ * The Naglieri verbal test asks three things, and this is all three.
+ *
+ * Worth stating because it was got wrong here once. The verbal test is not one
+ * item type: the published walkthrough demonstrates six pictures with an odd
+ * one out, a picture analogy, and a pair to find across two rows. Three skills
+ * here, one per item type -- where an earlier version had one item type split
+ * two ways by a distinction we invented to fill the gap.
+ *
+ * All three are cut by `band`, which is the test's own: the verbal test is
+ * levelled K-2, 3-6 and 7-12, and a first grader's form is not a fourth
+ * grader's with the hard items taken out. None of them prints a word, for the
+ * same reason the real test does not.
+ */
+
+/**
+ * Six pictures, five with something in common.
  *
  * Nothing is given as a worked example. CogAT's classification shows three
  * that belong and asks for a fourth, which tells the child the category exists
- * before they start looking for it; here the group and the outsider arrive
- * together and finding the idea is the item. The pictures carry no words, for
- * the same reason the real test's do not.
+ * before they start looking; here the group and the outsider arrive together
+ * and finding the idea is the item.
  *
- * The bank is cut twice. By `band`, which is the test's own -- the verbal test
- * is levelled K-2, 3-6 and 7-12, and a first grader's form is not a fourth
- * grader's with the hard items taken out. And by `kind`, which is ours: what
- * five pictures *are* against what they *do or have*. The test does not label
- * that second one, but a child who can see that five things are insects may
- * still not see that five things give off their own light, and a single skill
- * would ramp from one to the other invisibly.
+ * What the five share may be what they are (all insects) or what they do or
+ * have (all give off their own light, all come in a pair). The bank records
+ * which, because the two are worth writing deliberately, but they are one
+ * skill: the child is not told which kind of idea to look for, and neither is
+ * the reader of a practice question.
  */
 const oddOneOut: GeneratorFn = (rng, level, params) => {
   const { band } = formOf(params);
-  const kind = str(params, "kind", "category");
-  const items = NGAT_BANKS.oddOneOut.filter((i) => i.band === band && i.kind === kind);
-  const item = rng.pick(pool(items, level));
+  const item = rng.pick(pool(NGAT_BANKS.oddOneOut.filter((i) => i.band === band), level));
   return figureChoice(rng, {
     instructions: "Five of these six pictures are alike in one way.",
     stem: "Which picture does **not** belong with the others?",
@@ -131,10 +145,57 @@ const oddOneOut: GeneratorFn = (rng, level, params) => {
     distractorFigures: item.group.map(pictureCardSvg),
     options: VERBAL_OPTIONS,
     explanation: `Five of them are alike: ${item.concept}. ${item.why}`,
-    hint:
-      kind === "category"
-        ? "Name each picture out loud. What kind of thing are most of them?"
-        : "Do not ask what they are — ask what they do, or what each one has.",
+    hint: "Name each picture out loud. If what they are gets you nowhere, ask what each one does, or what each one has.",
+  });
+};
+
+/**
+ * A picture analogy: the top pair go together, so what goes with the third?
+ *
+ * Drawn as four boxes with no arrow. The relation may be semantic -- a cow
+ * gives milk, a saw cuts wood -- or an attribute the pair share, which is the
+ * example the walkthrough leads with: two yellow things above, one green thing
+ * below, so the answer is another green thing. A bank of only the first kind
+ * would be half an item type.
+ */
+const pictureAnalogies: GeneratorFn = (rng, level, params) => {
+  const { band } = formOf(params);
+  const item = rng.pick(pool(NGAT_BANKS.pictureAnalogies.filter((i) => i.band === band), level));
+  const say = (p: string) => parsePicture(p).word;
+  return figureChoice(rng, {
+    instructions: "The two pictures at the top go together in some way.",
+    stem: "Which picture belongs in the empty box?",
+    figure: pictureMatrixSvg(item.a, item.b, item.c),
+    answerFigure: pictureCardSvg(item.answer),
+    distractorFigures: item.wrong.map(pictureCardSvg),
+    options: OPTIONS,
+    explanation: item.why,
+    hint: `Say how the top two go together: "${say(item.a)} and ${say(item.b)} because..." Then say the same sentence about ${say(item.c)}.`,
+  });
+};
+
+/**
+ * "Which two go together?": one picture in the row above has a partner among
+ * the answers, and the rest have none.
+ *
+ * On the real test the child picks two, one from each of two rows. Ours shows
+ * the first row and asks for the one option that partners something in it.
+ * That is the same search -- read both sets, find the single link -- narrowed
+ * to the one answer a multiple choice can key, and it keeps the part that
+ * makes the item hard: you are not told which picture the link runs to.
+ */
+const picturePairs: GeneratorFn = (rng, level, params) => {
+  const { band } = formOf(params);
+  const item = rng.pick(pool(NGAT_BANKS.pairs.filter((i) => i.band === band), level));
+  return figureChoice(rng, {
+    instructions: "One of these pictures goes with one of the pictures above it.",
+    stem: "Which picture goes with one of the three?",
+    figure: pictureRowSvg(item.top),
+    answerFigure: pictureCardSvg(item.answer),
+    distractorFigures: item.wrong.map(pictureCardSvg),
+    options: OPTIONS,
+    explanation: item.why,
+    hint: "Take the three at the top one at a time, and check every answer against that one before you move on.",
   });
 };
 
@@ -553,80 +614,293 @@ const serialReasoning: GeneratorFn = (rng, level, params) => {
   });
 };
 
-/* --------------------------------------------------- spatial visualization */
-
-/** Mirrored left for right -- the one change a turn can never make. */
-const mirrored = (f: Fig): Fig => ({ ...f, flip: !f.flip });
-
-const turns = (f: Fig): Fig[] => [0, 1, 2, 3].map((q) => turnBy(f, q));
+/* -------------------------------------------------- figure odd one out */
 
 /**
- * A figure that a mirror moves and no amount of turning can undo.
+ * Five figures, four alike.
  *
- * The item asks which option is the figure turned rather than flipped over, so
- * it only exists if the figure has a handedness at all: a star or a hexagon is
- * its own mirror image, and every option would then be right. Handedness comes
- * from a shape with no axis of symmetry, or from something added off to one
- * side -- a copy behind it, a solid block, a half cut off, two different
- * shapes inside.
+ * The same question the verbal test opens with, asked about shapes: the
+ * walkthrough shows five designs where "there's always two blocks on the
+ * bottom, but this one doesn't have it", and another where "one of the designs
+ * is half of the other design, except right here". It is CogAT's
+ * classification turned round -- that shows three that belong and asks for a
+ * fourth, this shows the group and the outsider together and asks which is
+ * which -- so it runs on the same kinships over the same figures.
+ *
+ * As there, the five figures are the options; there is nothing to show above
+ * them.
  */
-function chiralFig(rng: Rng, level: number, form: Form): Fig {
-  const dress: ((rng: Rng, f: Fig) => Fig)[] = [
-    (_r, f) => ({ ...f, shape: _r.pick(["arrow", "ell", "parallelogram"] as ShapeName[]) }),
-    (_r, f) => ({ ...f, ghost: true }),
-    (_r, f) => ({ ...f, extruded: true }),
-    (_r, f) => ({ ...f, split: true, shading: "open" }),
-    (_r, f) => {
-      const [a, b] = threeShapes(_r);
-      return { ...f, shape: _r.pick(ROOMY), shading: "open", inner: { shapes: [a, b], at: "inside" } };
-    },
-  ];
-  // More than one dressing at the top levels, so the figure carries more to
-  // keep track of while it is being turned. The first-grade form stays at one:
-  // turning a figure in your head is hard enough at six without two things
-  // hanging off it.
-  const layers = form.grid === 2 || level <= 1 ? 1 : level <= 3 ? rng.int(1, 2) : 2;
+const figureOddOneOut: GeneratorFn = (rng, level, params) => {
+  const form = formOf(params);
+  const makers = KINSHIPS.filter((k) => k.tier <= tierCap(form, level));
 
-  for (let attempt = 0; attempt < 30; attempt++) {
-    let f = anyFig(rng, { size: 2, count: 1 });
-    for (const step of rng.sample(dress, layers)) f = step(rng, f);
-    if (!readable(f)) continue;
-    // Every way of turning it has to stay clear of every way of turning its
-    // mirror image, or one of the wrong options is also right.
-    const mine = turns(f).map(figLook);
-    const theirs = turns(mirrored(f)).map(figLook);
-    if (mine.some((k) => theirs.includes(k))) continue;
-    if (new Set(theirs).size < 4) continue;
-    return f;
+  let words = "";
+  let alike: Fig[] = [];
+  let odd: Fig | null = null;
+
+  outer: for (let pick = 0; pick < 14; pick++) {
+    const maker = rng.pick(makers);
+    for (let draw = 0; draw < 8; draw++) {
+      const kin = maker.make(rng);
+      const seen = new Set<string>();
+      const take = (build: () => Fig, n: number): Fig[] => {
+        const out: Fig[] = [];
+        for (let i = 0; i < 40 && out.length < n; i++) {
+          const f = build();
+          const look = figLook(f);
+          if (seen.has(look) || !readable(f)) continue;
+          seen.add(look);
+          out.push(f);
+        }
+        return out;
+      };
+      const four = take(() => kin.member(rng), 4);
+      const [out] = take(() => kin.outsider(rng), 1);
+      if (four.length < 4 || !out) continue;
+      // The rule the item states has to leave out exactly one of the five.
+      if (!four.every(kin.holds) || kin.holds(out)) continue;
+      if (!onlyOutsider([...four, out], out)) continue;
+      words = kin.words;
+      alike = four;
+      odd = out;
+      break outer;
+    }
   }
-  return { shape: "ell", shading: "open", size: 2, count: 1 };
+  if (!odd) ({ words, alike, odd } = plainOdd(rng));
+
+  const unit = fitUnit([...alike, odd], cellRoom(MATRIX_CELL));
+  return figureChoice(rng, {
+    instructions: "Four of these five figures are alike in one way.",
+    stem: "Which figure does **not** belong with the others?",
+    options: OPTIONS,
+    answerFigure: figSvg(odd, unit, MATRIX_CELL),
+    distractorFigures: alike.map((f) => figSvg(f, unit, MATRIX_CELL)),
+    explanation: `Four of them are alike in one way: ${words}. Only ${describe(odd)} is not.`,
+    hint: "Check one thing at a time across all five: the shape, how many, how dark, how big — and what is inside.",
+  });
+};
+
+/**
+ * Whether the keyed figure is the only one any reading leaves out.
+ *
+ * The inverse of the check the classification item makes. Four figures agree
+ * on the kinship the item was built around, and on whatever else fell out the
+ * same way by chance -- and each of those is a rule a child might settle on.
+ * If any of them singles out a different figure, that child is marked wrong
+ * for reasoning correctly.
+ */
+function onlyOutsider(figs: Fig[], answer: Fig): boolean {
+  for (const prop of PROPS) {
+    const values = figs.map(prop);
+    if (values.some((v) => v === null)) continue;
+    const groups = new Map<string, Fig[]>();
+    values.forEach((v, i) => groups.set(v as string, [...(groups.get(v as string) ?? []), figs[i]]));
+    if (groups.size !== 2) continue;
+    const lone = [...groups.values()].find((g) => g.length === 1);
+    if (lone && lone[0] !== answer) return false;
+  }
+  return true;
 }
 
 /**
- * Spatial visualization: the same figure, turned -- never flipped over.
+ * An item that cannot fail, for when every draw above has.
  *
- * Four of the five options are the figure's mirror image at four different
- * angles, and the fifth is the figure itself at one. Telling those apart is
- * the whole of the task, and it is the one nonverbal question here that cannot
- * be answered by naming what changed: a mirror image and a turn look like the
- * same kind of change until you try to make one out of the other.
+ * Sound by construction: four of one shape whose shadings, sizes and counts
+ * are spread so that no second property is held by exactly four of the five,
+ * and one figure of a shape nobody would mistake for it.
+ */
+function plainOdd(rng: Rng): { words: string; alike: Fig[]; odd: Fig } {
+  const shape = anyShape(rng);
+  const at = (shading: Shading, size: 1 | 2, count: 1 | 2 | 3): Fig => ({ shape, shading, size, count });
+  return {
+    words: `they are all ${plural(shape)}`,
+    alike: [at("open", 1, 1), at("shaded", 2, 2), at("solid", 1, 3), at("shaded", 2, 1)],
+    odd: { shape: rng.pick(unlike(shape)), shading: "open", size: 1, count: 2 },
+  };
+}
+
+/* --------------------------------------------------- spatial visualization */
+
+/**
+ * The pieces a shape can be cut into.
+ *
+ * Every one of them fits a three-by-two, which is what an option's slot holds.
+ * What matters more than the list is that it carries **several different
+ * pieces of the same size** -- two of three squares, five of four. Without
+ * that there is no such thing as a wrong option with the right number of
+ * squares, and the item collapses into counting: a child rules out every
+ * option but one without ever trying to lay a piece on the shape.
+ */
+const cells = (...pairs: [number, number][]): Cell[] => pairs.map(([c, r]) => ({ c, r }));
+
+const PIECES: Cell[][] = [
+  cells([0, 0], [1, 0]),                                     // two in a line
+  cells([0, 0], [1, 0], [2, 0]),                             // three in a line
+  cells([0, 0], [1, 0], [0, 1]),                             // three in a corner
+  cells([0, 0], [1, 0], [0, 1], [1, 1]),                     // a square of four
+  cells([0, 0], [1, 0], [2, 0], [0, 1]),                     // four, with a foot
+  cells([0, 0], [1, 0], [2, 0], [2, 1]),                     // four, footed the other way
+  cells([0, 0], [1, 0], [1, 1], [2, 1]),                     // four, stepped
+  cells([0, 0], [1, 0], [2, 0], [1, 1]),                     // four, with a stub
+];
+
+/** A piece at each of its distinct quarter turns. */
+function rotations(piece: Cell[]): Cell[][] {
+  const out: Cell[][] = [];
+  let cur = normalize(piece);
+  for (let i = 0; i < 4; i++) {
+    if (!out.some((o) => cellsKey(o) === cellsKey(cur))) out.push(cur);
+    cur = normalize(cur.map((p) => ({ c: -p.r, r: p.c })));
+  }
+  return out;
+}
+
+/**
+ * Whether these pieces cover the shape exactly, turned any way you like.
+ *
+ * This is what makes the item honest. The keyed option is right by
+ * construction -- the shape was built by laying those pieces down -- but a
+ * wrong option is only wrong if it genuinely cannot be made to fit, and a
+ * child is free to turn a piece round. So every wrong option is run through
+ * here before it is offered.
+ */
+export function fits(target: Cell[], pieces: Cell[][]): boolean {
+  const cells = normalize(target);
+  if (pieces.reduce((n, p) => n + p.length, 0) !== cells.length) return false;
+  const free = new Set(cells.map((p) => `${p.c},${p.r}`));
+  const shapes = pieces.map(rotations);
+  const used = shapes.map(() => false);
+
+  const place = (): boolean => {
+    // Always fill the first uncovered square, so the search never explores two
+    // orderings of the same placement.
+    const spot = cells.find((p) => free.has(`${p.c},${p.r}`));
+    if (!spot) return true;
+    for (let i = 0; i < shapes.length; i++) {
+      if (used[i]) continue;
+      for (const turned of shapes[i]) {
+        for (const anchor of turned) {
+          const put = turned.map((p) => ({
+            c: p.c + spot.c - anchor.c,
+            r: p.r + spot.r - anchor.r,
+          }));
+          if (!put.every((p) => free.has(`${p.c},${p.r}`))) continue;
+          used[i] = true;
+          put.forEach((p) => free.delete(`${p.c},${p.r}`));
+          if (place()) return true;
+          put.forEach((p) => free.add(`${p.c},${p.r}`));
+          used[i] = false;
+        }
+      }
+    }
+    return false;
+  };
+  return place();
+}
+
+/** A shape built by laying `count` pieces down inside a small grid. */
+function buildShape(rng: Rng, count: number): { target: Cell[]; pieces: Cell[][] } | null {
+  for (let attempt = 0; attempt < 60; attempt++) {
+    const taken = new Set<string>();
+    const cells: Cell[] = [];
+    const pieces: Cell[][] = [];
+    for (let n = 0; n < count; n++) {
+      let placed = false;
+      for (let go = 0; go < 30 && !placed; go++) {
+        const turned = rng.pick(rotations(rng.pick(PIECES)));
+        const w = Math.max(...turned.map((p) => p.c)) + 1;
+        const h = Math.max(...turned.map((p) => p.r)) + 1;
+        const dc = rng.int(0, TARGET_SPAN - w);
+        const dr = rng.int(0, TARGET_SPAN - h);
+        const put = turned.map((p) => ({ c: p.c + dc, r: p.r + dr }));
+        if (put.some((p) => taken.has(`${p.c},${p.r}`))) continue;
+        // Every piece after the first has to touch what is already there, or
+        // the shape falls into two shapes and is not one figure.
+        const touches =
+          n === 0 ||
+          put.some((p) =>
+            [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([x, y]) => taken.has(`${p.c + x},${p.r + y}`)),
+          );
+        if (!touches) continue;
+        put.forEach((p) => taken.add(`${p.c},${p.r}`));
+        cells.push(...put);
+        pieces.push(normalize(turned));
+        placed = true;
+      }
+      if (!placed) break;
+    }
+    if (pieces.length === count) return { target: normalize(cells), pieces };
+  }
+  return null;
+}
+
+/** Pieces in one fixed order, so the same set always draws the same picture. */
+const inOrder = (pieces: Cell[][]) => [...pieces].sort((a, b) => cellsKey(a).localeCompare(cellsKey(b)));
+const setKey = (pieces: Cell[][]) => inOrder(pieces).map(cellsKey).join(" / ");
+
+/**
+ * Spatial visualization: which pieces make the shape?
+ *
+ * The walkthrough's last nonverbal item -- "three pieces are going to combine
+ * to make this figure on top" -- and the one place a wrong option cannot be
+ * hand-waved: a child may turn a piece round, so `fits` runs every wrong set
+ * through an exhaustive placement search before it is offered. An option that
+ * has the right number of squares but cannot be made to cover the shape is the
+ * item working; an option that quietly can is two right answers.
  */
 const spatialVisualization: GeneratorFn = (rng, level, params) => {
-  const f = chiralFig(rng, level, formOf(params));
-  const quarter = rng.pick([1, 2, 3]);
-  const answer = turnBy(f, quarter);
-  const wrong = rng.shuffle(turns(mirrored(f))).slice(0, 4);
+  const form = formOf(params);
+  const count = wide(form, level) ? 3 : 2;
+  const built = buildShape(rng, count) ?? buildShape(rng, 2);
+  if (!built) return figureOddOneOut(rng, level, params);
+  const { target, pieces } = built;
 
-  const unit = fitUnit([f, answer, ...wrong], cellRoom(MATRIX_CELL));
+  const seen = new Set([setKey(pieces)]);
+  const wrong: Cell[][][] = [];
+  const offer = (set: Cell[][]) => {
+    const k = setKey(set);
+    if (wrong.length >= 6 || seen.has(k)) return;
+    if (fits(target, set)) return;
+    seen.add(k);
+    wrong.push(set);
+  };
+  // One piece swapped for another of the *same size* first. Those are the
+  // options worth having: they have as many squares as the shape does, so the
+  // only way to rule them out is to try to lay them on it. A swap that changes
+  // the square count can be struck out by counting, which is a good first
+  // move and a poor whole item -- so those come after, as the top-up.
+  const swaps = (keep: boolean) => {
+    for (const swap of rng.shuffle([...PIECES])) {
+      for (let i = 0; i < pieces.length; i++) {
+        if ((swap.length === pieces[i].length) !== keep) continue;
+        offer(pieces.map((p, j) => (j === i ? normalize(swap) : p)));
+      }
+    }
+  };
+  swaps(true);
+  // Two pieces changed at once, still keeping the count, before giving up on it.
+  for (let i = 0; i < 24 && wrong.length < 4; i++) {
+    const swapped = pieces.map((p) => {
+      const same = PIECES.filter((q) => q.length === p.length);
+      return normalize(rng.pick(same));
+    });
+    offer(swapped);
+  }
+  swaps(false);
+  for (let i = 0; i < 20 && wrong.length < 6; i++) {
+    offer(Array.from({ length: count }, () => normalize(rng.pick(PIECES))));
+  }
+  offer(pieces.slice(0, count - 1));
+
   return figureChoice(rng, {
-    instructions: "Turn this figure in your head. It is never flipped over.",
-    stem: "Which one is the **same figure, turned**?",
-    figure: matrixSvg([[f]], unit),
+    instructions: "These pieces can be turned round, but never flipped over.",
+    stem: "Which pieces fit together to make the shape?",
+    figure: targetSvg(target),
     options: OPTIONS,
-    answerFigure: figSvg(answer, unit, MATRIX_CELL),
-    distractorFigures: wrong.map((g) => figSvg(g, unit, MATRIX_CELL)),
-    explanation: `Turning ${describe(f)} gives ${describe(answer)}. Every other option is its mirror image — turn one of those any way you like and it never matches.`,
-    hint: "Pick one part of the figure and follow it round. If it ends up on the wrong side, that option is a mirror image.",
+    answerFigure: piecesSvg(inOrder(pieces)),
+    distractorFigures: wrong.map((set) => piecesSvg(inOrder(set))),
+    explanation: `The shape is ${target.length} squares. Most of the wrong sets have ${target.length} squares too — they just cannot be laid on it without an overlap or a gap.`,
+    hint: "Counting the squares rules out one or two. For the rest, find the tightest corner of the shape and work out which piece could possibly fill it.",
   });
 };
 
@@ -891,6 +1165,12 @@ const numberSeries: GeneratorFn = (rng, level, params) => {
  */
 const numberAnalogies: GeneratorFn = (rng, level, params) => {
   const form = formOf(params);
+  // The walkthrough shows the item both ways round: a very easy one counted
+  // out in birds, and harder ones written as "10 is to 5 as 8 is to 4 as 12 is
+  // to what". Drawn while the relation is a small step, written once it is
+  // not -- a set of eighteen things in a box stops being an analogy and starts
+  // being a counting test.
+  if (level >= 3) return writtenAnalogy(rng, level, form);
   const MAX_SET = form.maxSet;
   interface Change {
     to: (n: number) => number;
@@ -965,6 +1245,74 @@ const numberAnalogies: GeneratorFn = (rng, level, params) => {
   });
 };
 
+/**
+ * The same analogy written in numerals: `a` is to `b` as `c` is to what?
+ *
+ * Two rows at the bottom levels of this form and three at the top, which is
+ * how the walkthrough steps it up -- a third worked pair does not make the
+ * arithmetic harder, it makes the relation harder to be sure of, because two
+ * pairs can agree by accident and three rarely do.
+ */
+function writtenAnalogy(rng: Rng, level: number, form: Form): ReturnType<GeneratorFn> {
+  interface Step {
+    to: (n: number) => number;
+    words: string;
+    from: number[];
+    times?: boolean;
+  }
+  const top = form.ceiling <= 20 ? 20 : 144;
+  const whole = (n: number) => Number.isInteger(n) && n >= 1 && n <= top;
+  const steps: Step[] = [
+    ...range(2, form.ceiling <= 20 ? 5 : 12).map((d) => ({
+      to: (n: number) => n + d, words: `add ${d}`, from: range(1, top - d),
+    })),
+    ...range(2, form.ceiling <= 20 ? 5 : 12).map((d) => ({
+      to: (n: number) => n - d, words: `take away ${d}`, from: range(d + 1, top),
+    })),
+    ...[2, 3, 4].map((k) => ({
+      to: (n: number) => n * k, words: `multiply by ${k}`, from: range(1, Math.floor(top / k)), times: true,
+    })),
+    ...[2, 3, 4].map((k) => ({
+      to: (n: number) => n / k, words: `halve it`, from: range(1, top).filter((n) => n % k === 0), times: true,
+    })).map((step, i) => (i === 0 ? step : { ...step, words: `divide by ${[2, 3, 4][i]}` })),
+  ];
+  const usable = steps.filter((st) => (form.times || !st.times) && st.from.length >= 3);
+  const step = rng.pick(usable);
+
+  // Three worked pairs at the top level, two below it.
+  const shownPairs = level >= 4 ? 2 : 1;
+  const seeds = rng.sample(step.from, shownPairs + 1);
+  if (seeds.length < shownPairs + 1) return writtenAnalogy(rng, 3, form);
+  const rows = seeds.map((n) => [n, step.to(n)]);
+  const [ask] = rows.splice(shownPairs, 1);
+  const answer = ask[1];
+
+  // Near misses, and never the number already printed beside the blank -- an
+  // option a reader can strike out by looking is an option given away.
+  const wrong: number[] = [];
+  const offer = (n: number) => {
+    if (whole(n) && n !== answer && n !== ask[0] && !wrong.includes(n) && wrong.length < 4) wrong.push(n);
+  };
+  const spread = Math.max(2, Math.round(Math.abs(answer - ask[0]) / 2) + 1);
+  for (const n of nearbyNumbers(rng, answer, spread, 8)) offer(n);
+  for (let d = 1; wrong.length < 4 && d <= top; d++) {
+    offer(answer + d);
+    offer(answer - d);
+  }
+
+  const worked = rows.map(([a, b]) => `${a} is to ${b}`).join(", as ");
+  return choice(rng, {
+    instructions: "Each pair of numbers changes in the same way.",
+    stem: "Which number belongs where the **?** is?",
+    figure: numberGridSvg([...rows, [ask[0], null]]),
+    answer: `${answer}`,
+    options: OPTIONS,
+    distractors: wrong.map(String),
+    explanation: `${worked}: the rule is to ${step.words}. Doing the same to ${ask[0]} gives ${answer}.`,
+    hint: "Work out what the first pair does, then check it against the second before you use it.",
+  });
+}
+
 const range = (lo: number, hi: number): number[] =>
   hi < lo ? [] : Array.from({ length: hi - lo + 1 }, (_, i) => lo + i);
 
@@ -980,16 +1328,38 @@ const numberMatrices: GeneratorFn = (rng, level, params) => {
   const form = formOf(params);
   const size = wide(form, level) ? 3 : 2;
   const small = !form.times;
-  const dc = rng.int(small ? 1 : 2, small ? 4 : level >= 3 ? 15 : 9);
-  const dr = rng.intExcept(small ? 1 : 2, small ? 5 : level >= 3 ? 20 : 12, [dc]);
-  const base = rng.int(1, small ? 6 : 20);
-  // At the top of the fourth-grade form the rows multiply rather than add, so
-  // the two directions are not the same kind of step.
-  const times = form.times && level >= 4 ? rng.pick([2, 3]) : 1;
+  const dr = rng.int(small ? 1 : 2, small ? 5 : level >= 3 ? 20 : 12);
 
-  const cell = (r: number, c: number) => (base + r * dr) * times ** c + (times === 1 ? c * dc : 0);
+  /**
+   * How a row moves as you read it right.
+   *
+   * Three ways, and the middle one is the walkthrough's own example -- a table
+   * whose rows "added four and then subtracted two". A row that only ever
+   * steps by one number is a row you can finish after seeing two of its cells;
+   * a row that alternates has to be read all the way across, which is a
+   * different question rather than a bigger one.
+   */
+  const mode: "step" | "cycle" | "times" =
+    size === 2
+      ? "step"
+      : form.times && level >= 4 && rng.bool(0.35)
+        ? "times"
+        : rng.bool(0.45)
+          ? "cycle"
+          : "step";
+
+  const dc = rng.intExcept(small ? 1 : 2, small ? 4 : level >= 3 ? 15 : 9, [dr]);
+  const back = rng.intExcept(1, Math.max(2, dc - 1), [dc]);
+  const times = mode === "times" ? rng.pick([2, 3]) : 1;
+  const base = rng.int(mode === "cycle" ? back + 1 : 1, small ? 6 : 20);
+
+  // What each column adds to the number its row starts on.
+  const along = (c: number) =>
+    mode === "cycle" ? Array.from({ length: c }, (_, i) => (i % 2 === 0 ? dc : -back)).reduce((a, b) => a + b, 0) : c * dc;
+  const cell = (r: number, c: number) =>
+    mode === "times" ? (base + r * dr) * times ** c : base + r * dr + along(c);
+
   const grid = range(0, size - 1).map((r) => range(0, size - 1).map((c) => cell(r, c)));
-
   const [mr, mc] = level >= 4 ? [rng.int(0, size - 1), rng.int(0, size - 1)] : [size - 1, size - 1];
   const answer = grid[mr][mc];
   const shown: (number | null)[][] = grid.map((row, r) =>
@@ -1000,14 +1370,17 @@ const numberMatrices: GeneratorFn = (rng, level, params) => {
   // multiply, the columns no longer step by a single number -- each one steps
   // by `dr` times its own power -- so the honest description is the row starts
   // and the row rule, not two step sizes that only one of the columns obeys.
+  const starts = grid.map((row) => row[0]).join(", ");
   const rule =
-    times === 1
-      ? `Along each row you add ${dc} as you go right, and down each column you add ${dr}`
-      : `Each row multiplies by ${times} as you go right, and the rows begin ${grid.map((row) => row[0]).join(", ")} — ${dr} more each time`;
+    mode === "times"
+      ? `Each row multiplies by ${times} as you go right, and the rows begin ${starts} — ${dr} more each time`
+      : mode === "cycle"
+        ? `Along each row you add ${dc}, then take ${back} away, and so on; down each column you add ${dr}`
+        : `Along each row you add ${dc} as you go right, and down each column you add ${dr}`;
   const distractors = [
     cell(mr, (mc + 1) % size),
     cell((mr + 1) % size, mc),
-    ...nearbyNumbers(rng, answer, Math.max(2, times === 1 ? Math.min(dr, dc) : dr), 4),
+    ...nearbyNumbers(rng, answer, Math.max(2, mode === "times" ? dr : Math.min(dr, dc)), 4),
   ];
 
   return choice(rng, {
@@ -1022,83 +1395,143 @@ const numberMatrices: GeneratorFn = (rng, level, params) => {
   });
 };
 
-/** The row widths a total can be laid out in, inside one cell. */
-const layoutsFor = (total: number): number[] =>
-  range(1, Math.min(DOT_PER_ROW_MAX, total)).filter((perRow) => dotsFit(total, perRow));
-
 /**
- * Equal amounts: the same number of dots, arranged another way.
+ * Weight equivalency: what else would balance this?
  *
- * The published sample is a column of four cubes set against a two-by-two
- * block of them. What it asks is whether a number survives being rearranged,
- * which is a real thing a fourth grader can get wrong -- so every wrong option
- * is a *different total*, and there is no shortcut through the shape of the
- * picture. The only way through is to count.
+ * The walkthrough shows it twice -- "we have two items on the scale that are
+ * equal, so which of these would also go on the scale and be equal", and a
+ * harder pair of scales where one has to be evened up. Both are here, and the
+ * step between them is the whole point of the item. The easy one asks only
+ * whether a number survives being rearranged: the same things in a different
+ * order still weigh the same. The hard one puts an exchange rate on the top
+ * balance -- one of these weighs as much as three of those -- and then asks a
+ * question that cannot be answered without spending it.
  *
- * The arrangements are rows of a given width rather than full rectangles, and
- * that is what keeps it honest. Rectangles read more neatly, but a number has
- * only a handful of them and the answer would nearly always be the prompt
- * turned on its side -- "find the same two numbers the other way round", which
- * can be done without counting anything. Rows of six with two left over is
- * still a picture of twenty, and it has no such shape to match on. Right and
- * wrong options come from the same pool, so a short last row is never itself a
- * clue.
+ * Nothing is labelled with a number. The weights are what the top balance says
+ * they are, which is what keeps it a reasoning item rather than arithmetic.
  */
-const equalAmounts: GeneratorFn = (rng, level, params) => {
+const balance: GeneratorFn = (rng, level, params) => {
   const form = formOf(params);
-  const [lo, hi] = form.times
-    ? level <= 1 ? [6, 11] : level === 2 ? [8, 15] : level === 3 ? [10, 20] : [14, 28]
-    : level <= 1 ? [4, 8] : level === 2 ? [5, 10] : level === 3 ? [6, 12] : [8, 14];
-  let total = 0;
-  let shownRow = 0;
-  let answerRow = 0;
-  for (let attempt = 0; attempt < 30 && !total; attempt++) {
-    const n = rng.int(lo, hi);
-    const ways = layoutsFor(n);
-    if (ways.length < 2) continue;
-    [shownRow, answerRow] = rng.sample(ways, 2);
-    total = n;
+  // Only shapes nobody has to squint at. A parallelogram and a trapezoid are
+  // different shapes and, at the size a tray of them is drawn, the same wedge
+  // -- and this item asks a child to tell one from another five times over.
+  const WEIGHTS: ShapeName[] = ["circle", "square", "triangle", "star", "heart"];
+  const [light, heavy] = rng.sample(WEIGHTS, 2);
+  const weight = (s: ShapeName): Fig => ({ shape: s, shading: "solid", size: 1, count: 1 });
+  const load = (h: number, l: number): Fig[] => [
+    ...Array.from({ length: h }, () => weight(heavy)),
+    ...Array.from({ length: l }, () => weight(light)),
+  ];
+  /** The most a pan holds and still be counted at a glance. */
+  const PAN_MAX = 4;
+
+  if (!wide(form, level)) {
+    // One balance, and the only thing that changes is the order.
+    const kinds = rng.sample(WEIGHTS, level <= 1 ? 2 : 3);
+    const items = rng.shuffle(
+      Array.from({ length: level <= 1 ? 3 : PAN_MAX }, (_, i) => weight(kinds[i % kinds.length])),
+    );
+    const tally = (set: Fig[]) => set.map((f) => f.shape).sort().join("+");
+    const same = tally(items);
+
+    const seen = new Set<string>();
+    const wrong: Fig[][] = [];
+    const offer = (set: Fig[]) => {
+      const k = tally(set);
+      if (wrong.length >= 5 || k === same || seen.has(k) || !set.length || set.length > PAN_MAX) return;
+      seen.add(k);
+      wrong.push(rng.shuffle([...set]));
+    };
+    for (let i = 0; i < items.length; i++) {
+      offer(items.filter((_, j) => j !== i));                                   // one short
+      offer(items.map((f, j) => (j === i ? weight(rng.pick(WEIGHTS.filter((w) => w !== f.shape))) : f))); // one swapped
+    }
+    offer([...items, weight(rng.pick(WEIGHTS))]);                                // one too many
+
+    // Shuffled until the answer is not the picture it is answering: "the same
+    // things in a different order" is the item, so the same order is not it.
+    let answer = rng.shuffle([...items]);
+    for (let i = 0; i < 12 && answer.every((f, j) => f.shape === items[j].shape); i++) {
+      answer = rng.shuffle([...items]);
+    }
+
+    return figureChoice(rng, {
+      instructions: "The balance is level, so both pans weigh the same.",
+      stem: "Which pan would also balance against the one on the left?",
+      figure: balanceSvg([{ left: items, right: null }], PAN_UNIT),
+      options: OPTIONS,
+      answerFigure: panSvg(answer, PAN_UNIT),
+      distractorFigures: wrong.map((set) => panSvg(set, PAN_UNIT)),
+      explanation: `The left pan holds ${describeLoad(items)}. The answer holds exactly the same things, just arranged differently, so it weighs the same. Every other pan is missing something, has something extra, or has the wrong thing.`,
+      hint: "Count each kind of shape on the left, then count the same kinds in each answer.",
+    });
   }
-  if (!total) [total, shownRow, answerRow] = [12, 6, 4];
 
-  // Wrong totals, nearest first. Each is laid out at random from the same set
-  // of arrangements the answer was drawn from.
-  const wrong: string[] = [];
-  for (const d of [1, -1, 2, -2, 3, -3, 4, -4]) {
-    const n = total + d;
-    const ways = layoutsFor(n);
-    if (n < 2 || !ways.length || wrong.length >= 4) continue;
-    wrong.push(dotArraySvg(n, rng.pick(ways)));
+  // Two balances: the top one prices a heavy shape in light ones, and the
+  // bottom one cannot be answered without using that price.
+  const rate = rng.pick([2, 3]);
+  const worth = (h: number, l: number) => h * rate + l;
+  const loads: [number, number][] = [];
+  for (let h = 0; h <= PAN_MAX; h++) {
+    for (let l = 0; h + l <= PAN_MAX; l++) if (h + l > 0) loads.push([h, l]);
+  }
+  const byWorth = new Map<number, [number, number][]>();
+  for (const [h, l] of loads) {
+    const w = worth(h, l);
+    byWorth.set(w, [...(byWorth.get(w) ?? []), [h, l]]);
+  }
+  const sharedWorth = [...byWorth.entries()].filter(([, set]) => set.length >= 2);
+  const [total, ways] = rng.pick(sharedWorth);
+  // The two sides are written differently on purpose: a bottom pan answered by
+  // repeating what is opposite it would never need the top balance at all.
+  const [[lh, ll], [ah, al]] = rng.sample(ways, 2);
+
+  const seen = new Set([`${ah},${al}`, `${lh},${ll}`]);
+  const wrong: Fig[][] = [];
+  for (const [h, l] of rng.shuffle([...loads])) {
+    if (wrong.length >= 5 || worth(h, l) === total || seen.has(`${h},${l}`)) continue;
+    seen.add(`${h},${l}`);
+    wrong.push(load(h, l));
   }
 
-  const shape = (n: number, perRow: number) => {
-    const rows = Math.ceil(n / perRow);
-    if (rows === 1) return `a single row of ${n}`;
-    if (perRow === 1) return `a single column of ${n}`;
-    const over = n % perRow;
-    return over === 0 ? `${rows} rows of ${perRow}` : `rows of ${perRow}, with ${over} left over`;
-  };
-
+  const many = (n: number, s: ShapeName) => `${n} ${n === 1 ? SHAPE_WORDS[s] : plural(s)}`;
   return figureChoice(rng, {
-    instructions: "Count the dots in the picture.",
-    stem: "Which one shows the **same number** of dots?",
-    figure: dotArraySvg(total, shownRow),
-    answerFigure: dotArraySvg(total, answerRow),
-    distractorFigures: wrong,
+    instructions: "Both balances are level, so each one weighs the same on either side.",
+    stem: "Which pan would make the second balance level?",
+    figure: balanceSvg(
+      [
+        { left: load(0, rate), right: load(1, 0) },
+        { left: load(lh, ll), right: null },
+      ],
+      PAN_UNIT,
+    ),
     options: OPTIONS,
-    explanation: `The picture is ${shape(total, shownRow)} — ${total} dots. The answer is ${shape(total, answerRow)}, which is ${total} as well. Every other option is a different number.`,
-    hint: "Count one row, then count the rows. Do the same to each option instead of comparing the shapes.",
+    answerFigure: panSvg(load(ah, al), PAN_UNIT),
+    distractorFigures: wrong.map((set) => panSvg(set, PAN_UNIT)),
+    explanation: `The top balance shows that one ${SHAPE_WORDS[heavy]} weighs the same as ${many(rate, light)}. So the left pan below is worth ${many(total, light)}, and only ${describeLoad(load(ah, al))} comes to the same.`,
+    hint: `Swap every ${SHAPE_WORDS[heavy]} for ${many(rate, light)}, then count.`,
   });
 };
 
+/** "two circles and a triangle", for an explanation or an answer key. */
+function describeLoad(items: Fig[]): string {
+  const counts = new Map<ShapeName, number>();
+  for (const f of items) counts.set(f.shape, (counts.get(f.shape) ?? 0) + 1);
+  const parts = [...counts.entries()].map(([s, n]) => `${n} ${n === 1 ? SHAPE_WORDS[s] : plural(s)}`);
+  return parts.length > 1 ? `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}` : parts[0];
+}
+
 export const ngatGenerators: Record<string, GeneratorFn> = {
   "ngat-odd-one-out": oddOneOut,
+  "ngat-picture-analogies": pictureAnalogies,
+  "ngat-picture-pairs": picturePairs,
   "ngat-figure-matrices": figureMatrices,
   "ngat-serial-reasoning": serialReasoning,
+  "ngat-figure-odd-one-out": figureOddOneOut,
   "ngat-spatial-visualization": spatialVisualization,
   "ngat-pattern-completion": patternCompletion,
   "ngat-number-series": numberSeries,
   "ngat-number-analogies": numberAnalogies,
   "ngat-number-matrices": numberMatrices,
-  "ngat-equal-amounts": equalAmounts,
+  "ngat-balance": balance,
 };

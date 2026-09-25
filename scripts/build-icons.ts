@@ -58,6 +58,12 @@ function usedEmoji(): string[] {
   for (const item of NGAT_BANKS.oddOneOut) {
     pictures.push(...item.group, item.odd);
   }
+  for (const item of NGAT_BANKS.pictureAnalogies) {
+    pictures.push(item.a, item.b, item.c, item.answer, ...item.wrong);
+  }
+  for (const item of NGAT_BANKS.pairs) {
+    pictures.push(...item.top, item.answer, ...item.wrong);
+  }
   // Not from a bank: number analogies count these, and an object with no
   // artwork would be drawn as a text glyph six times over.
   pictures.push(...COUNTABLE_OBJECTS);

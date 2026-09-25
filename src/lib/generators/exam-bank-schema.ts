@@ -83,6 +83,43 @@ const oddOneOut = z
     message: "every picture in the item must be different",
   });
 
+/**
+ * A Naglieri verbal analogy. Every picture in the item has to be a different
+ * picture: two options drawn the same are two options that cannot both be
+ * wrong, and an option that repeats `c` answers the item without the relation.
+ */
+const ngatPictureAnalogy = z
+  .object({
+    band: z.enum(["K-2", "3-6"]),
+    a: picture, b: picture, c: picture, answer: picture,
+    wrong: z.array(picture).length(4),
+    why: nonEmpty,
+  })
+  .refine((i) => allDistinct([i.a, i.b, i.c, i.answer, ...i.wrong]), {
+    message: "every picture in the item must be different",
+  });
+
+/**
+ * "Which two go together?"
+ *
+ * The two rules that make it answerable: the partner has to be one of the
+ * pictures actually shown, and no wrong option may be shown as well -- an
+ * option already in the row above is a second defensible answer.
+ */
+const ngatPair = z
+  .object({
+    band: z.enum(["K-2", "3-6"]),
+    top: z.array(picture).length(3),
+    answer: picture,
+    mate: picture,
+    wrong: z.array(picture).length(4),
+    why: nonEmpty,
+  })
+  .refine((i) => i.top.includes(i.mate), { message: "mate must be one of the pictures in top" })
+  .refine((i) => allDistinct([...i.top, i.answer, ...i.wrong]), {
+    message: "every picture in the item must be different",
+  });
+
 /** An ISEE passage: four keyed question types over one piece of prose. */
 const iseePassage = z
   .object({
@@ -113,6 +150,8 @@ export const EXAM_ITEM_SCHEMA = {
   "cogat.pictureGroups": pictureGroup,
   "cogat.sentenceCompletion": pictureSentence,
   "ngat.oddOneOut": oddOneOut,
+  "ngat.pictureAnalogies": ngatPictureAnalogy,
+  "ngat.pairs": ngatPair,
   "isee.synonyms": wordItem,
   "isee.sentenceCompletion": sentenceItem,
   "isee.passages": iseePassage,
@@ -130,6 +169,10 @@ export const examDedupeKey: Record<ExamBankName, (item: never) => string> = {
   // item, it is one item filed twice, and it makes the harder form open on a
   // question its own readers were asked three years earlier.
   "ngat.oddOneOut": (i: { concept: string }) => i.concept.toLowerCase(),
+  // An analogy is the relation it carries, which its first pair fixes.
+  "ngat.pictureAnalogies": (i: { a: string; b: string }) => `${i.a}:${i.b}`.toLowerCase(),
+  // A pairs item is the link it hides, so the pair itself is the key.
+  "ngat.pairs": (i: { mate: string; answer: string }) => `${i.mate}:${i.answer}`.toLowerCase(),
   // Two synonym items for the same prompt word are one item, however
   // differently the options are written.
   "isee.synonyms": (i: [string, string, string[]]) => i[0].toLowerCase(),

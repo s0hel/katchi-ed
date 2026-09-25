@@ -38,10 +38,10 @@ YouTube's privacy-enhanced player.
 
 ```
 src/lib/rng.ts            seeded xorshift PRNG — all question generation is pure
-src/lib/generators/       84 generators: 47 math, 15 ELA, 9 CogAT, 9 NGAT, 4 ISEE
+src/lib/generators/       87 generators: 47 math, 15 ELA, 9 CogAT, 12 NGAT, 4 ISEE
 src/lib/generators/shapes.ts        drawing a figure: geometry, turns, shading
-src/lib/generators/figure-rules.ts  choosing one, and changing it by a rule
-src/lib/generators/grids.ts         NGAT's matrices, cut-out patterns, numerals
+src/lib/generators/figure-rules.ts  choosing one, changing it, grouping it
+src/lib/generators/grids.ts         NGAT's matrices, patterns, balances, pieces
 src/lib/generators/counters.ts      the abacus and the trains
 src/lib/generators/pictures.ts      picture items, drawn from vendored artwork
 src/lib/curriculum.ts     the skill catalog (subject → grade → strand → skill)
@@ -232,19 +232,29 @@ npx vite-node scripts/build-icons.ts -- --check # fail if the file is stale
 **NGAT — first and fourth grade.** The Naglieri General Ability Tests are three
 separate tests rather than one form with batteries inside it, and districts sit
 any combination of them, so the catalog keeps them apart the way a score report
-does:
+does. The twelve skills are the twelve item types the publisher's own
+walkthrough demonstrates:
 
 | Test | Skills |
 | --- | --- |
-| Verbal | Odd one out by category, Odd one out by property |
-| Nonverbal | Figure matrices, Serial reasoning, Pattern completion, Spatial visualization |
-| Quantitative | Number series, Number analogies, Number matrices, Equal amounts |
+| Verbal | Odd one out, Picture analogies, Which two go together |
+| Nonverbal | Figure matrices, Serial reasoning, Figure odd one out, Pattern completion, Spatial visualization |
+| Quantitative | Number series, Number analogies, Number matrices, Balance the scales |
 
-Both grades are asked those same ten questions, because that is what the test
-is: one instrument read at different ages. What changes is the **form**. The
-three tests are levelled by grade band and the bands do not line up with each
-other — a first grader sits the 1st-grade nonverbal and quantitative forms and
-the K–2 verbal one; a fourth grader sits the 3rd–4th forms and the 3rd–6th
+That list is the second draft. The first had ten skills and was wrong in a way
+worth recording: it assumed **the verbal test asks one thing**. It asks three —
+six pictures with an odd one out, a picture analogy, and a pair to find across
+two rows — and the odd one out had been split two ways here, by a
+category-or-property distinction we invented, to fill the space where the other
+two belonged. Four more item types were missing outright, and one that no
+source describes had been invented to stand in for spatial visualization.
+Everything in this section now traces to a demonstrated item.
+
+Both grades are asked those same twelve questions, because that is what the
+test is: one instrument read at different ages. What changes is the **form**.
+The three tests are levelled by grade band and the bands do not line up with
+each other — a first grader sits the 1st-grade nonverbal and quantitative forms
+and the K–2 verbal one; a fourth grader sits the 3rd–4th forms and the 3rd–6th
 verbal. `FORMS` in `ngat.ts` is that table, and a generator looks its form up
 from the grade of the catalog entry it is serving, which `generateQuestion`
 hands it as a parameter.
@@ -256,8 +266,11 @@ A form is not a difficulty dial. It decides what gets asked at all:
 | Figure matrices | four boxes | four, then nine |
 | Serial reasoning | two rows of three | that, then the 3×3 square |
 | Pattern completion | one set of lines | one, then two crossing |
+| Spatial visualization | two pieces | two, then three |
+| Number analogies | counted in objects, then written | the same, and multiplying |
+| Balance | one scale | one, then two and an exchange rate |
 | Quantitative | adds and takes away, inside 20 | doubles and trebles, no ceiling |
-| Verbal bank | the K–2 band | the 3–6 band |
+| Verbal banks | the K–2 band | the 3–6 band |
 
 Nine boxes is not four boxes made harder: four show one rule and ask you to
 apply it, nine show two and ask you to find where they meet. `ngat.test.ts`
@@ -266,72 +279,82 @@ them, and that the fourth-grade one does, because every assertion of the first
 kind also passes if a form simply never reaches its own top.
 
 Adding second, third or fifth grade is another key in `FORMS` and
-`NGAT_BY_GRADE`, plus a verbal bank for whichever band it sits.
+`NGAT_BY_GRADE`, plus verbal banks for whichever band it sits.
 
 **The only text on an NGAT page is numerals.** The instructions are animated and
-wordless so that they need no translation; the verbal test is pictures; the
-quantitative test is patterns and states outright that it contains no word
-problems. That is a different reason from CogAT Level 7's, which avoids text
-because a six-year-old cannot be assumed to read — the NGAT avoids it at every
-age because reading is the thing it is trying not to measure. Two things follow:
+wordless so that they need no translation — a proctor reads nothing out — the
+verbal test is pictures, and the quantitative test states outright that it
+contains no word problems. That is a different reason from CogAT Level 7's,
+which avoids text because a six-year-old cannot be assumed to read; the NGAT
+avoids it at every age because reading is the thing it is trying not to
+measure. Two things follow:
 
 - **Numerals are allowed, and used** — at both grades. A number is not reading,
   and a first grader who can count to twenty can read 2, 4, 6, 8 without it
   becoming a reading test. (This is where the two exams in this repo part
   company: CogAT Level 7, sat by the same six-year-olds, draws its whole
   quantitative battery as beads and dots, because that is what *its* form
-  does.) Drawing a series as sets of objects would also cap it at what fits in
-  a box, so number series and number matrices are digits in boxes. Number
-  analogies stay drawn, because that item is about how many and not which — and
-  because the published sample is exactly that: two gifts become three, so one
-  pair of scissors becomes how many.
+  does.) So number series and number matrices are digits in boxes, and a number
+  analogy is counted out in objects while the relation is a small step and
+  written as `10 is to 5 as 8 is to 4 as 12 is to what` once it is not.
 - **The nonverbal items are matrices with no arrows.** CogAT draws an arrow to
   say which way the rule runs. Working that out is part of what the NGAT is
   measuring, so a figure item here is a 2×2 or 3×3 grid with a `?` in it and
   nothing telling you which direction to read.
 
-The verbal test is one item type — six pictures, five of which share an idea,
-pick the one that does not — so it is not three skills pretending otherwise.
-It is two, split by whether the five share what they **are** (all insects, all
-buildings) or what they **do or have** (all give off their own light, all have
-a shell). That split is ours rather than the test's: the second is reliably the
-harder reading of a picture, and one skill would ramp from the first to the
-second invisibly. The options *are* the question here — six pictures, labelled
-A to F — which is why `CHOICE_LABELS` runs to six and why the item has no prompt
-figure above the options at all.
+Two of the verbal items are the same question asked of different material, and
+the third is not. The odd one out shows six pictures and keeps the idea hidden:
+what the five share may be what they *are* (all insects) or what they *do or
+have* (all give off their own light, all come in a pair), and the child is not
+told which kind of idea to look for. "Which two go together" shows a row of
+three and asks which answer partners one of them — on the real test the child
+picks two, one from each of two rows, and ours narrows that to the one answer a
+multiple choice can key while keeping the part that makes it hard: you are not
+told which picture the link runs to.
 
-The bank is cut again by `band`, and that one *is* the test's: the verbal test
-is levelled K–2, 3–6 and 7–12. No concept appears in both bands, which is the
+The banks are cut by `band`, and that one is the test's own: the verbal test is
+levelled K–2, 3–6 and 7–12. No concept appears in both bands, which is the
 stricter rule on purpose — "they are all fruit" written for both is not two
 items, it is one filed twice, and it makes the harder form open on a question
 its own readers were asked three years earlier.
 
 Everything nonverbal reuses the CogAT figure kit, which is why adding this test
-split it in two: `shapes.ts` draws a figure and `figure-rules.ts` chooses one
-and changes it. Both exams want the same twenty transformations over the same
-thirteen shapes and ask different questions of them; two copies would have
-drifted apart. What is new is in `grids.ts`, and two pieces of it are worth
-reading:
+split it in two: `shapes.ts` draws a figure, and `figure-rules.ts` both chooses
+one and says what a group of them can have in common. Both exams want the same
+twenty transformations and the same twenty kinships over the same thirteen
+shapes, and they ask about them from opposite ends — CogAT shows three figures
+that belong and asks for a fourth, the NGAT shows five and asks which one does
+not. Two copies would have drifted apart. What is new is in `grids.ts`, and
+three pieces of it are worth reading:
 
 - **Pattern completion** describes its design as numbers — families of parallel
   lines, each with an angle, a spacing and an offset — and then draws it. The
   right patch is that design cropped to the hole, so it cannot disagree with
   the pattern around it; every wrong patch is the same renderer with one number
-  moved. A child rules an option out because its lines do not meet the ones
-  either side of the hole, not because it was drawn worse. Each patch emits only
-  the lines inside its own window, so two patches that look identical *are*
-  identical and one of them gets dropped rather than appearing twice.
-- **Spatial visualization** asks which option is the figure *turned*, and makes
-  the other four its mirror image at four angles. The item only exists if the
-  figure has a handedness at all — a star is its own mirror image and every
-  option would then be right — so the figure is built, then checked: none of
-  its four turns may coincide with any of its mirror's four, or the item has two
-  defensible answers and one of them is marked wrong.
+  moved. Only one wrong option is ever at the wrong angle: offering all three
+  of the angles the pattern is not meant three of the four wrong pieces could
+  be ruled out without looking at the hole, which left a five-option item that
+  was really a choice between two.
+- **Spatial visualization** asks which pieces fit together to make the shape.
+  The keyed set is right by construction — the shape was built by laying those
+  pieces down — but a wrong set is only wrong if it genuinely cannot be made to
+  cover the shape, and a child is free to turn a piece round, so every wrong
+  set goes through an exhaustive placement search first. The piece library
+  carries several *different pieces of the same size* for the same reason: with
+  one piece per size there is no such thing as a wrong option with the right
+  number of squares, and the item collapses into counting.
+- **The balance** is the one item that prices its own units. The easy form asks
+  only whether a number survives being rearranged — the same things in a
+  different order still weigh the same — and the hard one puts an exchange rate
+  on a second balance above it, so the answer cannot be reached without
+  spending it. Nothing is labelled with a number, which is what keeps it
+  reasoning rather than arithmetic.
 
 Every NGAT item offers five options, which is what the published samples show,
-except the verbal one, which offers six because the format does. Nothing here
-narrows the board at the lower tiers or on the younger form; the ramp comes
-from the rules a level allows and the slice of the bank it draws from.
+except the verbal odd one out, which offers six because the six pictures *are*
+the options. Nothing here narrows the board at the lower tiers or on the
+younger form; the ramp comes from the rules a level allows and the slice of the
+bank it draws from.
 
 **ISEE, Middle Level — sixth grade.** A sixth grader applying for grades 7–8
 sits the Middle Level, and the catalog covers its four scored sections: Verbal

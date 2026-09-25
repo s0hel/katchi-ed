@@ -296,46 +296,205 @@ export function numberGridSvg(rows: (number | null)[][]): string {
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${label}.">${cells}</svg>`;
 }
 
-/* ----------------------------------------------------------- dot arrays */
+/* ------------------------------------------------------------- balances */
 
 /**
- * A number of dots, laid out in rows of a given width.
+ * A balance scale, or two of them stacked.
  *
- * The item this serves shows one arrangement and asks which option holds the
- * same number in a different one -- twelve as two rows of six against three
- * rows of four. Two things follow. The dot is the same size in every option,
- * because a dot drawn to fill its box would shrink as the count grew and turn
- * the question into "which picture is darkest". And the rows are the layout
- * rather than a rectangle, so every total has several arrangements instead of
- * only the ones that factorise.
+ * The quantitative test's equivalency item: a beam that is level because both
+ * trays carry the same, and one tray left empty to fill. The trays are drawn
+ * the same width whatever they hold, because a tray that grew with its load
+ * would answer the question before the child counted anything.
  */
-const DOT_CELL = 88;
-const DOT_STEP = 13;
-const DOT_R = 4.5;
-/** The widest row and the most rows that stay inside one cell. */
-export const DOT_PER_ROW_MAX = 6;
-export const DOT_ROWS_MAX = 6;
+const PAN = MATRIX_CELL;
+const BEAM_H = 78;
+/** How far the tray sits below the beam it hangs from. */
+const HANGER = 15;
 
-/** Whether `total` dots in rows of `perRow` fit the box they are drawn in. */
-export const dotsFit = (total: number, perRow: number): boolean =>
-  perRow >= 1 && perRow <= DOT_PER_ROW_MAX && Math.ceil(total / perRow) <= DOT_ROWS_MAX;
+/**
+ * How big a weight is drawn.
+ *
+ * Bigger than it looks like it needs to be. The item turns on telling one
+ * shape from another at a glance, several times over, and at the size this
+ * started at a parallelogram and a trapezoid were the same grey wedge.
+ */
+export const PAN_UNIT = 11;
 
-export function dotArraySvg(total: number, perRow: number): string {
-  const rows = Math.ceil(total / perRow);
-  const dots: string[] = [];
-  for (let i = 0; i < total; i++) {
-    const row = Math.floor(i / perRow);
-    // The last row is centred under the full ones rather than left-aligned, so
-    // a short row reads as "the rest of them" and not as a column of its own.
-    const inRow = Math.min(perRow, total - row * perRow);
-    const col = i % perRow;
-    const cx = DOT_CELL / 2 + (col - (inRow - 1) / 2) * DOT_STEP;
-    const cy = DOT_CELL / 2 + (row - (rows - 1) / 2) * DOT_STEP;
-    dots.push(`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${DOT_R}" fill="${STROKE}"/>`);
+function tray(items: Fig[] | null, cx: number, beam: number, unit: number): string {
+  const w = PAN * 0.86;
+  const top = beam + HANGER;
+  const hanger = `<line x1="${cx}" y1="${beam}" x2="${cx}" y2="${top}"
+    stroke="${STROKE}" stroke-width="1.4" opacity="0.7"/>`;
+  const dish = `<path d="M ${cx - w / 2} ${top} h ${w} l ${-w * 0.14} ${PAN * 0.17} h ${-w * 0.72} z"
+    fill="none" stroke="${STROKE}" stroke-width="1.8" stroke-linejoin="round"
+    ${items === null ? 'stroke-dasharray="5 4"' : ""}/>`;
+  if (items === null) {
+    // Clear above the beam rather than across it. A load rests on the tray and
+    // the beam passes behind it, which is what a tray balance looks like; a
+    // question mark with a line through it just looks like a mistake.
+    return `${hanger}${dish}<text x="${cx}" y="${beam - 7}" text-anchor="middle"
+      font-size="21" font-weight="700" fill="${STROKE}">?</text>`;
   }
-  const shape = total % perRow === 0 ? `${rows} row${rows === 1 ? "" : "s"} of ${perRow}` : `rows of ${perRow}`;
-  return `<svg viewBox="0 0 ${DOT_CELL} ${DOT_CELL}" ${sizedInCells(DOT_CELL, DOT_CELL)} role="img"
-    aria-label="${total} dot${total === 1 ? "" : "s"}, in ${shape}.">
-    ${box(0, 0, DOT_CELL)}${dots.join("")}
+  // Resting on the tray, in a row, wrapped once past three -- six things in
+  // one line would be drawn too small to tell a circle from a hexagon.
+  const perRow = items.length <= 3 ? items.length : Math.ceil(items.length / 2);
+  const step = (w * 0.88) / Math.max(perRow, 1);
+  const rows = Math.ceil(items.length / perRow);
+  const drawn = items.map((f, i) => {
+    const row = Math.floor(i / perRow);
+    const inRow = Math.min(perRow, items.length - row * perRow);
+    const col = i % perRow;
+    const x = cx + (col - (inRow - 1) / 2) * step;
+    const cy = top - unit - 2 - (rows - 1 - row) * (unit * 2 + 2);
+    return figElements(f, x, cy, unit);
+  });
+  return hanger + dish + drawn.join("");
+}
+
+const say = (items: Fig[] | null) =>
+  items === null ? "an empty tray" : items.map(describe).join(" and ");
+
+/** `scales` are drawn one above the other; a `null` tray is the one in question. */
+export function balanceSvg(scales: { left: Fig[]; right: Fig[] | null }[], unit: number): string {
+  const W = PAN * 3;
+  const H = BEAM_H * scales.length;
+  const one = (s: { left: Fig[]; right: Fig[] | null }, i: number) => {
+    const beam = i * BEAM_H + BEAM_H - HANGER - 20;
+    const mid = W / 2;
+    const arm = W * 0.3;
+    return `<line x1="${mid - arm}" y1="${beam}" x2="${mid + arm}" y2="${beam}"
+        stroke="${STROKE}" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M ${mid - 10} ${beam + 16} L ${mid} ${beam} L ${mid + 10} ${beam + 16} z"
+        fill="none" stroke="${STROKE}" stroke-width="1.8" stroke-linejoin="round"/>
+      ${tray(s.left, mid - arm, beam, unit)}
+      ${tray(s.right, mid + arm, beam, unit)}`;
+  };
+  const label = scales
+    .map((s) => `a balance carrying ${say(s.left)} against ${say(s.right)}`)
+    .join(", and below it ");
+  return `<svg viewBox="0 0 ${W} ${H}" ${sizedInCells(W, PAN)} role="img" aria-label="${label}.">
+    ${scales.map(one).join("")}
+  </svg>`;
+}
+
+/** One answer option: a tray's worth of shapes, at the scale of the balance. */
+export function panSvg(items: Fig[], unit: number): string {
+  return `<svg viewBox="0 0 ${PAN} ${PAN}" ${sizedInCells(PAN, PAN)} role="img"
+    aria-label="${say(items)}.">
+    ${tray(items, PAN / 2, PAN - HANGER - 16, unit)}
+  </svg>`;
+}
+
+/* ------------------------------------------------------- pieces and wholes */
+
+/**
+ * Figures made of squares, for the spatial-visualization item: a shape at the
+ * top, and sets of pieces that might combine to make it.
+ *
+ * Drawn as a silhouette rather than as a grid of little boxes -- only the
+ * edges with nothing on the other side are stroked. A target that showed its
+ * own cell boundaries would be telling the child where the cuts are, which is
+ * the whole question.
+ *
+ * One square is the same size in the target and in every option, which is what
+ * makes the two comparable at a glance; that is also what fixes the sizes here.
+ * An option holds up to four pieces in a two-by-two of slots inside one cell,
+ * so a piece fits a two-by-two of squares, and the target fits three by three.
+ */
+export interface Cell {
+  c: number;
+  r: number;
+}
+
+/**
+ * One square, in the units both the target and the pieces are drawn in.
+ *
+ * Small, and that is the binding constraint rather than a preference. An
+ * option holds up to four pieces in a two-by-two of slots inside the one cell
+ * every option gets, so a slot is half a cell and a piece has to fit it --
+ * which is what decides both the square and how long a piece may be.
+ */
+export const SQUARE = 11;
+/** The widest a target may be, in squares, and the widest a single piece may be. */
+export const TARGET_SPAN = 4;
+export const PIECE_SPAN = 3;
+
+const key = (c: Cell) => `${c.c},${c.r}`;
+
+/** The outline of a set of squares: every edge with nothing on the far side. */
+function silhouette(cells: Cell[], x0: number, y0: number): string {
+  const has = new Set(cells.map(key));
+  const fills = cells
+    .map(
+      (p) => `<rect x="${x0 + p.c * SQUARE}" y="${y0 + p.r * SQUARE}"
+        width="${SQUARE}" height="${SQUARE}" fill="${STROKE}" fill-opacity="0.4"/>`,
+    )
+    .join("");
+  const edges: string[] = [];
+  for (const p of cells) {
+    const x = x0 + p.c * SQUARE;
+    const y = y0 + p.r * SQUARE;
+    const sides: [number, number, number, number, number, number][] = [
+      [0, -1, x, y, x + SQUARE, y],
+      [0, 1, x, y + SQUARE, x + SQUARE, y + SQUARE],
+      [-1, 0, x, y, x, y + SQUARE],
+      [1, 0, x + SQUARE, y, x + SQUARE, y + SQUARE],
+    ];
+    for (const [dc, dr, x1, y1, x2, y2] of sides) {
+      if (has.has(key({ c: p.c + dc, r: p.r + dr }))) continue;
+      edges.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"
+        stroke="${STROKE}" stroke-width="2.2" stroke-linecap="square"/>`);
+    }
+  }
+  return fills + edges.join("");
+}
+
+/** A set of squares, moved so its top-left corner is the origin. */
+export function normalize(cells: Cell[]): Cell[] {
+  const minC = Math.min(...cells.map((p) => p.c));
+  const minR = Math.min(...cells.map((p) => p.r));
+  return cells
+    .map((p) => ({ c: p.c - minC, r: p.r - minR }))
+    .sort((a, b) => a.r - b.r || a.c - b.c);
+}
+
+export const cellsKey = (cells: Cell[]): string => normalize(cells).map(key).join(" ");
+
+const span = (cells: Cell[]) => ({
+  w: Math.max(...cells.map((p) => p.c)) + 1,
+  h: Math.max(...cells.map((p) => p.r)) + 1,
+});
+
+/** The whole shape, to be made out of pieces. */
+export function targetSvg(cells: Cell[]): string {
+  const box = MATRIX_CELL;
+  const at = normalize(cells);
+  const { w, h } = span(at);
+  return `<svg viewBox="0 0 ${box} ${box}" ${sizedInCells(box, box)} role="img"
+    aria-label="A shape ${at.length} squares in size.">
+    ${silhouette(at, (box - w * SQUARE) / 2, (box - h * SQUARE) / 2)}
+  </svg>`;
+}
+
+/**
+ * One answer option: the pieces, laid out apart from each other.
+ *
+ * Never touching, so that two pieces side by side are never mistaken for one
+ * larger piece -- which would make the option a different option than the one
+ * that was keyed.
+ */
+export function piecesSvg(pieces: Cell[][]): string {
+  const box = MATRIX_CELL;
+  const slot = box / 2;
+  const drawn = pieces.map((piece, i) => {
+    const at = normalize(piece);
+    const { w, h } = span(at);
+    const sx = (i % 2) * slot + (slot - w * SQUARE) / 2;
+    const sy = Math.floor(i / 2) * slot + (slot - h * SQUARE) / 2;
+    return silhouette(at, sx, sy);
+  });
+  return `<svg viewBox="0 0 ${box} ${box}" ${sizedInCells(box, box)} role="img"
+    aria-label="${pieces.length} pieces, of ${pieces.map((p) => p.length).join(", ")} squares.">
+    ${drawn.join("")}
   </svg>`;
 }

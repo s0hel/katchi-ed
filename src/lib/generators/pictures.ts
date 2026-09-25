@@ -38,6 +38,8 @@ const PICTURE_GENERATORS = new Set([
   "cogat-sentence-completion",
   "cogat-number-analogies",
   "ngat-odd-one-out",
+  "ngat-picture-analogies",
+  "ngat-picture-pairs",
   "ngat-number-analogies",
 ]);
 
@@ -144,7 +146,7 @@ export function pictureAnalogySvg(a: string, b: string, c: string): string {
   </svg>`;
 }
 
-/** Three pictures that belong together. */
+/** A row of pictures: the three that belong together, or the row to find a partner in. */
 export function pictureRowSvg(pictures: string[]): string {
   const gap = 10;
   const pad = 12;
@@ -156,7 +158,28 @@ export function pictureRowSvg(pictures: string[]): string {
     })
     .join("");
   return `<svg viewBox="0 0 ${W} ${CELL_H}" role="img"
-    aria-label="Three pictures: ${pictures.map(words).join(", ")}.">${cells}</svg>`;
+    aria-label="${pictures.length} pictures: ${pictures.map(words).join(", ")}.">${cells}</svg>`;
+}
+
+/**
+ * A picture analogy the way the Naglieri prints it: four boxes, no arrows.
+ *
+ * CogAT draws the arrow because a six-year-old has to be told which way the
+ * rule runs. This test does not, at any age -- working out that the top pair
+ * explains the bottom one is part of what it is asking -- so the layout is a
+ * plain two-by-two with the fourth box empty.
+ */
+export function pictureMatrixSvg(a: string, b: string, c: string): string {
+  const gap = 8;
+  const W = CELL_W * 2 + gap;
+  const H = CELL_H * 2 + gap;
+  const at = (x: number, y: number, p?: string) =>
+    box(x, y) + (p ? cell(p, x, y) : question(x, y));
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" class="kx-fig-block"
+    aria-label="${words(a)} goes with ${words(b)}. What goes with ${words(c)} the same way?">
+    ${at(0, 0, a)}${at(CELL_W + gap, 0, b)}
+    ${at(0, CELL_H + gap, c)}${at(CELL_W + gap, CELL_H + gap)}
+  </svg>`;
 }
 
 /**
